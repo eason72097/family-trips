@@ -1,0 +1,933 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>炎夏親子好去處・桃竹苗中彰</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@500;700;900&family=Noto+Sans+TC:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#f4efe4;        /* warm cream */
+    --paper:#fbf8f0;
+    --ink:#23301f;       /* deep forest */
+    --green:#3f6b3a;
+    --green-d:#2c4d29;
+    --moss:#6f8c4e;
+    --terra:#c0623a;     /* terracotta accent */
+    --terra-d:#9c4a28;
+    --sky:#3d7a8c;
+    --gold:#caa23c;
+    --line:#d9cfba;
+    --shadow:0 1px 2px rgba(35,48,31,.06),0 6px 18px rgba(35,48,31,.07);
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html{scroll-behavior:smooth}
+  body{
+    background:var(--bg);
+    color:var(--ink);
+    font-family:"Noto Sans TC",sans-serif;
+    line-height:1.7;
+    -webkit-font-smoothing:antialiased;
+    padding-bottom:60px;
+  }
+  /* ---- hero ---- */
+  header{
+    position:relative;
+    background:
+      radial-gradient(120% 90% at 80% -10%, rgba(202,162,60,.20), transparent 60%),
+      linear-gradient(155deg,var(--green-d),var(--green));
+    color:#f6f2e6;
+    padding:46px 22px 34px;
+    overflow:hidden;
+  }
+  header::after{
+    content:"";position:absolute;inset:0;
+    background-image:radial-gradient(rgba(255,255,255,.05) 1px,transparent 1px);
+    background-size:14px 14px;opacity:.6;pointer-events:none;
+  }
+  .kicker{
+    font-size:.72rem;letter-spacing:.32em;text-transform:uppercase;
+    color:var(--gold);font-weight:700;margin-bottom:10px;
+  }
+  header h1{
+    font-family:"Noto Serif TC",serif;font-weight:900;
+    font-size:clamp(2rem,8vw,2.9rem);line-height:1.15;letter-spacing:.01em;
+  }
+  header h1 .accent{color:#f0c969}
+  header p{margin-top:12px;max-width:46ch;color:#e3dcc8;font-size:.95rem}
+  .meta{margin-top:18px;display:flex;flex-wrap:wrap;gap:8px}
+  .meta span{
+    background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.18);
+    padding:4px 11px;border-radius:999px;font-size:.76rem;backdrop-filter:blur(2px);
+  }
+
+  /* ---- sticky controls ---- */
+  .controls{
+    position:sticky;top:0;z-index:40;
+    background:rgba(244,239,228,.92);backdrop-filter:blur(8px);
+    border-bottom:1px solid var(--line);
+    padding:10px 14px;
+  }
+  .filter-label{font-size:.72rem;color:var(--moss);font-weight:700;letter-spacing:.1em;margin:0 0 6px}
+  .searchbox{position:relative;display:flex;align-items:center}
+  .search-ico{position:absolute;left:12px;font-size:.95rem;opacity:.6;pointer-events:none}
+  #search{
+    width:100%;border:1px solid var(--line);background:var(--paper);color:var(--ink);
+    font-family:inherit;font-size:.92rem;padding:10px 38px 10px 36px;border-radius:12px;outline:none;transition:.15s;
+  }
+  #search:focus{border-color:var(--moss);background:#fff;box-shadow:0 0 0 3px rgba(111,140,78,.15)}
+  #search::-webkit-search-cancel-button{display:none}
+  .search-clear{
+    position:absolute;right:8px;border:none;background:var(--line);color:var(--ink);
+    width:22px;height:22px;border-radius:50%;cursor:pointer;font-size:.7rem;line-height:1;display:none;
+  }
+  .search-clear.show{display:block}
+  .search-count{font-size:.76rem;color:var(--moss);margin-top:6px;min-height:1em}
+  mark{background:#fbe7a6;color:inherit;border-radius:3px;padding:0 1px}
+  .xlink{display:flex;flex-wrap:wrap;gap:6px;margin-top:9px}
+  .xlink a{
+    font-size:.7rem;color:var(--sky);text-decoration:none;border:1px dashed #bcd3da;
+    background:#eef5f7;padding:2px 8px;border-radius:7px;
+  }
+  .xlink a:hover{background:var(--sky);color:#fff;border-color:var(--sky)}
+  .ctl-row+.ctl-row{margin-top:9px}
+  .chips{display:flex;gap:7px;overflow-x:auto;-webkit-overflow-scrolling:touch;scrollbar-width:none}
+  .chips::-webkit-scrollbar{display:none}
+  .chip{
+    border:1px solid var(--line);background:var(--paper);color:var(--ink);
+    padding:6px 13px;border-radius:999px;font-size:.82rem;font-weight:500;
+    cursor:pointer;transition:.18s;font-family:inherit;white-space:nowrap;flex:0 0 auto;text-decoration:none;
+  }
+  .chip:hover{border-color:var(--moss)}
+  .chip.active{background:var(--green);color:#fff;border-color:var(--green)}
+  .gchip{
+    border:1px solid var(--moss);background:#fff;color:var(--green-d);
+    padding:6px 12px;border-radius:999px;font-size:.82rem;font-weight:700;
+    white-space:nowrap;flex:0 0 auto;text-decoration:none;transition:.15s;
+  }
+  .gchip:hover{background:var(--green);color:#fff}
+
+  .wrap{max-width:880px;margin:0 auto;padding:8px 14px 0}
+
+  /* ---- group divider ---- */
+  .group-div{margin:32px 0 4px;scroll-margin-top:132px}
+  .group-div:first-child{margin-top:16px}
+  .group-div h2{
+    font-family:"Noto Serif TC",serif;font-weight:900;font-size:1.55rem;color:var(--green-d);
+    display:flex;align-items:center;gap:10px;
+  }
+  .group-div h2::after{content:"";flex:1;height:3px;background:linear-gradient(90deg,var(--moss),transparent);border-radius:2px}
+  .subchips{display:flex;gap:7px;flex-wrap:wrap;margin-top:10px}
+  .subchips a{
+    text-decoration:none;font-size:.8rem;color:var(--green-d);
+    border:1px dashed var(--line);padding:5px 11px;border-radius:8px;background:var(--paper);
+  }
+  .subchips a:hover{border-color:var(--moss);background:#fff}
+
+  /* ---- back-to-top link & floating button ---- */
+  .totop{margin-left:auto;font-size:.74rem;color:var(--moss);text-decoration:none;border:1px solid var(--line);
+    padding:3px 9px;border-radius:7px;white-space:nowrap;align-self:center}
+  .totop:hover{border-color:var(--moss);color:var(--green)}
+  .fab{
+    position:fixed;right:16px;bottom:18px;z-index:60;width:46px;height:46px;border-radius:50%;
+    border:none;cursor:pointer;background:var(--green);color:#fff;font-size:1.2rem;font-weight:700;
+    box-shadow:0 4px 14px rgba(35,48,31,.28);opacity:0;pointer-events:none;
+    transition:opacity .25s,transform .25s;transform:translateY(8px);
+  }
+  .fab.show{opacity:1;pointer-events:auto;transform:translateY(0)}
+  .fab:hover{background:var(--green-d)}
+
+  /* ---- section ---- */
+  section{margin-top:30px;scroll-margin-top:132px}
+  .sec-head{display:flex;align-items:baseline;gap:10px;border-bottom:2px solid var(--ink);padding-bottom:7px;margin-bottom:4px}
+  .sec-head .emoji{font-size:1.35rem}
+  .sec-head h2{font-family:"Noto Serif TC",serif;font-weight:700;font-size:1.32rem}
+  .sec-sub{color:var(--moss);font-size:.82rem;margin:7px 0 14px}
+
+  /* ---- cards ---- */
+  .grid{display:grid;grid-template-columns:1fr;gap:12px}
+  @media(min-width:620px){.grid{grid-template-columns:1fr 1fr}}
+  .card{
+    background:var(--paper);border:1px solid var(--line);border-radius:14px;
+    padding:15px 16px;box-shadow:var(--shadow);position:relative;
+    transition:transform .15s, box-shadow .15s;
+  }
+  .card:hover{transform:translateY(-2px);box-shadow:0 4px 10px rgba(35,48,31,.08),0 14px 30px rgba(35,48,31,.10)}
+  .card.star{border-color:var(--gold);background:linear-gradient(180deg,#fffdf3,var(--paper))}
+  .card-top{display:flex;align-items:flex-start;justify-content:space-between;gap:10px}
+  .name{font-weight:700;font-size:1.04rem;line-height:1.35}
+  .name .star-mark{color:var(--gold)}
+  .map-link{display:inline-block;text-decoration:none;color:var(--ink)}
+  .map-link:hover{color:var(--green)}
+  .map-link .pin{font-size:.78rem;opacity:.55}
+  .map-link:hover .pin{opacity:1}
+  .area{font-size:.76rem;color:var(--moss);margin-top:1px}
+  .note{font-size:.88rem;margin-top:9px;color:#36422f}
+  .badges{display:flex;flex-wrap:wrap;gap:6px;margin-top:11px}
+  .b{font-size:.71rem;font-weight:700;padding:3px 9px;border-radius:7px;letter-spacing:.02em;white-space:nowrap}
+  .b-near{background:#e4eed9;color:#3f6b3a}
+  .b-mid{background:#fbeed6;color:#9a6a1c}
+  .b-far{background:#f3ddd2;color:var(--terra-d)}
+  .b-free{background:#dfeeee;color:#2f6473}
+  .b-rest{background:#f1e3e3;color:#a23b3b}   /* 公休 */
+  /* difficulty */
+  .b-d1{background:#e3f0e0;color:#2f7a35}
+  .b-d2{background:#e9efce;color:#6c7d1e}
+  .b-d3{background:#fbe9cf;color:#b07415}
+  .b-d4{background:#f6dcc9;color:#bb4f1f}
+  .b-d5{background:#ead7e6;color:#8a3a7e}
+  /* conditions */
+  .b-c0{background:#e4eede;color:#3f6b3a}
+  .b-c1{background:#fbecc9;color:#94701a}
+  .b-c2{background:#f4d6d6;color:#a23030}
+  /* animal tags */
+  .b-tag{background:#eef0e6;color:#4a5a39;border:1px solid #d9cfba}
+  a.b-tap{text-decoration:none;cursor:pointer;transition:.15s}
+  a.b-tap:hover{background:var(--green);color:#fff;border-color:var(--green)}
+
+  /* legend */
+  .legend{background:var(--paper);border:1px solid var(--line);border-radius:12px;padding:14px 16px;margin:6px 0 16px;font-size:.85rem}
+  .legend h3{font-size:.82rem;letter-spacing:.08em;color:var(--moss);margin-bottom:8px;font-weight:700}
+  .legend p{margin:5px 0}
+  .legend .dot{font-weight:700}
+
+  footer{max-width:880px;margin:34px auto 0;padding:20px 16px;border-top:1px dashed var(--line);color:var(--moss);font-size:.82rem}
+  footer b{color:var(--ink)}
+  .tip-box{background:#eef2e6;border-left:4px solid var(--moss);border-radius:8px;padding:12px 14px;margin-top:14px;font-size:.86rem;color:#36422f}
+  .empty{display:none;text-align:center;color:var(--moss);padding:30px;font-style:italic}
+
+  .sync-status{
+    text-align:center;font-size:.74rem;color:var(--moss);padding:6px 0;
+    background:var(--paper);border-bottom:1px solid var(--line);
+  }
+  .sync-status.err{color:#a23030}
+  .sync-status.ok{color:var(--green)}
+
+  .want-btn{
+    border:1px solid var(--line);background:var(--paper);cursor:pointer;
+    border-radius:999px;font-size:.78rem;padding:4px 10px;font-family:inherit;
+    display:inline-flex;align-items:center;gap:4px;transition:.15s;
+  }
+  .want-btn.on{background:#fff7df;border-color:var(--gold);color:#8a6a17}
+  .want-btn:hover{border-color:var(--gold)}
+  .want-who{font-size:.68rem;color:var(--moss);margin-left:6px}
+  .card-foot{display:flex;align-items:center;justify-content:space-between;margin-top:10px;flex-wrap:wrap;gap:6px}
+</style>
+</head>
+<body>
+
+<header id="top">
+  <div class="kicker">Family Summer Guide</div>
+  <h1>炎夏親子<span class="accent">好去處</span><br>桃園・新竹・苗栗・台中・彰化</h1>
+  <p>從竹南出發整理的避暑收藏清單。上方選單常駐：可依距離篩選，或在七大類間快速跳轉；捲到任何位置都能用右下角「↑」回到頂端。每張卡片點店名／地名即可一鍵開 Google 地圖。</p>
+  <div class="meta">
+    <span>📍 以竹南為起點</span>
+    <span>🗂️ 9 大類・37 子類別</span>
+    <span>🥾 步道分 5 級</span>
+    <span>🔄 持續擴充中</span>
+  </div>
+</header>
+
+<div class="controls">
+  <div class="ctl-row">
+    <div class="searchbox">
+      <span class="search-ico">🔍</span>
+      <input id="search" type="search" placeholder="搜尋店名、地點、特色…（例：豆花、老屋、宜蘭、賞螢）" autocomplete="off">
+      <button id="searchClear" class="search-clear" aria-label="清除">✕</button>
+    </div>
+    <div class="search-count" id="searchCount"></div>
+  </div>
+  <div class="ctl-row">
+    <div class="filter-label">我是誰（標註想去用）</div>
+    <div class="chips" id="whoSwitch">
+      <button class="chip active" data-who="me">🙋 我</button>
+      <button class="chip" data-who="wife">💛 老婆</button>
+    </div>
+    <button id="onlyWant" class="chip" style="margin-left:8px">⭐ 只看想去的</button>
+  </div>
+  <div class="ctl-row">
+    <div class="filter-label">依距離篩選（竹南出發）</div>
+    <div class="chips" id="distFilter">
+      <button class="chip active" data-d="all">全部</button>
+      <button class="chip" data-d="near">近・30分內</button>
+      <button class="chip" data-d="mid">中・30–60分</button>
+      <button class="chip" data-d="far">📍遠・1.5hr＋</button>
+    </div>
+  </div>
+  <div class="ctl-row">
+    <div class="filter-label">快速跳到大類</div>
+    <div class="chips" id="groupNav"></div>
+  </div>
+</div>
+
+<div class="sync-status" id="syncStatus">☁️ 連接中…</div>
+
+<div class="wrap">
+  <div id="app"></div>
+  <p class="empty" id="empty">沒有符合的結果，換個關鍵字或距離看看 🙂</p>
+</div>
+
+<button id="fab" class="fab" aria-label="回到頂端">↑</button>
+
+<footer>
+  <p>⭐ = 你標記想嘗試的點　｜　🔴🟡🟢 = 步道前往條件（見「登山步道」區說明）</p>
+  <div class="tip-box">
+    <b>通用提醒：</b>熱天上午 9 點前或下午 4 點後出發體感差很多 ｜ 出發前務必確認公休日（多數博物館週一休）｜ 水樂園與賞花為季節限定，先上官網確認開放與線上購票 ｜ 山區比平地涼 3–5 度，是最舒服的避暑選擇。
+  </div>
+  <p style="margin-top:14px">建立日期：2026 年 5 月 ｜ 資料來源：Google 地圖評價與官方資訊，實際開放時間／入山規定請以官方為準。｜ ☁️ 「想去」標註會跨裝置同步。</p>
+</footer>
+
+<script type="module">
+/* ===== Firebase 設定（沿用既有 ppl-plan 專案，使用獨立的 places collection） ===== */
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+import {
+  getFirestore, collection, doc, getDocs, setDoc, updateDoc, onSnapshot
+} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+
+const firebaseConfig = {
+  apiKey: "AIzaSyD68ASVlyKiBOdvcyqIjil1DLNhibaxiaM",
+  authDomain: "ppl-plan.firebaseapp.com",
+  projectId: "ppl-plan",
+  storageBucket: "ppl-plan.firebasestorage.app",
+  messagingSenderId: "91585219195",
+  appId: "1:91585219195:web:f1ce4e153622965f1930de"
+};
+const fbApp = initializeApp(firebaseConfig);
+const db = getFirestore(fbApp);
+const PLACES_COL = "places"; // 與 ppl-plan 的 workouts collection 完全獨立
+
+/* ---------- 資料 ---------- */
+/* dist: near | mid | far    star: true 想試
+   登山專用：diff(1輕鬆~5高山)、cond(0綠/1黃/2紅) */
+const sections = [
+  { id:"hike", emoji:"🥾", title:"登山步道（依難度與條件分級）", sub:"難度：① 輕鬆 ② 中等 ③ 中高 ④ 進階 ⑤ 高山　｜　條件：🟢無須申請　🟡需付費／裝備／登記　🔴需入園證＋入山證", legend:true, items:[
+    {n:"十八尖山",a:"新竹市・近",dist:"near",diff:1,cond:0,note:"市區森林步道，路面平整、有飲水機與廁所，約 2 小時。最適合帶小小孩入門。"},
+    {n:"鳳崎落日步道",a:"竹北／新豐・近",dist:"near",diff:1,cond:0,note:"大多在樹蔭下、有看海視野，全程約 1.5 小時，終點有咖啡店和廁所。"},
+    {n:"蓬萊溪護魚步道",a:"南庄・中",dist:"mid",diff:1,cond:0,note:"清澈溪水看魚、沿途遮蔭，坡度平緩好走，單程 2km 內，4–5 歲以上可走。"},
+    {n:"青蛙石步道",a:"尖石・中",dist:"mid",diff:1,cond:1,note:"溪流＋巨石，30 分鐘走完，適合小小孩。需門票。"},
+    {n:"新豐紅樹林",a:"新豐・近",dist:"near",diff:1,cond:0,note:"平緩木棧道＋遮陽涼亭，看招潮蟹與水鳥（退潮才看得到蟹）。"},
+    {n:"香山濕地賞蟹步道",a:"新竹・近",dist:"near",diff:1,cond:1,note:"海上木棧道、看招潮蟹與夕陽。週一公休，傍晚最佳。"},
+    {n:"飛鳳山步道",a:"芎林新竹・中",dist:"mid",diff:2,cond:0,note:"新竹人氣 No.1，多在樹蔭下、有陡階段，1–2 小時，停車方便，天氣好可遠眺台灣海峽。"},
+    {n:"火炎山大拐道",a:"三義苗栗・中",dist:"mid",diff:2,cond:0,note:"環線約 3–4 小時、峽谷地貌壯觀。⚠️ 部分稜線裸露日曬，夏天偏熱，需大量水、早上去。"},
+    {n:"馬那邦山",a:"大湖苗栗・中",dist:"mid",diff:2,cond:1,note:"約 4 小時、秋楓名所，黏土路面雨後濕滑。建議騎車到登山口；停車投幣 $100。"},
+    {n:"李棟山古堡",a:"尖石新竹・中",dist:"mid",diff:2,cond:0,note:"1.5km 緩升至日治時代山頂古堡，森林優美。尖石後山山路較遠，注意行車。"},
+    {n:"鵝公髻山（第一登山口）",a:"五峰新竹・中高",dist:"mid",diff:3,cond:1,note:"小百岳 1579m，前段產業道路頗陡、後段柳杉林，約 2 小時上。清潔費 $100、有廁所。"},
+    {n:"加里山",a:"南庄苗栗・進階",dist:"mid",diff:4,cond:1,note:"中級山經典！11km／6–7 小時，多樹根、最後一段需攀繩，途中需渡溪（多人赤腳過）。柳杉林全程遮蔭。需好鞋與體力，建議登記行程。"},
+    {n:"鎮西堡神木群",a:"尖石新竹・進階",dist:"mid",diff:4,cond:1,note:"7km／5–6 小時，千年扁柏神木群，前段陡升。山路遙遠（尖石後山），屬山地部落區，出發前查詢最新入山規定與路況。"},
+    {n:"八仙山（谷關七雄之首）",a:"和平台中・進階",dist:"far",diff:4,cond:1,note:"主峰單程 6km、來回約 8 小時、爬升逾 1000m。園區門票約 $250；園內另有平緩河濱步道與幼兒戲水區（輕鬆路線）。"},
+    {n:"雪山主峰",a:"武陵・雪霸國家公園・高山",dist:"far",diff:5,cond:2,note:"3886m，多為 2 天 1 夜。🔴 需『雪霸入園證』（線上申請、熱門路線抽籤）＋『入山證』＋山屋床位（七卡／三六九山莊）。需高山經驗與裝備。"}
+  ]},
+
+  { id:"water", emoji:"🌊", title:"親子玩水・溪邊戲水", items:[
+    {n:"內灣（橫山）",a:"近",dist:"near",note:"油羅溪邊踩水、老街吃野薑花粽。帶替換衣物與防滑鞋。"},
+    {n:"頭前溪豆腐岩",a:"竹北・近",dist:"near",note:"免費踩水、綠色隧道、拍照熱點。⚠️ 石塊間距大又深，懼高或小小孩要牽好。"},
+    {n:"青蛙石步道",a:"尖石・中",dist:"mid",note:"溪流巨石、30 分鐘，適合小小孩（有門票）。"},
+    {n:"蓬萊溪護魚步道",a:"南庄・中",dist:"mid",note:"溪水清澈看魚、沿途遮蔭，平緩好走。"}
+  ]},
+
+  { id:"waterpark", emoji:"💦", title:"水樂園（消暑最直接）", sub:"季節限定，先上官網確認開放日與線上購票", items:[
+    {n:"六福村水樂園",a:"關西・中",dist:"mid",note:"離家最近的大型水樂園，主題＋水樂園分開售票。平日人少、溜滑梯需泳帽。"},
+    {n:"麗寶馬拉灣",a:"后里台中・遠",dist:"far",note:"造浪池＋漂漂河＋兒童戲水區，旁有 Outlet 與摩天輪。週二三休。"},
+    {n:"小人國主題樂園",a:"龍潭・中",dist:"mid",note:"7–8 月限定水樂園，迷你建築＋遊樂設施，雨天也有室內區。"}
+  ]},
+
+  { id:"forest", emoji:"🏔", title:"上山避暑・森林", items:[
+    {n:"馬武督探索森林",a:"關西・中",dist:"mid",note:"柳杉林蔭步道、芬多精。低度開發、無遊樂設施；山路前段窄。"},
+    {n:"綠世界生態農場",a:"北埔・中",dist:"mid",note:"動物＋大草原，小孩最愛。夏天早上去，有電動接駁。"},
+    {n:"雪霸休閒農場",a:"五峰・中遠",dist:"mid",note:"高海拔雲海、咖啡鬆餅。最後 2km 山路顛簸。"},
+    {n:"東眼山國家森林遊樂區",a:"桃園復興・遠",dist:"far",note:"避暑森林浴、親子友善、可能遇獼猴，園內有新咖啡館。"}
+  ]},
+
+  { id:"animal", emoji:"🦒", title:"動物・牧場・水族館", sub:"標籤：🌟有名　🍽有得吃　📚學習／課程　🐾動物多　💚重視動物福利。已盡量挑選照顧良好的場所；少數有疑慮者會以 ⚠️ 註明。", items:[
+    {n:"新竹市立動物園",a:"新竹・近",dist:"near",tags:["🌟 有名","📚 學習","💚 重視動物福利"],note:"百年公立動物園，近年整建走友善環境路線，綠意多、好推嬰兒車，園內有歷史建築改建的星巴克。週一休。"},
+    {n:"飛牛牧場",a:"通霄・中",dist:"mid",tags:["🍽 有得吃","📚 課程","🐾 動物多"],note:"乳牛主題牧場，可擠奶、餵小牛、看鴨子大遊行，有 DIY 課程與牧場鮮乳冰淇淋。夏天建議早上去。"},
+    {n:"綠世界生態農場",a:"北埔・中",dist:"mid",tags:["🐾 動物多","📚 學習","💚 重視動物福利"],note:"（亦見『上山避暑』）生態保育農場，草泥馬、金剛鸚鵡、水豚自然放養，動物多且照顧細緻，有電動接駁。"},
+    {n:"Xpark 水族館",a:"中壢桃園・遠",dist:"far",tags:["🌟 有名","🍽 有得吃"],note:"全室內冷氣、企鵝水母（類 teamLab 燈光），有動物互動秀與餐廳。熱天雨天備案首選。"},
+    {n:"台北市立動物園",a:"台北木柵・遠",dist:"far",tags:["🌟 有名","📚 學習","🐾 動物多","💚 重視動物福利"],note:"全台最大、保育與教育導向，貓熊、無尾熊、穿山甲館，動物健康、餵食得宜。腹地大有園內接駁車、門票便宜，可搭貓纜。"},
+    {n:"壽山動物園",a:"高雄・遠",dist:"far",tags:["🐾 動物多","💚 重視動物福利"],note:"2022 整建後以『仿棲地』設計改善動物福利，老虎、犀牛可近距離觀察，空間舒適、票價便宜。週一休；山上有野生獼猴，食物收好。"},
+    {n:"斑比山丘",a:"宜蘭員山・遠",dist:"far",tags:["🌟 有名","🍽 有得吃","📚 課程","💚 重視動物福利"],note:"梅花鹿與水豚園區，最受好評在於工作人員會引導正確互動、動物健康、環境友善，4.8 高分。建議線上預約購票，有冰淇淋與周邊。"},
+    {n:"張美阿嬤農場",a:"宜蘭三星・遠",dist:"far",tags:["🌟 有名","🍽 有得吃","🐾 動物多"],note:"梅花鹿、水豚、羊駝近距離餵食，門票含飼料與點心，4.9 超高分。⚠️ 宜蘭有兩間同名農場，這間（三星）對動物照顧較佳。"},
+    {n:"清境農場・青青草原",a:"南投仁愛・遠",dist:"far",tags:["🌟 有名","🐾 動物多"],note:"高山綿羊牧場，青青草原餵羊、景色開闊涼爽，可串小瑞士花園與天空步道。綿羊秀為定時表演。"},
+    {n:"初鹿牧場",a:"台東・遠",dist:"far",tags:["🍽 有得吃","📚 課程","🐾 動物多"],note:"草飼乳牛牧場，可餵牛、馬、兔、羊與滑草，招牌鮮乳冰淇淋，有 DIY 與餐廳，腹地大。"},
+    {n:"頑皮世界野生動物園",a:"台南學甲・遠",dist:"far",tags:["🐾 動物多","🍽 有得吃"],note:"腹地寬廣的野生動物園，水豚（需預約互動）、羊駝，夏季有戲水區。⚠️ 大型猛獸較少，部分遊客覺得票價偏高。"},
+    {n:"埔心牧場",a:"楊梅・中遠",dist:"far",tags:["🐾 動物多"],note:"可餵羊駝、水豚，動物種類多、腹地大可野餐。⚠️ 有遊客反映部分動物活動空間偏小、植栽為塑膠草，在意動物福利者可斟酌。"},
+    {n:"富田花園農場",a:"大溪・中遠",dist:"far",tags:["🐾 動物多"],note:"互動餵食羊駝、綿羊等，動物親人。⚠️ 範圍小巧、約停留 1 小時，有遊客覺得票價偏高。週三休。"},
+    {n:"宜農牧場",a:"宜蘭冬山・遠",dist:"far",tags:["🍽 有得吃","🐾 動物多","💚 重視動物福利"],note:"近市區的友善小牧場，遊客稱讚動物照顧得好、還貼心提供香茅防蚊與止癢膏，可餵羊餵兔、門票便宜，有羊奶製品。週四休。"},
+    {n:"瑞穗牧場",a:"花蓮瑞穗・遠",dist:"far",tags:["🌟 有名","🍽 有得吃","🐾 動物多"],note:"300 多頭乳牛的觀光牧場，鮮乳冰淇淋、起司蛋糕、奶酪有名，可看牛與鴕鳥。⚠️ 目前已不開放餵食動物。"}
+  ]},
+
+  { id:"pick", emoji:"🍓", title:"採果體驗（依季節）", sub:"水果有產季，出發前務必先電話確認開放與是否需預約；現為初夏，水蜜桃、葡萄陸續上場。", items:[
+    {n:"拉拉山假日觀光果園",a:"桃園復興・遠",dist:"far",tags:["🍽 有得吃","📚 學習"],note:"高山水蜜桃名產地，樹熟現採香甜、老欉栽培可現場試吃。產季約 6–8 月（部分品種 5 月底起）。山路較長，注意行車。"},
+    {n:"卓蘭松柏葡萄園",a:"苗栗卓蘭・中",dist:"mid",tags:["🍽 有得吃","📚 學習","💚 友善"],note:"老闆親自帶採、免費試吃並教你辨識成熟葡萄，價格實在、4.8 高分。葡萄產季：夏果約 6–8 月、冬果約 11–1 月。"},
+    {n:"大村葡萄黑匠觀光果園",a:"彰化大村・遠",dist:"far",tags:["🍽 有得吃"],note:"彰化大村是巨峰葡萄之鄉，老闆親切、適合全家採果，另有葡萄醋。夏果約 6–8 月、冬果約 11–1 月。"},
+    {n:"徐家有機紅棗果園",a:"苗栗公館・中",dist:"mid",tags:["🍽 有得吃","📚 學習","💚 友善"],note:"公館是台灣紅棗主產地，有機自採、現摘紅棗清脆像蘋果，老闆友善、親子寵物友善、園內少蚊，4.9 高分。產季約 7–8 月。"},
+    {n:"大湖草莓文化館・草莓園",a:"苗栗大湖・中",dist:"mid",tags:["🍽 有得吃"],note:"全台最有名的草莓鄉，草莓博物館＋大量草莓加工品，可自採。⚠️ 草莓為冬季限定（約 12 月–翌年 4 月），現非產季；夏天主要逛館與選購。"}
+  ]},
+
+  { id:"eco", emoji:"🌿", title:"生態農場・自然教育", sub:"偏學習型；部分需事先預約或線上申請（見各點說明）。", items:[
+    {n:"頭城農場",a:"宜蘭頭城・遠",dist:"far",tags:["📚 課程","🍽 有得吃","🐾 動物多","💚 重視動物福利"],note:"綜合型生態農場，導覽解說專業、DIY 課程豐富又分齡，可餵水牛山羊、做果醋，學校戶外教學常選，適合住一晚深度體驗。"},
+    {n:"台一生態休閒農場",a:"南投埔里・遠",dist:"far",tags:["📚 學習","🐾 動物多","🍽 有得吃"],note:"花園與生態並重，夜間有甲蟲觀察與賞螢導覽（季節限定），可採果、有溫泉房與餐廳，適合親子過夜。"},
+    {n:"紙教堂・桃米生態村",a:"南投埔里・遠",dist:"far",tags:["📚 學習"],note:"九二一後重建的青蛙生態村，紙教堂建築特別，園區保留多種蛙類與棲地，適合自然觀察散步。週三休。"},
+    {n:"福山植物園",a:"宜蘭員山・遠",dist:"far",tags:["📚 學習","💚 重視動物福利"],note:"亞熱帶雨林植物園，常能近距離看到野生動物、教育性強。🔴 需事先線上申請、每日限流，週二休、開放 09–15 時。"},
+    {n:"八德埤塘生態公園",a:"桃園八德・遠",dist:"far",tags:["📚 學習"],note:"市區型免費生態公園，埤塘濕地有水鳥、鴨、龜，綠蔭多好散步、可野餐餵鴨，24 小時開放。"},
+    {n:"香格里拉休閒農場",a:"宜蘭冬山・遠",dist:"far",tags:["📚 課程","🐾 動物多"],note:"山林田園農場，夜間生態活動與傳統 DIY（天燈、搗麻糬），視野與空氣佳，適合住一晚。"}
+  ]},
+
+  { id:"museum", emoji:"🏛", title:"博物館（含全台）", sub:"竹苗中彰可當日來回；台北、宜蘭、台南、高雄、屏東、台東等需專程或安排過夜", items:[
+    {n:"新竹市玻璃工藝博物館",a:"新竹・近",dist:"near",note:"玻璃產業史＋現場工坊示範，門票 50 元，約 1.5 小時。週一休。"},
+    {n:"三義木雕博物館",a:"苗栗・中",dist:"mid",note:"四層樓木藝、門票 80 元，旁有木雕老街。週一休。"},
+    {n:"台灣客家文化館",a:"銅鑼・中",dist:"mid",note:"免費、客語動畫電影院、互動遊戲，雨天備案。週二休。"},
+    {n:"國立自然科學博物館",a:"台中・遠",dist:"far",note:"親子神級、太空劇場圓頂銀幕，可待一整天。週一休。"},
+    {n:"彰化扇形車庫",a:"彰化・遠",dist:"far",note:"全台唯一運作中扇形車庫、免費、鐵道迷必訪。週末早上／平日下午才開。"},
+    {n:"台灣玻璃館",a:"鹿港・遠",dist:"far",note:"玻璃吹製、玻璃媽祖廟、鏡子迷宮。交通較不便。"},
+    {n:"大溪木藝生態博物館",a:"桃園・中遠",dist:"far",note:"日式老屋群、看大溪河谷。週一休。"},
+    {n:"國立故宮博物院",a:"台北士林・遠",dist:"far",note:"全台最知名、逾 60 萬件中華文物（翠玉白菜、肉形石），可參加免費定時導覽。門票 350 元，週一休。"},
+    {n:"奇美博物館",a:"台南仁德・遠",dist:"far",note:"歐式宮殿建築＋遼闊草坪噴泉，收藏西洋藝術、兵器、樂器、動物標本，可野餐。評價 4.7、極推。週三休。"},
+    {n:"國立海洋生物博物館",a:"屏東車城・遠",dist:"far",note:"南台灣超人氣水族館，珊瑚王國海底隧道、白鯨，可報名『夜宿海生館』。學生票 250 元。"},
+    {n:"國立科學工藝博物館",a:"高雄・遠",dist:"far",note:"大型互動科學館，室內遊戲區、地震體驗、氣候變遷展，小孩可玩 3–4 小時。"},
+    {n:"國立臺灣美術館",a:"台中・遠",dist:"far",note:"全台最大美術館、免費入場，腹地寬廣有雕塑公園與兒童繪本區，建築明亮好拍。週一休。"},
+    {n:"國立臺灣博物館",a:"台北 228 公園・遠",dist:"far",note:"全台最古老博物館，古蹟建築＋自然史，含對面古生物館（恐龍化石），門票僅 30 元、CP 值極高。週一休。"},
+    {n:"蘭陽博物館",a:"宜蘭頭城・遠",dist:"far",note:"招牌『單面山』傾斜造型建築，介紹宜蘭山海平原生態文化，旁有烏石港，設兒童區。週三休。"},
+    {n:"朱銘美術館",a:"新北金山・遠",dist:"far",note:"戶外大型雕塑公園（太極系列），山海環抱、適合野餐遛小孩，可配金山老街。週一休。"},
+    {n:"921 地震教育園區",a:"台中霧峰・遠",dist:"far",note:"保存斷層帶上倒塌的光復國中校舍，地震體驗劇場震撼，工程與防災教育經典，大小孩都印象深刻。週一休。"},
+    {n:"黃金博物館",a:"新北金瓜石・遠",dist:"far",note:"礦業山城＋日式宿舍，可摸 220 公斤大金磚、走礦坑體驗，順遊九份。門票 80 元。"},
+    {n:"國立臺灣史前文化博物館",a:"台東・遠",dist:"far",note:"史前考古與南島文化，大量兒童互動展與手作教室，內容紮實、英文解說完整。週一休。"},
+    {n:"鶯歌陶瓷博物館",a:"新北鶯歌・遠",dist:"far",note:"窯型與製陶技法展示、建築漂亮、有冷氣，門票 80 元，戶外有兒童戲水區與 DIY，近鶯歌老街。"},
+    {n:"袖珍博物館",a:"台北・遠",dist:"far",note:"亞洲首座微縮模型博物館，娃娃屋與微縮場景做工驚人，雨天備案、老少咸宜。週一休。"},
+    {n:"樹火紀念紙博物館",a:"台北・遠",dist:"far",note:"小巧的紙博物館，每日兩場造紙 DIY（10:30／14:30），可做花瓣紙當紀念，很適合小孩。週日、週一休。"},
+    {n:"十三行博物館",a:"新北八里・遠",dist:"far",note:"考古主題、得獎建築，介紹台灣鐵器時代與南島文化，含 VR 體驗與親子互動活動。"},
+    {n:"國立臺灣文學館",a:"台南・遠",dist:"far",note:"免費，設於古蹟『原台南州廳』，以互動展呈現台灣文學史，空間優美。週一休。"},
+    {n:"順益台灣原住民博物館",a:"台北士林・遠",dist:"far",note:"介紹台灣原住民族文化的私人博物館，影片與織品展精彩，距故宮步行約 10 分鐘可一起參觀。週一休。"},
+    {n:"國立海洋科技博物館",a:"基隆・遠",dist:"far",note:"互動式海洋科學館，船舶科技、海洋生態多為動手展示，適合親子。週一休。"}
+  ]},
+
+  { id:"rail", emoji:"🚂", title:"鐵道主題", items:[
+    {n:"舊山線 Rail Bike＋勝興車站",a:"三義・中",dist:"mid",note:"軌道自行車穿隧道、鐵橋，隧道內涼。需先上官網訂票、提早 30–40 分取票。"},
+    {n:"鯉魚潭水庫後池堰",a:"三義・中",dist:"mid",note:"河流景觀、免費，可順遊舊山線隧道。"},
+    {n:"功維敘隧道",a:"苗栗市・中",dist:"mid",note:"百年鐵道隧道改步道、夏天涼、夜間光雕、24h。地面濕滑，夜間帶手電筒。"}
+  ]},
+
+  { id:"factory", emoji:"🏭", title:"觀光工廠（室內冷氣・DIY）", items:[
+    {n:"巧克力共和國",a:"桃園八德・中",dist:"mid",note:"巧克力 DIY（折抵券很便宜），小孩最愛。週三休。"},
+    {n:"寶熊漁樂館",a:"台中潭子・遠",dist:"far",star:true,note:"4.6 高分、巨型釣魚池＋模擬釣魚遊戲，適合 10 歲以下。週二三休。"},
+    {n:"台灣優格餅乾學院",a:"彰化線西・遠",dist:"far",star:true,note:"哈利波特風裝潢、餅乾 DIY、免費咖啡與大量試吃。鹿港玻璃館順路。"}
+  ]},
+
+  { id:"indoor", emoji:"🎡", title:"室內親子樂園（雨天備案）", items:[
+    {n:"異想新樂園",a:"台中大里・遠",dist:"far",note:"⭐4.9 超高分、8+ 主題全室內、營業到晚上。分單一館／三館／全館票，家長票 $100 可陪同。"},
+    {n:"小人國主題樂園",a:"龍潭・中",dist:"mid",note:"迷你建築＋遊樂設施＋夏季水樂園。"}
+  ]},
+
+  { id:"sky", emoji:"🌉", title:"天空步道・吊橋", items:[
+    {n:"小烏來天空步道",a:"桃園復興・遠",dist:"far",note:"玻璃步道＋瀑布＋吊橋。週二休。"},
+    {n:"八卦山天空步道",a:"彰化・遠",dist:"far",note:"約 1km 輕鬆步道、老少咸宜，鳳凰木夏季開花。"},
+    {n:"新溪口吊橋（角板山）",a:"桃園復興・遠",dist:"far",note:"303m、台灣最長之一，門票 50 元。週一二休；回程階梯陡，膝蓋不好者斟酌。"}
+  ]},
+
+  { id:"flower", emoji:"🌹", title:"賞花農場・玫瑰園", sub:"花季多在春天，現為淡季，雅聞玫瑰全年皆可", items:[
+    {n:"雅聞七里香玫瑰森林",a:"頭屋苗栗・中",dist:"mid",note:"免費、滿園玫瑰香、陶瓷小屋造景、有餐廳（餐點普通）。注意蜜蜂。"},
+    {n:"中社觀光花市",a:"后里台中・遠",dist:"far",note:"大片花田、鬱金香、風車打卡。春季最佳。"}
+  ]},
+
+  { id:"coast", emoji:"🌅", title:"海邊・漁港・夕陽（傍晚最舒服）", items:[
+    {n:"南寮漁港",a:"新竹・近",dist:"near",note:"美食攤、放風箏、騎電動車吹海風、看夕陽。週一休。"},
+    {n:"高美濕地",a:"台中清水・遠",dist:"far",note:"全台最美夕陽濕地、木棧道＋大風車，建議 5 點到，可踩水看小螃蟹。"}
+  ]},
+
+  { id:"night", emoji:"🌃", title:"夜景・觀景台", items:[
+    {n:"望高寮夜景公園",a:"台中・遠",dist:"far",note:"台中夜景名所、24h，黃昏人較少。"},
+    {n:"功維敘隧道",a:"苗栗市・中",dist:"mid",note:"夜間光雕、24h。帶手電筒。"}
+  ]},
+
+  { id:"street", emoji:"🏮", title:"老街・文化散步", items:[
+    {n:"南庄老街",a:"苗栗・中",dist:"mid",note:"客家小吃、現做蛋捲、附近有廟與吊橋。週四休，可配蓬萊溪步道。"},
+    {n:"新瓦屋客家文化保存區",a:"竹北・近",dist:"near",note:"紅磚老屋內涼快、荷花池、假日小農市集。室內外兼具、好推車。"},
+    {n:"湖口老街",a:"新竹湖口・近",dist:"near",note:"巴洛克紅磚拱廊街屋、三元宮古廟，傳統客家小吃。騎樓有遮蔭，半天逛完，假日較熱鬧。"},
+    {n:"內灣老街",a:"橫山新竹・近中",dist:"near",note:"客家小吃（野薑花粽、烤香腸）、內灣戲院，搭內灣線小火車最有味。週一多店家休息。"},
+    {n:"北埔老街",a:"新竹北埔・中",dist:"mid",note:"清代客家聚落，200m 內古蹟密度全台最高（金廣福、天水堂、慈天宮），擂茶、柿餅、客家菜。"},
+    {n:"關西石店子老街",a:"新竹關西・中",dist:"mid",note:"安靜的文青老街，石店子 69 有機書店（以書換書）、二手書與手作小物，可順遊馬武督。"},
+    {n:"三坑老街",a:"龍潭桃園・中",dist:"mid",note:"客家迷你老街（永福宮、黑白洗），10–30 分鐘逛完，可在周邊騎自行車賞稻田。⚠️ 多數店家僅週末營業。"},
+    {n:"大溪老街",a:"桃園・中遠",dist:"mid",note:"巴洛克立面街屋保存極佳、大溪豆干豆花、木藝文化，可串大溪木藝博物館。攤位多 9 點後才開。"},
+    {n:"鹿港老街",a:"彰化・遠",dist:"far",note:"紅磚老街＋龍山寺、摸乳巷等密集古蹟，小吃多、評價 4.5，可串台灣玻璃館。約 2 小時車程。"},
+    {n:"審計新村",a:"台中・遠",dist:"far",note:"老眷舍改建的文創園區，市集、咖啡、選物店，文青散步好拍照，可串科博館。"}
+  ]},
+
+  { id:"coffee-tcm", emoji:"📍", title:"桃竹苗在地咖啡（離家近）", sub:"離竹南最近的一批，附優點與可能缺點。標籤同上：☕精品手沖　🍰甜點讚　🛋座位舒適　🌿氛圍特別　🌄景觀　🏚老屋　📚書店　🌱蔬食　🐱有店貓。", items:[
+    {n:"享。咖啡｜陶鍋烘焙",a:"竹北・近",dist:"near",tags:["☕ 精品手沖","🏚 老屋","🍰 甜點讚"],note:"優點：5.0 評價，少見的陶鍋烘豆＋虹吸沖煮、風味乾淨尾韻明顯，紅磚老屋木質空間，巴斯克蛋糕必點、老闆健談。缺點：⚠️週一二休、僅下午營業、座位少。"},
+    {n:"或者書店 OR",a:"竹北新瓦屋・近",dist:"near",tags:["📚 書店","🌱 蔬食","🛋 座位舒適"],note:"優點：新瓦屋客家聚落裡的書店＋咖啡＋藝廊，選書質感佳、二樓窗邊座位看老屋，茶與蛋糕、蔬食皆有。缺點：⚠️週一休；以茶點與閱讀為主，咖啡非主打。"},
+    {n:"自然產販豆所 coffee & roaster",a:"新竹市・近",dist:"near",tags:["☕ 精品手沖","🍰 甜點讚","🛋 座位舒適"],note:"優點：4.7，自家烘焙、風味乾淨平衡，海鹽奶蓋蛋糕捲與巴斯克受好評，藏巷弄、樓上座位多，近長和宮。缺點：⚠️週二休、營業時間以 IG 為準。"},
+    {n:"春室 The POOL",a:"新竹市・近",dist:"near",tags:["🌿 氛圍特別","🍰 甜點讚","🛋 座位舒適"],note:"優點：玻璃工坊＋咖啡＋藝廊，頂樓明亮有陽台俯瞰新竹公園，飲品甜點有創意、常與台灣品牌聯名，可順遊玻璃博物館。缺點：⚠️週一休、座位有限。"},
+    {n:"偶然展覽・文創咖啡廳",a:"新竹市・近",dist:"near",tags:["☕ 精品手沖","🍰 甜點讚","🌿 氛圍特別","🛋 座位舒適"],note:"優點：4.8，大面採光、座位舒適可久坐，定期換展、手沖均衡、甜點精緻，插座多適合工作。缺點：⚠️週三、四休。"},
+    {n:"邊境黑白切咖啡",a:"新竹市・近",dist:"near",tags:["☕ 精品手沖","🌿 氛圍特別"],note:"優點：4.7，被在地人列為新竹必訪，咖啡好、老闆親切，氛圍放鬆、有戶外座位。缺點：⚠️低調小店、座位有限。"},
+    {n:"掀冊店（苑裡掀海風）",a:"苗栗苑裡・近",dist:"near",tags:["📚 書店","🌱 在地","🌿 氛圍特別"],note:"優點：4.7，苑裡老屋改建的獨立書店＋咖啡，主打在地文史、幫小農賣米茶黑豆，常辦展、氛圍 chill，離竹南很近。缺點：⚠️平日多休（約週五至週一營業），以閱讀與在地體驗為主。"},
+    {n:"麥Mai 珈琲（麥賣）",a:"桃園楊梅・近",dist:"near",tags:["☕ 精品手沖","🍰 甜點讚","🛋 座位舒適"],note:"優點：4.9，自家烘焙、日系明亮網美空間，flat white 出色、手作甜點多，餐具不用塑膠、服務親切（對幼兒友善）。缺點：⚠️週三休。"},
+    {n:"山行玫瑰",a:"苗栗南庄・中",dist:"mid",tags:["🌄 景觀","🌿 氛圍特別","🌱 蔬食"],note:"優點：南庄山中的絕景咖啡＋民宿，庭園與山景極美、可賞日出日落，有蔬食套餐，入場 $200 可折抵。缺點：⚠️週二、四休、需自行開車、價格偏高。"},
+    {n:"今遇良研 cafe",a:"桃園市・中",dist:"mid",tags:["☕ 精品手沖","🍰 甜點讚"],note:"優點：4.9，明亮乾淨，咖啡師熱情會幫你挑豆，巴斯克起司蛋糕被讚全台前段，氛圍 chill。缺點：⚠️週二休；個別品項（如檸檬咖啡）有人覺得偏貴。"},
+    {n:"秋旭",a:"桃園大溪・遠",dist:"far",tags:["🏚 老屋","🍰 甜點讚","🌿 氛圍特別"],note:"優點：大溪老街旁巷弄老屋，安靜有氛圍，咖啡與昭和布丁、戚風受好評，週末限定牛肉麵。缺點：⚠️週一休、營業時間以 IG 為準。"}
+  ]},
+
+  { id:"coffee-spec", emoji:"🏆", title:"精品・冠軍・自家烘焙", sub:"標籤：🏆冠軍/世界級　☕精品手沖　🍰甜點讚　🛋座位舒適　🌿氛圍特別　🌄景觀　🏚老屋　🌍產地體驗　🐱有店貓。縣市見地點標籤。", items:[
+    {n:"興波咖啡 Simple Kaffa Sola",a:"台北信義 101・88F・遠",dist:"far",tags:["🏆 世界冠軍","🌄 景觀","☕ 精品手沖"],note:"優點：世界咖啡師大賽冠軍吳則霖的店，世界級咖啡＋101 高樓全景，甜點精緻。⚠️需 7 天前訂位、靠窗每桌低消 2000 元、有時間限制。"},
+    {n:"興波咖啡 華山旗艦店",a:"台北中正・遠",dist:"far",tags:["🏆 世界級","☕ 精品手沖","🍰 甜點讚","🌿 氛圍特別"],note:"優點：「世界最佳咖啡館」得主，復古空間舒適，咖啡與餐點（佛卡夏、酸種麵包）都出色，是不必上 101 的平地版選擇。"},
+    {n:"Fika Fika Cafe",a:"台北中山・遠",dist:"far",tags:["☕ 精品手沖","🍰 甜點讚","🛋 座位舒適"],note:"優點：北歐風精品，老闆是北歐盃烘豆冠軍；flat white 滑順、肉桂捲與起司蛋糕受好評，有花園座位、服務溫暖。"},
+    {n:"咖啡葉 Coffee Leaf",a:"台中豐原・遠",dist:"far",tags:["☕ 精品手沖","🍰 甜點讚","🌿 氛圍特別"],note:"優點：4.7 高分，單一產區豆種多、放爵士樂氛圍慵懶，千層與可麗餅甜點很受好評，有 wifi 適合待整個下午。"},
+    {n:"The Factory Mojocoffee",a:"台中西區・遠",dist:"far",tags:["☕ 精品手沖","🛋 座位舒適","🌿 氛圍特別"],note:"優點：玻璃木造綠意建築、明亮像灑滿陽光的客廳，單一產區豆多（含雲南），店員親切會解說、平日常有試飲。"},
+    {n:"森高砂咖啡 大稻埕本店",a:"台北大同・遠",dist:"far",tags:["🇹🇼 台灣咖啡","☕ 精品手沖","🏚 老屋"],note:"優點：專門主打全台各產區「台灣咖啡」，設於日治老屋、冷熱對比品飲很專業，適合久坐細品。"},
+    {n:"鳴草咖啡自家烘焙館",a:"宜蘭市・遠",dist:"far",tags:["☕ 精品手沖","🐱 有店貓","🛋 座位舒適"],note:"優點：4.7，自家烘焙、台灣豆果香明顯，老闆 Jack 很懂咖啡可聊，小巧溫馨還有店貓。"}
+  ]},
+
+  { id:"coffee-origin", emoji:"🌍", title:"咖啡產地・莊園（偏學習）", sub:"想了解咖啡從種植到烘焙的好選擇；建議先預約導覽。", items:[
+    {n:"鄒築園 Zou Coffee",a:"嘉義阿里山樂野・遠",dist:"far",tags:["🌍 產地體驗","🌄 景觀","☕ 精品手沖","🏆 得獎豆"],note:"優點：不只咖啡館也是咖啡莊園，種植→處理→烘焙一條龍，可預約導覽看完整製程，阿里山高山景觀、得獎阿里山豆。"},
+    {n:"古坑華山咖啡大街",a:"雲林古坑・遠",dist:"far",tags:["🌍 產地體驗","🌄 景觀"],note:"優點：台灣咖啡發源地之一，山區咖啡聚落＋登山步道，多家莊園可喝可逛、自然景色優美。"}
+  ]},
+
+  { id:"coffee-view", emoji:"🌄", title:"景觀咖啡", sub:"以景觀取勝；飲品有時普通，主要為視野與拍照。", items:[
+    {n:"山度空間",a:"花蓮壽豐・遠",dist:"far",tags:["🌄 景觀","🌿 氛圍特別"],note:"優點：4.6，太平洋海景＋鏡面鞦韆網美拍照點，入場 $50 可折抵飲品。⚠️飲料普通但景觀一流，建議早到避開人潮與排隊。"},
+    {n:"BRICK YARD 33⅓",a:"台北陽明山・遠",dist:"far",tags:["🌄 景觀","🏚 老屋","🌿 氛圍特別"],note:"優點：1950–60 年代美軍俱樂部改建、濃濃復古氛圍，有戶外水景。⚠️以喝飲料、拍照為主，餐點普通。"}
+  ]},
+
+  { id:"coffee-old", emoji:"🏚", title:"老屋・特色咖啡", sub:"空間與氛圍是亮點；多有公休日，出發前先確認。", items:[
+    {n:"窄門咖啡",a:"台南中西區・遠",dist:"far",tags:["🏚 老屋","🌿 氛圍特別","☕ 老派手沖"],note:"優點：藏在約 38 公分寬窄巷盡頭、上 2 樓是 1989 年懷舊空間，老派手沖與起司蛋糕，戲劇感入口超好拍。⚠️週三休、窄巷不適合推車輪椅。"},
+    {n:"PARIPARI apt.",a:"台南中西區・遠",dist:"far",tags:["🏚 老屋","🌿 氛圍特別","🍰 甜點讚"],note:"優點：日式喫茶氛圍，1 樓選物店、2 樓咖啡（需按對講機），美學與拍照為重點。⚠️咖啡偏貴份量小、週四休。"},
+    {n:"蜂大咖啡 Fong Da",a:"台北西門・遠",dist:"far",tags:["🏚 老屋","☕ 老派手沖"],note:"優點：1956 年老字號，復古樸實、手沖咖啡配核桃酥與古早味蛋糕，可外帶咖啡豆。⚠️有 1 小時時間限制。"},
+    {n:"驛前大和咖啡館 Yamato",a:"屏東市・遠",dist:"far",tags:["🏚 老屋","🍰 甜點讚","🛋 座位舒適"],note:"優點：1939 年老建築重生，座位舒適、有冷氣 wifi，蘋果塔與拿鐵受好評，就在火車站旁好抵達。"},
+    {n:"霜空珈琲",a:"嘉義市西區・遠",dist:"far",tags:["🌿 氛圍特別","🍰 甜點讚"],note:"優點：4.4，日式禪意網美空間，每片蛋糕現點現裝飾、水果千層與戚風新鮮，服務佳。⚠️週二三休、使用插座酌收電費。"},
+    {n:"江山藝改所",a:"新竹市東區・近",dist:"near",tags:["🏚 老屋","🌿 氛圍特別","🇹🇼 蔬食"],note:"優點：離你最近！老屋改建的咖啡＋書店＋展演空間，蔬食與法式熱可可受好評，老闆懂咖啡可聊，低消一杯飲料或一本書。⚠️週一休、下午才開。"}
+  ]},
+
+  { id:"coffee-spot", emoji:"☕", title:"景點旁咖啡", sub:"順遊景點時的咖啡停留點。", items:[
+    {n:"大山北月",a:"橫山新竹・近中",dist:"near",tags:["🌿 氛圍特別","🍰 麵食有名"],note:"優點：廢校改建的人氣咖啡餐廳、麵食有名，初夏可賞螢，順遊內灣線。⚠️週一休。"},
+    {n:"卓也小屋",a:"三義・中",dist:"mid",tags:["🌿 氛圍特別","🌍 藍染 DIY"],note:"優點：藍染主題園區＋咖啡＋蔬食，可體驗藍染 DIY，搭配舊山線 Rail Bike 一起跑。"}
+  ]},
+
+  { id:"town-n", emoji:"🏘", title:"特色小鎮｜北部（桃竹苗）", sub:"離家最近、最適合說走就走。每個小鎮的「🏞特色」標籤可點擊，直接開該鎮代表地標的 Google 地圖。", items:[
+    {n:"苑裡",a:"苗栗・近",dist:"near",tags:[{t:"🏞 藺草編織",q:"苑裡老街"},"🍜 米食","☕ 掀冊店"],note:"特色：藺草編織的故鄉、稻田風景與天下第一蔗。美食：芋頭酥、米食。甜點咖啡：掀冊店（苑裡掀海風）老屋書店咖啡。可順遊山腳國小日式宿舍群。"},
+    {n:"湖口",a:"新竹・近",dist:"near",tags:[{t:"🏞 巴洛克老街",q:"湖口老街"},"🍜 客家小吃"],note:"特色：湖口老街巴洛克紅磚拱廊街屋、三元宮古廟。美食：客家小吃、湯圓。騎樓有遮蔭，半天逛完。"},
+    {n:"楊梅・富岡",a:"桃園・近",dist:"near",tags:[{t:"🏞 富岡老街",q:"富岡老街 楊梅"},"🚂 鐵道","☕ 麥Mai"],note:"特色：富岡老街與火車站、鐵道風情。美食：在地麵食。甜點咖啡：麥Mai 珈琲（自家烘焙、日系空間，4.9）。"},
+    {n:"三義",a:"苗栗・中",dist:"mid",tags:[{t:"🏞 木雕",q:"勝興車站"},"🍜 客家菜","☕ 卓也小屋"],note:"特色：木雕小鎮＋勝興車站舊山線鐵道。美食：客家菜、ㄚ箱寶。甜點咖啡：卓也小屋（藍染＋蔬食咖啡）、Walk Cloud 漫步雲端。"},
+    {n:"南庄",a:"苗栗・中",dist:"mid",tags:[{t:"🏞 客家山城",q:"南庄老街"},"🍜 桂花巷","☕ 山行玫瑰"],note:"特色：客家山城、桂花巷、老郵局。美食：桂花釀、客家小炒、丈母娘豆干。甜點咖啡：山行玫瑰景觀咖啡、老寮。可配蓬萊溪步道。"},
+    {n:"北埔",a:"新竹・中",dist:"mid",tags:[{t:"🏞 古蹟聚落",q:"北埔老街"},"🍜 擂茶","🍰 柿餅"],note:"特色：清代客家聚落，金廣福、天水堂、姜阿新洋樓密集。美食：客家擂茶、粄條。甜點：柿餅、水井茶堂。"},
+    {n:"關西",a:"新竹・中",dist:"mid",tags:[{t:"🏞 仙草故鄉",q:"關西石店子老街"},"🍜 仙草雞","☕ 石店子書店"],note:"特色：仙草的故鄉、石店子老街文青聚落。美食：仙草雞、ㄤ咕麵。甜點咖啡：石店子 69 有機書店（以書換書）。可順遊馬武督。"},
+    {n:"峨眉",a:"新竹・中",dist:"mid",tags:[{t:"🏞 湖光山色",q:"峨眉湖"},"🍜 茶點","🍞 野山田工坊"],note:"特色：峨眉湖環湖、富興老茶廠、彌勒大佛。美食：擂茶、東方美人茶。甜點：野山田工坊（老教堂柴燒麵包）。"},
+    {n:"新埔",a:"新竹・中",dist:"mid",tags:[{t:"🏞 宗祠聚落",q:"新埔老街"},"🍜 粄條","🍰 柿餅"],note:"特色：宗祠家廟密集的客家小鎮、九降風柿餅。美食：新埔粄條、客家菜。甜點：味衛佳柿餅（秋季曬柿最美）。"},
+    {n:"龍潭",a:"桃園・中",dist:"mid",tags:[{t:"🏞 三坑老街",q:"三坑老街"},"🍜 客家菜","🌊 石門水庫"],note:"特色：三坑老街（黑白洗、永福宮）、石門水庫、客家文化館。美食：石門活魚、客家菜。甜點咖啡：周邊單車道與埤塘景觀小店。"},
+    {n:"大溪",a:"桃園・中遠",dist:"mid",tags:[{t:"🏞 巴洛克老街",q:"大溪老街"},"🍜 豆干","☕ 秋旭"],note:"特色：巴洛克立面老街、木藝文化、大漢溪河谷。美食：大溪豆干、豆花、月光餅。甜點咖啡：秋旭老屋咖啡。可串大溪木藝博物館。"},
+    {n:"公館",a:"苗栗・中",dist:"mid",tags:[{t:"🏞 紅棗故鄉",q:"公館鄉 苗栗"},"🍜 福菜","🍰 紅棗"],note:"特色：台灣紅棗主產地、福菜故鄉、農村風景。美食：福菜、芋頭。甜點：棗莊與紅棗加工品；7–8 月可採紅棗。"},
+    {n:"銅鑼",a:"苗栗・中",dist:"mid",tags:[{t:"🏞 杭菊花海",q:"銅鑼杭菊 苗栗"},"🍜 客家菜","🍵 茶"],note:"特色：秋季杭菊花海、客家文化園區、桐花。美食：客家菜。甜點：菊花茶、客家麻糬。"}
+  ]},
+
+  { id:"town-c", emoji:"🏘", title:"特色小鎮｜中部（中彰投雲）", sub:"多為一日遊或過夜行程。「🏞特色」標籤可點擊開地圖。", items:[
+    {n:"鹿港",a:"彰化・遠",dist:"far",tags:[{t:"🏞 古蹟天堂",q:"鹿港老街"},"🍜 小吃","🍰 糕餅"],note:"特色：龍山寺、天后宮、摸乳巷等密集古蹟。美食：蚵仔煎、蝦猴、麵線糊。甜點：玉珍齋鳳眼糕、牛舌餅。可串台灣玻璃館。"},
+    {n:"田中",a:"彰化・遠",dist:"far",tags:[{t:"🏞 小鎮散步",q:"田中老街 彰化"},"🍜 麵食","🏮 田中窯"],note:"特色：田中老街、稻田、八卦山脈登山步道口。美食：鎮上麵食、肉圓。手作：田中窯（陶藝、窯烤）。"},
+    {n:"西螺",a:"雲林・遠",dist:"far",tags:[{t:"🏞 西螺大橋",q:"西螺大橋"},"🍜 醬油","🏮 延平老街"],note:"特色：紅色西螺大橋、醬油釀造故鄉、延平老街。美食：西螺醬油、丸莊醬油觀光工廠、九層粿。"},
+    {n:"北港",a:"雲林・遠",dist:"far",tags:[{t:"🏞 朝天宮",q:"北港朝天宮"},"🍜 小吃","🍰 傳統糕餅"],note:"特色：北港朝天宮（媽祖信仰中心）、老街。美食：鴨肉羹、煎盤粿。甜點：日香珍、傳統大餅與麻油。"},
+    {n:"集集",a:"南投・遠",dist:"far",tags:[{t:"🏞 綠色隧道",q:"集集綠色隧道"},"🚂 集集線","🍌 香蕉"],note:"特色：集集綠色隧道、集集車站、香蕉故鄉、火車鐵道。美食：香蕉料理。可騎單車遊綠色隧道。"},
+    {n:"竹山",a:"南投・遠",dist:"far",tags:[{t:"🏞 竹藝",q:"竹山天空之橋"},"🍜 番薯","🌉 天空之橋"],note:"特色：竹藝之鄉、紫南宮、太極峽谷天空之橋。美食：竹筒飯、番薯。特色店：不少老屋改建的設計小店。"},
+    {n:"新社",a:"台中・遠",dist:"far",tags:[{t:"🏞 山城花海",q:"新社花海 台中"},"🍄 香菇","☕ 莊園咖啡"],note:"特色：新社花海（秋）、山城田園。美食：香菇、菇類料理。甜點咖啡：森林系莊園咖啡與景觀餐廳。"},
+    {n:"清水・梧棲",a:"台中・遠",dist:"far",tags:[{t:"🏞 海線文化",q:"清水眷村文化園區"},"🍜 米糕","🌊 高美濕地"],note:"特色：清水眷村文化園區、高美濕地、海線老車站。美食：清水米糕、肉圓、王塔米糕。"}
+  ]},
+
+  { id:"town-s", emoji:"🏘", title:"特色小鎮｜南部（嘉南高屏）", sub:"適合安排過夜的深度小旅行。「🏞特色」標籤可點擊開地圖。", items:[
+    {n:"鹽水",a:"台南・遠",dist:"far",tags:[{t:"🏞 月津港",q:"月津港 鹽水"},"🍜 意麵","🏮 八角樓"],note:"特色：月津港（元宵蜂炮與燈節）、八角樓、老街。美食：鹽水意麵、豆簽羹。漫步老街很有味道。"},
+    {n:"新化",a:"台南・遠",dist:"far",tags:[{t:"🏞 老街",q:"新化老街"},"🍠 地瓜","🏯 武德殿"],note:"特色：新化老街巴洛克街屋、武德殿、地瓜故鄉。美食：地瓜、葉麥克炸雞、米糕。"},
+    {n:"菁寮",a:"台南・遠",dist:"far",tags:[{t:"🏞 無米樂",q:"菁寮老街 後壁"},"🍚 稻米","🏮 老聚落"],note:"特色：《無米樂》的故鄉、後壁稻田與老聚落、嫁妝老街。美食：割稻飯、在地米。步調極慢、很適合放空散步。"},
+    {n:"旗山",a:"高雄・遠",dist:"far",tags:[{t:"🏞 巴洛克老街",q:"旗山老街"},"🍌 香蕉","🍧 枝仔冰"],note:"特色：香蕉故鄉、旗山老街巴洛克亭仔腳、舊火車站。美食：香蕉料理。甜點：常美冰店枝仔冰、香蕉蛋糕。"},
+    {n:"美濃",a:"高雄・遠",dist:"far",tags:[{t:"🏞 客家小鎮",q:"美濃 高雄"},"🍜 粄條","☂ 油紙傘"],note:"特色：客家文化、油紙傘、菸樓、湖光山色。美食：美濃粄條、客家菜、擂茶。可騎單車遊田園。"},
+    {n:"東港",a:"屏東・遠",dist:"far",tags:[{t:"🏞 漁港",q:"東港 屏東"},"🐟 黑鮪魚","🏮 東隆宮"],note:"特色：東港漁港、東隆宮（三年一科燒王船）、華僑市場。美食：黑鮪魚、櫻花蝦、雙糕潤。可順遊小琉球。"},
+    {n:"竹田",a:"屏東・遠",dist:"far",tags:[{t:"🏞 日式車站",q:"竹田驛園"},"🚂 鐵道","🍜 客庄"],note:"特色：竹田驛園（日式老火車站）、安靜的客家庄、池上一郎博士文庫。步調慢、人少好拍。"}
+  ]},
+
+  { id:"town-e", emoji:"🏘", title:"特色小鎮｜東部（宜花東）", sub:"慢步調、好風景，適合過夜深度遊。「🏞特色」標籤可點擊開地圖。", items:[
+    {n:"頭城",a:"宜蘭・遠",dist:"far",tags:[{t:"🏞 開蘭第一城",q:"頭城老街 宜蘭"},"🌊 烏石港","🏛 蘭陽博物館"],note:"特色：頭城老街（開蘭第一城）、烏石港、外澳沙灘。美食：海鮮、小吃。可串蘭陽博物館。"},
+    {n:"羅東・冬山",a:"宜蘭・遠",dist:"far",tags:[{t:"🏞 林業文化",q:"羅東林業文化園區"},"🍜 夜市","☕ 農場咖啡"],note:"特色：羅東林業文化園區、冬山河、田園農場。美食：羅東夜市（包心粉圓、肉羹）。甜點咖啡：周邊休閒農場與景觀咖啡。"},
+    {n:"池上",a:"台東・遠",dist:"far",tags:[{t:"🏞 稻浪",q:"伯朗大道 池上"},"🍚 池上飯包","🚴 伯朗大道"],note:"特色：伯朗大道、金城武樹、縱谷稻浪、大坡池。美食：池上飯包、米食。秋收與春耕時節風景最美。"},
+    {n:"關山",a:"台東・遠",dist:"far",tags:[{t:"🏞 環鎮單車道",q:"關山環鎮自行車道"},"🍚 便當","🌾 縱谷"],note:"特色：全台首座環鎮自行車道、親水公園、縱谷田園。美食：關山便當、池上米。很適合帶小孩騎車。"}
+  ]},
+
+  { id:"food-salty-tcm", emoji:"🍜", title:"鹹食｜桃竹苗（離家近）", sub:"米粉、潤餅、鴨香飯、麵線等正餐鹹點。已避開高人氣但評價偏低的觀光店。點店名開地圖。", items:[
+    {n:"阿城號米粉",a:"新竹城隍廟・近",dist:"near",tags:["🍜 炒米粉","🥣 貢丸湯","👵 三代老店"],note:"優點：城隍廟一帶最受好評的米粉貢丸，家族三代經營、炒米粉鹹香溫潤、貢丸湯鮮。⚠️用餐時段需併桌、空間擁擠。"},
+    {n:"郭家元祖潤餅",a:"新竹城隍廟・近",dist:"near",tags:["🌯 潤餅","💰 銅板美食"],note:"優點：城隍廟前排隊名攤，花生、豆芽、肉丁裹薄餅像台式潤餅捲，一捲約 35 元 CP 值極高、口味穩定。⚠️常要排隊。"},
+    {n:"廟口鴨香飯",a:"新竹城隍廟・近",dist:"near",tags:["🍚 鴨香飯","🥢 在地必吃"],note:"優點：新竹城隍廟代表性小吃之一，鴨油拌飯香氣足、滷味與鴨肉受在地人喜愛。建議避開正中午尖峰。"},
+    {n:"頭份蚵仔麵線・在地麵攤",a:"苗栗頭份・近",dist:"near",tags:["🍜 麵線","🥢 銅板"],note:"優點：頭份市區巷弄麵線與小吃聚集，距竹南極近，是在地人日常早午餐。建議挑人潮穩定、現煮的攤位。"}
+  ]},
+
+  { id:"food-salty-tw", emoji:"🍢", title:"鹹食｜全台經典小吃地圖", sub:"出遊到各地時，認明該地的代表鹹食小吃。點店名／地名開地圖。", items:[
+    {n:"度小月擔仔麵",a:"台南・遠",dist:"far",tags:["🍜 擔仔麵","👵 百年老店"],note:"台南代表：百年擔仔麵創始，肉燥與蝦湯頭是靈魂。台南小吃還有牛肉湯、碗粿、蝦捲、鹹粥。"},
+    {n:"阿章蚵仔煎・鹿港小吃",a:"彰化鹿港・遠",dist:"far",tags:["🦪 蚵仔煎","🍤 蝦猴"],note:"鹿港代表：蚵仔煎、蝦猴、麵線糊、肉圓。老街周邊攤位密集，邊走邊吃最對味。"},
+    {n:"基隆廟口夜市",a:"基隆・遠",dist:"far",tags:["🌃 夜市","🦪 海鮮"],note:"基隆代表：奠濟宮廟口夜市，鼎邊銼、天婦羅、營養三明治、泡泡冰，海港小吃集大成。"},
+    {n:"嘉義火雞肉飯",a:"嘉義・遠",dist:"far",tags:["🍚 雞肉飯","🥢 在地"],note:"嘉義代表：火雞肉飯（如劉里長、噴水）、砂鍋魚頭、涼麵。林聰明砂鍋魚頭也是名物。"},
+    {n:"彰化肉圓・爌肉飯",a:"彰化市・遠",dist:"far",tags:["🥟 肉圓","🍚 爌肉飯"],note:"彰化代表：彰化肉圓（油炸口感）、爌肉飯、貓鼠麵、北門口肉圓。"},
+    {n:"宜蘭羅東夜市",a:"宜蘭羅東・遠",dist:"far",tags:["🌃 夜市","🍡 包心粉圓"],note:"宜蘭代表：羅東夜市（包心粉圓、肉羹番、龍鳳腿、卜肉），蘭陽小吃一次吃齊。"},
+    {n:"台中第二市場",a:"台中・遠",dist:"far",tags:["🏬 老市場","🍜 在地小吃"],note:"台中代表：第二市場（山河魯肉飯、丁山肉丸、顏記肉包），加上太陽餅、麻薏湯為台中特色。"}
+  ]},
+
+  { id:"food-sweet-tcm", emoji:"🍰", title:"甜食｜桃竹苗（離家近）", sub:"車輪餅、古早味冰、豆花、老餅舖。點店名開地圖。", items:[
+    {n:"小鶖幸車輪餅（東南起家店）",a:"新竹東區・近",dist:"near",tags:["🥮 車輪餅","🍵 抹茶麻糬"],note:"優點：4.4，新竹人氣車輪餅，外皮酥脆、內餡多樣（抹茶麻糬、珍珠卡士達特別），現點現做。⚠️熱門口味常售完、需排隊。"},
+    {n:"好豆味冰沙豆花",a:"新竹東區・近",dist:"near",tags:["🍧 豆花","🥜 花生"],note:"優點：4.3，招牌冰球評價最高，豆花不過甜、花生綿密、可選豆漿底，自助式平價。⚠️配料部分評價普通，主推冰球與豆花本體。"},
+    {n:"冰斗古早味剉冰",a:"新竹東區・近",dist:"near",tags:["🍧 古早味剉冰","👍 4.7 高分"],note:"優點：4.7，老闆親切、用料實在的傳統剉冰，夏天消暑首選。⚠️店休日以 FB 粉絲頁公告為準，去前先查。"},
+    {n:"新復珍竹塹餅",a:"新竹城隍廟・近",dist:"near",tags:["🥮 竹塹餅","👵 百年老店"],note:"優點：百年餅舖，招牌竹塹餅（內含肥肉丁與青蔥的傳統喜餅）是新竹代表伴手。⚠️傳統口味偏油，部分人不習慣；停車不便。"},
+    {n:"慢慢的車輪餅",a:"苗栗市・中",dist:"mid",tags:["🥮 車輪餅","🍵 抹茶"],note:"優點：4.4，南苗市場旁小店，老闆客氣、車輪餅皮酥脆，抹茶與卡士達受好評，限定紫地瓜不過甜。⚠️週二休、座位無，外帶為主。"},
+    {n:"玉珍香（竹南）伴手",a:"苗栗竹南・近",dist:"near",tags:["🍰 糕餅","🎁 伴手禮"],note:"優點：竹南在地糕餅老店，傳統大餅、綠豆椪、蛋黃酥等，逢年過節在地人送禮常見選擇。"}
+  ]},
+
+  { id:"food-sweet-tw", emoji:"🍨", title:"甜食｜全台（依類型）", sub:"出遊各地的甜點地標，含台式老味道、冰品、日式洋菓子。點店名／地名開地圖。", items:[
+    {n:"旗山枝仔冰・香蕉美食",a:"高雄旗山・遠",dist:"far",tags:["🍧 枝仔冰","🍌 香蕉"],note:"冰品：常美冰店枝仔冰、香蕉蛋糕、香蕉清冰，旗山老街亭仔腳邊逛邊吃。"},
+    {n:"連得堂煎餅",a:"台南・遠",dist:"far",tags:["🥠 手工煎餅","👵 百年老店"],note:"台式老味道：台南百年手工煎餅，柴燒鐵模現烤，雞蛋與味噌口味經典，每人限購。"},
+    {n:"舊振南餅店",a:"高雄・遠",dist:"far",tags:["🥮 漢餅","🎁 伴手禮"],note:"台式老味道：百年漢餅老店，綠豆椪、鳳梨酥精緻，是南台灣送禮代表。"},
+    {n:"玉珍齋",a:"彰化鹿港・遠",dist:"far",tags:["🥮 鳳眼糕","👵 百年老店"],note:"台式老味道：鹿港百年糕餅，鳳眼糕、牛舌餅、綠豆糕，old-school 古早味。"},
+    {n:"九份芋圓",a:"新北九份・遠",dist:"far",tags:["🍡 芋圓","🌄 海景"],note:"冰品：九份山城手工芋圓，邊吃邊看基隆山海景，冷熱皆宜。"},
+    {n:"豐仁冰",a:"台中・遠",dist:"far",tags:["🍧 古早味冰","💰 銅板"],note:"冰品：台中一中街古早味，酸梅冰加鳳梨與大紅豆，銅板價、夏天必吃。"},
+    {n:"宮原眼科・日出",a:"台中・遠",dist:"far",tags:["🍦 冰淇淋","🎁 伴手禮","🏛 老建築"],note:"洋菓子：舊眼科醫院改建的華麗甜點空間，冰淇淋口味多、鳳梨酥與乳酪蛋糕為伴手，建築本身就是景點。"},
+    {n:"亞尼克菓子工房",a:"新北萬里・遠",dist:"far",tags:["🍰 生乳捲","🎁 伴手禮"],note:"洋菓子：生乳捲起家的人氣品牌，多分店；萬里總店有 DIY，北海岸出遊可順道。"},
+    {n:"花蓮提拉米蘇・伴手",a:"花蓮・遠",dist:"far",tags:["🍰 提拉米蘇","🎁 伴手禮"],note:"洋菓子：花蓮以提拉米蘇與奶油酥條聞名，東部旅行帶得走。"}
+  ]},
+
+  { id:"food-other", emoji:"🧺", title:"其他｜獨立書店・伴手・選物", sub:"非甜非鹹、難歸到甜鹹的歸在這裡：獨立書店（藝文午後）、伴手禮與選物。點店名開地圖。", items:[
+    {n:"福源花生醬",a:"新竹東區・近",dist:"near",tags:["🥜 花生醬","🎁 伴手禮"],note:"伴手：超過一甲子的花生醬老店，顆粒花生醬香濃綿密、抹現烤吐司一絕，也有果醬與古早味零嘴。⚠️品項多，計價請看清楚。"},
+    {n:"想，做書店",a:"新竹中央市場・近",dist:"near",tags:[{t:"🏚 市場裡的書店",q:"想做書店 新竹中央市場"},"📚 選書佳","🛋 有冷氣"],note:"書店：4.9，藏在中央市場裡的明亮小書店，選書涵蓋文學、性別、地方創生與繪本，也有二手書與在地刊物《貢丸湯》。⚠️僅週五至週日下午營業。"},
+    {n:"或者書店 OR",a:"竹北新瓦屋・近",dist:"near",tags:[{t:"📚 書店＋藝廊",q:"或者書店 竹北"},"🌱 蔬食","🛋 座位舒適"],note:"書店：新瓦屋客家聚落裡的書店＋咖啡＋藝廊，選書有質感、二樓窗邊看老屋。⚠️週一休。"},
+    {n:"江山藝改所",a:"新竹東區・近",dist:"near",tags:[{t:"🏚 老屋書店咖啡",q:"江山藝改所 新竹"},"🌱 蔬食","🎤 展演"],note:"書店：老屋改建的咖啡＋書店＋展演空間，蔬食與熱可可受好評，老闆懂咖啡。⚠️週一休、下午才開。"},
+    {n:"掀冊店（苑裡掀海風）",a:"苗栗苑裡・近",dist:"near",tags:[{t:"🏚 在地書店",q:"掀冊店 苑裡"},"🌾 地方創生","🌿 氛圍特別"],note:"書店：4.7，苑裡老屋改建的獨立書店＋咖啡，主打在地文史、幫小農賣米茶，常辦展。⚠️平日多休（約週五至週一營業）。"},
+    {n:"軒田書集",a:"苗栗市・中",dist:"mid",tags:[{t:"🏚 紅磚老屋",q:"軒田書集 苗栗"},"📖 二手書","🐶 寵物友善"],note:"書店：苗栗高中對面的紅磚老屋二手書店，安靜閱讀、二手書價格實惠、店員親切。⚠️週一、四休、午後才開。"},
+    {n:"或者工藝櫥窗・新瓦屋",a:"新竹竹北・近",dist:"near",tags:["🎨 工藝","📚 選物"],note:"選物：「或者」品牌的工藝選物與展覽空間，與或者書店同在新瓦屋，可一起逛。"},
+    {n:"舊香居",a:"台北大安・遠",dist:"far",tags:["📖 古書","🏛 經典"],note:"書店：台北知名古書店，珍本舊書與文人風骨，愛書人朝聖地。"},
+    {n:"洪雅書房",a:"嘉義市・遠",dist:"far",tags:["🌾 社運","📚 在地"],note:"書店：嘉義老牌獨立書店，關注農業、土地與社會議題，常辦講座。"},
+    {n:"三餘書店",a:"高雄新興・遠",dist:"far",tags:["🏚 老屋","🎤 講座"],note:"書店：高雄代表性獨立書店，老屋三層樓、選書與文學活動豐富，有咖啡。"},
+    {n:"晃晃書店",a:"台東市・遠",dist:"far",tags:["🐱 有貓","🛏 換宿"],note:"書店：台東知名獨立書店，有店貓、可換宿，背包客與愛書人聚集地。"},
+    {n:"虎尾厝沙龍",a:"雲林虎尾・遠",dist:"far",tags:["🏯 古蹟","🌿 氛圍特別"],note:"書店：日式洋風老宅改建的書店沙龍，生態人文選書，空間極美。"},
+    {n:"小間書菜",a:"宜蘭員山・遠",dist:"far",tags:["🌾 以菜換書","🥬 友善小農"],note:"書店：深溝村的書店，可用自種蔬菜換書，結合友善耕作與閱讀，獨一無二。"}
+  ]},
+
+  { id:"forest-n", emoji:"🌲", title:"國家森林遊樂區｜北部", sub:"親子友善、好到達。開放時間與門票以林業署『台灣山林悠遊網』為準。點名稱開地圖。", items:[
+    {n:"太平山國家森林遊樂區",a:"宜蘭大同・遠",dist:"far",tags:[{t:"🌲 雲海蹦蹦車",q:"太平山國家森林遊樂區"},"♨ 鳩之澤溫泉","🚠 蹦蹦車"],note:"難度：園內步道多為①輕鬆（見晴懷古步道、翠峰湖環山步道）。注意：山區濕滑多霧、日夜溫差大，需防滑鞋與保暖；蹦蹦車與翠峰湖需留意班次。交通：自行開車為主，台 7 甲線轉宜專一線；大眾運輸可搭『太平山國家森林遊樂區假日專車』。停車：中央階梯、太平山莊周邊有停車場，旺季易滿、建議早到。"},
+    {n:"觀霧國家森林遊樂區",a:"新竹／苗栗・遠",dist:"far",tags:[{t:"🌲 雲霧檜木林",q:"觀霧國家森林遊樂區"},"🌳 巨木步道","🦋 生態"],note:"難度：園內步道①～②（檜山巨木群步道來回約 4 小時稍有坡度）。注意：大鹿林道路況與管制需先查，雲霧多、午後易起霧。交通：須自行開車，雪見／觀霧山區道路較長且彎，注意行車；無大眾運輸直達。停車：遊客中心旁有停車場。⚠️ 這裡也是大霸尖山登山口方向。"},
+    {n:"內洞國家森林遊樂區",a:"新北烏來・遠",dist:"far",tags:[{t:"🌲 瀑布森林浴",q:"內洞國家森林遊樂區"},"💧 信賢瀑布","👶 親子友善"],note:"難度：①輕鬆，觀瀑步道平緩好走、嬰兒車友善。注意：潮濕多苔注意防滑，雨後步道可能封閉。交通：自行開車經烏來；假日烏來常塞車，建議早到。停車：園區外與烏來老街周邊停車場，需步行進入。"},
+    {n:"滿月圓國家森林遊樂區",a:"新北三峽・遠",dist:"far",tags:[{t:"🌲 楓紅瀑布",q:"滿月圓國家森林遊樂區"},"💧 瀑布","🍁 秋楓"],note:"難度：②，至滿月圓瀑布、處女瀑布有階梯與緩坡。注意：步道濕滑、需好走的鞋。交通：自行開車為主，停車後需走一段聯外步道才到收費站。停車：園區外停車場（距入口約 1.5 公里，需步行或接駁）。"},
+    {n:"東眼山國家森林遊樂區",a:"桃園復興・遠",dist:"far",tags:[{t:"🌲 杉林避暑",q:"東眼山國家森林遊樂區"},"🌳 親子","🦌 生態"],note:"難度：①～②，自導式步道與森林浴步道，親子可走。注意：山路彎多、午後起霧；可能遇獼猴勿餵食。交通：自行開車經台 7 線轉北橫，無大眾運輸直達。停車：遊客中心旁停車場。"}
+  ]},
+
+  { id:"forest-c", emoji:"🌲", title:"國家森林遊樂區｜中部", sub:"中部高山森林，避暑與賞景首選。點名稱開地圖。", items:[
+    {n:"奧萬大國家森林遊樂區",a:"南投仁愛・遠",dist:"far",tags:[{t:"🍁 楓葉故鄉",q:"奧萬大國家森林遊樂區"},"💧 瀑布","🌉 吊橋"],note:"難度：①～②，園區步道平緩，吊橋與賞楓步道親子可行。注意：秋季賞楓人潮多、楓況逐年不同；園內常有施工路段請看公告。交通：自行開車經埔里、台 14 線轉投 83；無大眾運輸直達。停車：服務中心旁停車場，旺季滿載需停下方步行約 20 分鐘。"},
+    {n:"八仙山國家森林遊樂區",a:"台中和平・遠",dist:"far",tags:[{t:"🌲 谷關森林",q:"八仙山國家森林遊樂區"},"💧 溪流","👶 親子步道"],note:"難度：園內①～②（八仙山主峰另為④進階，見百岳區）。注意：靠近谷關、夏季注意雷陣雨。交通：自行開車經東勢、台 8 線；可順遊谷關溫泉。停車：園區停車場。"},
+    {n:"大雪山國家森林遊樂區",a:"台中和平・遠",dist:"far",tags:[{t:"🌲 神木賞鳥",q:"大雪山國家森林遊樂區"},"🦅 賞鳥","🌳 神木"],note:"難度：①～③，小神木步道輕鬆、天池與稍來山步道稍有坡度。注意：大雪山林道長約 50 公里、彎多需 1.5 小時以上，務必檢查油料與煞車、注意起霧。交通：須自行開車，無大眾運輸。停車：遊客中心與各步道口有停車格。"},
+    {n:"武陵國家森林遊樂區",a:"台中和平・遠",dist:"far",tags:[{t:"🌲 武陵農場森林",q:"武陵國家森林遊樂區"},"🌸 櫻花","🐟 櫻花鉤吻鮭"],note:"難度：①～②，桃山瀑布步道來回約 4.3 公里緩坡。注意：櫻花季（2 月）採總量管制、需預約接駁與停車；這裡也是雪山登山口所在。交通：自行開車經宜蘭或梨山，櫻花季有管制；可搭國光客運。停車：武陵農場有停車場，櫻花季須預約。"}
+  ]},
+
+  { id:"forest-s", emoji:"🌲", title:"國家森林遊樂區｜南部", sub:"南台灣森林與生態。點名稱開地圖。", items:[
+    {n:"阿里山國家森林遊樂區",a:"嘉義・遠",dist:"far",tags:[{t:"🌲 日出雲海",q:"阿里山國家森林遊樂區"},"🚂 森林小火車","🌅 日出"],note:"難度：①，園內步道與棧道平緩、親子與長輩皆可；巨木群棧道好走。注意：海拔約 2200m 較冷需保暖、日出需搭乘祝山線小火車（另購票、清晨）。交通：自行開車經台 18 線（約 2-3 小時山路），或嘉義搭台灣好行／阿里山客運。停車：第一、第二停車場，旺季易滿。"},
+    {n:"墾丁國家森林遊樂區",a:"屏東恆春・遠",dist:"far",tags:[{t:"🌲 珊瑚礁森林",q:"墾丁國家森林遊樂區"},"🌴 鐘乳石","👶 親子"],note:"難度：①～②，珊瑚礁地形步道、有些狹窄岩縫（一線天）。注意：南部夏季炎熱、防曬補水。交通：自行開車經恆春，或墾丁街車。停車：園區停車場。"},
+    {n:"雙流國家森林遊樂區",a:"屏東獅子・遠",dist:"far",tags:[{t:"💧 瀑布森林浴",q:"雙流國家森林遊樂區"},"🦋 蝴蝶","🦌 獼猴"],note:"難度：①～②，雙流瀑布步道平緩、親水好走，可看蝴蝶與獼猴。注意：瀑布段曾因施工封閉，去前先確認；雨後注意溪水暴漲。交通：自行開車經南迴公路台 9 線。停車：園區停車場。"}
+  ]},
+
+  { id:"forest-e", emoji:"🌲", title:"國家森林遊樂區｜東部", sub:"東部森林秘境。點名稱開地圖。", items:[
+    {n:"知本國家森林遊樂區",a:"台東卑南・遠",dist:"far",tags:[{t:"🌲 熱帶森林",q:"知本國家森林遊樂區"},"🌴 榕樹巨木","♨ 知本溫泉"],note:"難度：①～②，好漢坡較陡（約 800 階），其餘步道平緩。注意：低海拔較熱、夏季注意防蚊與午後雷雨。交通：自行開車經知本溫泉區。停車：園區入口停車場，可順遊知本溫泉。"},
+    {n:"池南國家森林遊樂區",a:"花蓮壽豐・遠",dist:"far",tags:[{t:"🌲 鯉魚潭林業",q:"池南國家森林遊樂區"},"🚞 林業文化","🏞 鯉魚潭"],note:"難度：①～②，林業展示與森林步道，可結合鯉魚潭。注意：步道部分較陡、注意防蚊。交通：自行開車經鯉魚潭。停車：園區停車場。"},
+    {n:"富源（蝴蝶谷）國家森林遊樂區",a:"花蓮瑞穗・遠",dist:"far",tags:[{t:"🦋 蝴蝶樟樹林",q:"富源國家森林遊樂區"},"💧 瀑布","🌳 樟樹"],note:"難度：①～②，全台最大樟樹林、蝴蝶谷瀑布與吊橋。注意：賞蝶季春夏、注意濕滑。交通：自行開車經台 9 線瑞穗。停車：園區停車場。"}
+  ]},
+
+  { id:"baiyue-small", emoji:"🥾", title:"小百岳（精選・北中南東）", sub:"小百岳＝全台 100 座郊山名峰，半天～一天可登。難度①輕鬆～③中高。出發前查最新路況（台灣山林悠遊網／各登山社群）。點名稱開地圖。", items:[
+    {n:"七星山（主峰）",a:"台北陽明山・遠",dist:"far",tags:[{t:"🥾 北部最高",q:"七星山主峰登山口 小油坑"},"🌋 火山地形","🚌 大眾運輸佳"],note:"難度：②，小油坑登山口至主峰約 1.6km、來回約 2 小時，前 400m 較陡。注意：硫磺噴氣口空氣不佳勿久留、芒草季風大、午後易起霧。交通：大眾運輸極方便，可搭小 15、108 遊園公車到小油坑。停車：小油坑遊客服務站有停車場（假日易滿）。"},
+    {n:"土庫岳（更寮古道）",a:"台北南港・遠",dist:"far",tags:[{t:"🥾 14 號小百岳",q:"更寮古道親山步道 南港"},"🪜 階梯","🚇 捷運可達"],note:"難度：②，多為石階稍累、來回約 2 小時，登頂視野佳。注意：天熱階梯曬、補水。交通：捷運昆陽站轉公車 5 號到舊莊，步行接更寮古道；大眾運輸友善。停車：登山口附近（九莊街一帶）有少量路邊停車。"},
+    {n:"十八尖山",a:"新竹市・近",dist:"near",tags:[{t:"🥾 市區森林",q:"十八尖山"},"👶 親子","🚻 設施齊全"],note:"難度：①最輕鬆，鋪面平整、有飲水機與廁所，約 2 小時。注意：假日人多、清晨傍晚最舒服。交通：新竹市區，開車或騎車皆可，距竹南約 30 分。停車：博愛街、寶山路登山口周邊有停車格。"},
+    {n:"火炎山",a:"苗栗三義・中",dist:"mid",tags:[{t:"🥾 惡地峽谷",q:"火炎山登山步道 三義"},"🏜 裸露地形","☀ 需遮陽"],note:"難度：②～③，環線約 3-4 小時、峽谷地貌壯觀。注意：稜線裸露無遮蔽、夏天酷熱，需大量水與防曬、避免雨後（地質鬆軟危險）。交通：自行開車經三義／苑裡，國道 1 號三義交流道下。停車：登山口（大安溪橋旁、三義建中國小一帶）有空地停車。"},
+    {n:"十二寮山（峨眉）",a:"新竹峨眉・中",dist:"mid",tags:[{t:"🥾 峨眉湖畔",q:"十二寮山步道 峨眉"},"🏞 湖景","🌿 健行"],note:"難度：②，可結合峨眉湖環湖。注意：⚠️ 目前 1 號口與 6-7 號口封閉、僅 2-5 號口可走（約 1.5 小時），出發前再確認。交通：自行開車經竹 49 鄉道，距竹南約 40 分。停車：峨眉湖、十二寮休閒農業區周邊有停車場。"},
+    {n:"大坑頭嵙山（台中大坑）",a:"台中北屯・遠",dist:"far",tags:[{t:"🥾 台中後花園",q:"大坑風景區 頭嵙山登山口"},"🪜 多級步道","🌳 森林"],note:"難度：②～④，大坑步道群分 1-10 號難度不一（4 號最陡需拉繩、9-10 號親子）。注意：依體力選步道號碼、天熱補水。交通：自行開車經台中市區往大坑，公車可達風景區。停車：各登山口（如 4 號、5 號）有收費停車場。"},
+    {n:"旗尾山（旗山）",a:"高雄旗山・遠",dist:"far",tags:[{t:"🥾 旗山地標",q:"旗尾山登山口 旗山"},"🌅 展望佳","🪜 階梯"],note:"難度：③，連續階梯陡上、來回約 3 小時，稜線展望極佳。注意：曝曬無遮蔭、需早上去並備足水。交通：自行開車經旗山老街，可順遊旗山。停車：登山口（旗甲路一帶）有空地停車。"},
+    {n:"鯉魚山（花蓮壽豐）",a:"花蓮壽豐・遠",dist:"far",tags:[{t:"🥾 鯉魚潭旁",q:"鯉魚山步道 花蓮鯉魚潭"},"🏞 潭景","👶 親子"],note:"難度：①～②，鯉魚潭畔的親山步道，路況良好、適合親子，登頂俯瞰鯉魚潭。注意：低海拔較熱、防蚊。交通：自行開車經鯉魚潭風景區。停車：鯉魚潭潭北、潭南停車場。"}
+  ]},
+
+  { id:"baiyue-big", emoji:"🏔", title:"百岳（經典熱門路線）", sub:"百岳＝海拔 3000m 以上名山。多需體能、裝備與事前申請。🔴 入山證（警政署）／入園證（國家公園）／山屋床位缺一不可，務必先上『臺灣國家公園入園入山線上申請服務網』查證。點名稱開地圖。", items:[
+    {n:"合歡山主峰",a:"南投／花蓮・遠",dist:"far",tags:[{t:"🏔 最親民百岳",q:"合歡山主峰登山口 武嶺"},"🚗 公路可達","🌅 雲海日出"],note:"難度：②（百岳裡最簡單），登山口在台 14 甲線旁、來回約 2 小時緩坡水泥路。注意：海拔 3417m 仍會高山反應、紫外線強、午後易變天，需保暖防曬。交通：自行開車到武嶺／合歡山遊客中心，或搭豐原客運 6658A。停車：武嶺、昆陽、合歡山莊旁停車場（假日與雪季爆滿、常需走一段）。免申請、無須入園證，最適合入門。"},
+    {n:"合歡山東峰",a:"南投／花蓮・遠",dist:"far",tags:[{t:"🏔 入門百岳",q:"合歡山東峰登山口"},"🌸 高山杜鵑","🌅 展望"],note:"難度：②，從滑雪山莊旁起登、來回約 1.5-2 小時陡階。注意：同主峰，高海拔保暖防曬、階梯較陡。交通／停車：同合歡山主峰一帶。免申請。"},
+    {n:"石門山",a:"南投／花蓮・遠",dist:"far",tags:[{t:"🏔 最易百岳",q:"石門山登山口 合歡山"},"👶 最輕鬆","🌅 雲海"],note:"難度：①（百岳最輕鬆之一），來回僅約 1 小時、緩坡好走，親子體驗高山的入門首選。注意：仍是 3237m、注意高度與天氣。交通：台 14 甲線克難關旁。停車：路邊停車格，假日易滿。免申請。"},
+    {n:"雪山主峰（東峰線）",a:"台中／武陵・遠",dist:"far",tags:[{t:"🏔 台灣第二高峰",q:"雪山登山口 武陵"},"🛏 需山屋","🔴 需申請"],note:"難度：④進階，3886m、多為 2 天 1 夜（七卡山莊／三六九山莊）。注意：🔴 需雪霸入園證（線上申請、熱門抽籤）＋入山證＋山屋床位；需高山經驗與裝備、雪季需冰爪雪攀技術。交通：自行開車到武陵農場雪山登山口服務站。停車：登山口服務站旁停車場。"},
+    {n:"玉山主峰",a:"南投／嘉義・遠",dist:"far",tags:[{t:"🏔 台灣最高峰",q:"玉山登山口 塔塔加"},"🛏 排雲山莊","🔴 需抽籤"],note:"難度：④進階，3952m、東亞最高，多為 2 天 1 夜宿排雲山莊。注意：🔴 需玉管處入園證（排雲山莊採抽籤、極熱門）＋入山證；塔塔加登山口不開放自用車與機車進入，需從上東埔停車場步行約 2.1km 或搭付費接駁。交通：自行開車到上東埔停車場，轉接駁或步行。停車：上東埔停車場。"},
+    {n:"嘉明湖（向陽山・三叉山）",a:"台東海端・遠",dist:"far",tags:[{t:"🏔 天使的眼淚",q:"向陽國家森林遊樂區 嘉明湖登山口"},"🛏 山屋抽籤","🔴 需申請"],note:"難度：④進階，多為 2 天 1 夜或 3 天（向陽山屋／嘉明湖避難山屋），來回約 26 公里。注意：🔴 需入山證＋山屋床位抽籤（向陽山屋極熱門）；高低差大、需良好體能與裝備。交通：自行開車到向陽國家森林遊樂區登山口。停車：向陽登山口停車場。"},
+    {n:"北大武山",a:"屏東泰武・遠",dist:"far",tags:[{t:"🏔 南台灣屏障",q:"北大武山登山口 泰武"},"🛏 檜谷山莊","🔴 需申請"],note:"難度：④進階，3092m、五嶽之一，多為 2 天 1 夜宿檜谷山莊，來回約 18 公里。注意：🔴 需入山證＋檜谷山莊床位申請；爬升大、雲海與神木著名。交通：自行開車到泰武鄉登山口（舊筏灣／登山口）。停車：登山口附近空地停車。"}
+  ]}
+];
+
+/* ---------- 渲染 ---------- */
+const distLabel={near:["近","b-near"],mid:["中","b-mid"],far:["📍遠","b-far"]};
+const diffLabel={1:["① 輕鬆","b-d1"],2:["② 中等","b-d2"],3:["③ 中高","b-d3"],4:["④ 進階","b-d4"],5:["⑤ 高山","b-d5"]};
+const condLabel={0:["🟢 無須申請","b-c0"],1:["🟡 需付費／裝備／登記","b-c1"],2:["🔴 需入園證＋入山證","b-c2"]};
+const restRE=/(週[一二三四五六日]休|公休|週一休|週二三休|週一二休)/;
+
+function badge(txt,cls){return `<span class="b ${cls}">${txt}</span>`}
+function mapHref(q){return "https://www.google.com/maps/search/?api=1&query="+encodeURIComponent(q.trim())}
+function tagBadge(t){
+  if(typeof t==="string") return badge(t,"b-tag");
+  // object {t:label, q:map query} -> clickable
+  return `<a class="b b-tag b-tap" href="${mapHref(t.q)}" target="_blank" rel="noopener">${t.t} 📍</a>`;
+}
+
+/* 工具：同名正規化 */
+function normName(n){return n.replace(/[（(].*$/,"").replace(/[・·]/g,"").trim()}
+const xref={};      // name -> [{secId}]
+const secMeta={};   // secId -> {title, groupId, emoji}
+
+function renderCard(it,curSecId,idx){
+  const placeId=curSecId+"-"+idx;
+  let badges="";
+  const d=distLabel[it.dist]; if(d) badges+=badge(d[0],d[1]);
+  if(it.diff){const x=diffLabel[it.diff]; badges+=badge(x[0],x[1]);}
+  if(it.cond!==undefined){const c=condLabel[it.cond]; badges+=badge(c[0],c[1]);}
+  if(it.tags){it.tags.forEach(t=>{badges+=tagBadge(t)});}
+  const rest=it.note.match(restRE); if(rest) badges+=badge("🗓 "+rest[0],"b-rest");
+  const star=it.star?` <span class="star-mark">⭐</span>`:"";
+  const distWords=["近","中","遠","近中","中遠"];
+  let loc=(it.a||"").split("・")[0].trim();
+  if(distWords.includes(loc)) loc="";
+  const mapsUrl=mapHref((it.n+" "+loc).trim());
+  // 也出現在其他子類別
+  const others=(xref[normName(it.n)]||[]).filter(r=>r.secId!==curSecId);
+  let xlinks="";
+  if(others.length){
+    const seen={};
+    xlinks=`<div class="xlink">`+others.filter(r=>{if(seen[r.secId])return false;seen[r.secId]=1;return true;})
+      .map(r=>`<a href="#${r.secId}">🔗 也在：${secMeta[r.secId].title.split("｜")[0].split("（")[0]}</a>`).join("")+`</div>`;
+  }
+  // 可搜尋文字（去除標點利於比對）
+  const tagText=(it.tags||[]).map(t=>typeof t==="string"?t:t.t).join(" ");
+  const hay=(it.n+" "+(it.a||"")+" "+it.note+" "+tagText).toLowerCase();
+  return `<div class="card ${it.star?'star':''}" data-pid="${placeId}" data-dist="${it.dist}" data-hay="${hay.replace(/"/g,'')}" data-name="${it.n}">
+    <div class="card-top"><div>
+      <a class="name map-link" href="${mapsUrl}" target="_blank" rel="noopener">${it.n}${star} <span class="pin">📍</span></a>
+      <div class="area">${it.a}</div>
+    </div></div>
+    <div class="note">${it.note}</div>
+    <div class="badges">${badges}</div>
+    ${xlinks}
+    <div class="card-foot">
+      <button class="want-btn" data-pid="${placeId}">🤍 想去</button>
+      <span class="want-who" data-pid-who="${placeId}"></span>
+    </div>
+  </div>`;
+}
+
+function renderLegend(){
+  return `<div class="legend">
+    <h3>難度與前往條件說明</h3>
+    <p><span class="dot">難度</span>　① 輕鬆（鋪面、嬰兒車友善）→ ② 中等 → ③ 中高 → ④ 進階（攀繩／渡溪／長程）→ ⑤ 高山（需 2 天以上、高山經驗）</p>
+    <p><span class="dot">🟢 無須申請</span>：直接前往。</p>
+    <p><span class="dot">🟡 需付費／裝備／登記</span>：清潔費或停車費、需攀繩渡溪好鞋、或建議事先登記行程／預約接駁。</p>
+    <p><span class="dot">🔴 需證件</span>：國家公園高山需「<b>入園證</b>」（線上申請，熱門路線抽籤）＋「<b>入山證</b>」（警政署），部分還需預約山屋床位。</p>
+  </div>`;
+}
+
+const groups=[
+  {id:"g-nature", emoji:"🌳", name:"戶外自然",  secs:["water","waterpark","forest","hike"]},
+  {id:"g-animal", emoji:"🐾", name:"動物・農場", secs:["animal","pick","eco"]},
+  {id:"g-learn",  emoji:"🏛", name:"室內・知識", secs:["museum","factory","indoor"]},
+  {id:"g-culture",emoji:"🏮", name:"文化・懷舊", secs:["rail","street"]},
+  {id:"g-scenery",emoji:"🌅", name:"景觀・休閒", secs:["sky","flower","coast","night"]},
+  {id:"g-coffee", emoji:"☕", name:"咖啡主題",  secs:["coffee-tcm","coffee-spec","coffee-origin","coffee-view","coffee-old","coffee-spot"]},
+  {id:"g-town",   emoji:"🏘", name:"特色小鎮",  secs:["town-n","town-c","town-s","town-e"]},
+  {id:"g-food",   emoji:"🍴", name:"在地美食",  secs:["food-salty-tcm","food-salty-tw","food-sweet-tcm","food-sweet-tw","food-other"]},
+  {id:"g-mtn",    emoji:"⛰", name:"國森・登山",  secs:["forest-n","forest-c","forest-s","forest-e","baiyue-small","baiyue-big"]}
+];
+
+const app=document.getElementById("app");
+const groupNav=document.getElementById("groupNav");
+const secById={}; sections.forEach(s=>secById[s.id]=s);
+
+/* 掃描建立同名交叉索引與子類別資訊（groups 已定義） */
+groups.forEach(g=>{
+  g.secs.forEach(id=>{
+    const s=secById[id]; if(!s)return;
+    secMeta[id]={title:s.title,groupId:g.id,emoji:s.emoji};
+    s.items.forEach(it=>{
+      const key=normName(it.n);
+      (xref[key]=xref[key]||[]).push({secId:id});
+    });
+  });
+});
+
+let html="", navHtml="";
+groups.forEach(g=>{
+  navHtml+=`<a class="gchip" href="#${g.id}">${g.emoji} ${g.name}</a>`;
+  let sub="";
+  g.secs.forEach(id=>{const s=secById[id]; if(s) sub+=`<a href="#${s.id}">${s.emoji} ${s.title.split("（")[0].split("｜").pop()}</a>`;});
+  html+=`<div class="group-div" id="${g.id}"><h2>${g.emoji} ${g.name}</h2><div class="subchips">${sub}</div></div>`;
+  g.secs.forEach(id=>{
+    const s=secById[id]; if(!s)return;
+    html+=`<section id="${s.id}" data-group="${g.id}">
+      <div class="sec-head"><span class="emoji">${s.emoji}</span><h2>${s.title}</h2><a class="totop" href="#top">↑ 分類</a></div>
+      ${s.sub?`<div class="sec-sub">${s.sub}</div>`:`<div style="height:8px"></div>`}
+      ${s.legend?renderLegend():""}
+      <div class="grid">${s.items.map((it,idx)=>renderCard(it,s.id,idx)).join("")}</div>
+    </section>`;
+  });
+});
+app.innerHTML=html;
+groupNav.innerHTML=navHtml;
+
+/* ---------- Firebase：想去標註（讀取＋即時同步＋寫入） ---------- */
+let currentWho = "me"; // "me" | "wife"
+const wantState = {}; // placeId -> {me:bool, wife:bool}
+const syncStatus = document.getElementById("syncStatus");
+
+function renderWantUI(){
+  document.querySelectorAll(".want-btn").forEach(btn=>{
+    const pid=btn.dataset.pid;
+    const st=wantState[pid]||{};
+    const mine=!!st[currentWho];
+    btn.classList.toggle("on",mine);
+    btn.innerHTML = mine ? "💛 想去" : "🤍 想去";
+  });
+  document.querySelectorAll(".want-who").forEach(span=>{
+    const pid=span.dataset.pidWho;
+    const st=wantState[pid]||{};
+    const who=[];
+    if(st.me) who.push("🙋我");
+    if(st.wife) who.push("💛老婆");
+    span.textContent = who.length ? who.join(" ")+" 想去" : "";
+  });
+}
+
+// 即時監聽 Firestore，任一裝置更新都會同步反映
+onSnapshot(collection(db,PLACES_COL), snap=>{
+  snap.forEach(docSnap=>{
+    const data=docSnap.data();
+    wantState[docSnap.id] = {
+      me: !!(data.wantToGo||[]).includes("me"),
+      wife: !!(data.wantToGo||[]).includes("wife")
+    };
+  });
+  renderWantUI();
+  syncStatus.textContent = "☁️ 已連接，跨裝置同步中";
+  syncStatus.className = "sync-status ok";
+}, err=>{
+  console.error(err);
+  syncStatus.textContent = "⚠️ 同步連線失敗，想去功能暫時無法使用（其他功能不受影響）";
+  syncStatus.className = "sync-status err";
+});
+
+/* 首次自動初始化：若 Firestore 裡還沒有任何景點資料，把全部 235 筆寫入一次。
+   之後每次開啟網站都只是讀取，不會重複寫入。 */
+async function seedIfEmpty(){
+  try{
+    const snap = await getDocs(collection(db,PLACES_COL));
+    if(!snap.empty) return; // 已有資料，不重複寫入
+    syncStatus.textContent = "☁️ 第一次啟用，正在初始化資料庫…";
+    syncStatus.className = "sync-status";
+    let n=0;
+    for(const sec of sections){
+      for(let idx=0; idx<sec.items.length; idx++){
+        const it=sec.items[idx];
+        const placeId=sec.id+"-"+idx;
+        await setDoc(doc(db,PLACES_COL,placeId), {
+          n: it.n, a: it.a||"", secId: sec.id, wantToGo: []
+        });
+        n++;
+      }
+    }
+    syncStatus.textContent = `☁️ 初始化完成，已建立 ${n} 個地點的同步資料`;
+    syncStatus.className = "sync-status ok";
+  }catch(e){
+    console.error("初始化失敗",e);
+    syncStatus.textContent = "⚠️ 資料庫初始化失敗，想去功能暫時無法使用（其他功能不受影響）";
+    syncStatus.className = "sync-status err";
+  }
+}
+seedIfEmpty();
+
+async function toggleWant(placeId){
+  const st=wantState[placeId]||{me:false,wife:false};
+  const mine=!!st[currentWho];
+  const next={...st,[currentWho]:!mine};
+  const arr=[]; if(next.me)arr.push("me"); if(next.wife)arr.push("wife");
+  wantState[placeId]=next; renderWantUI(); // 先更新畫面（樂觀更新），Firestore 確認後 onSnapshot 會再校正一次
+  try{
+    await setDoc(doc(db,PLACES_COL,placeId), {wantToGo:arr}, {merge:true});
+  }catch(e){
+    console.error("寫入失敗",e);
+    syncStatus.textContent = "⚠️ 標註寫入失敗，請檢查網路後再試一次";
+    syncStatus.className = "sync-status err";
+  }
+}
+
+document.getElementById("app").addEventListener("click",e=>{
+  const btn=e.target.closest(".want-btn");
+  if(!btn) return;
+  toggleWant(btn.dataset.pid);
+});
+
+document.getElementById("whoSwitch").addEventListener("click",e=>{
+  const b=e.target.closest("button[data-who]");
+  if(!b) return;
+  [...document.getElementById("whoSwitch").children].forEach(c=>c.classList.remove("active"));
+  b.classList.add("active");
+  currentWho=b.dataset.who;
+  renderWantUI();
+});
+
+let onlyWantActive=false;
+document.getElementById("onlyWant").addEventListener("click",e=>{
+  onlyWantActive=!onlyWantActive;
+  e.target.classList.toggle("active",onlyWantActive);
+  applyFilters();
+});
+
+/* ---------- 搜尋 ＋ 距離篩選（合併） ---------- */
+const filter=document.getElementById("distFilter");
+const searchInput=document.getElementById("search");
+const searchClear=document.getElementById("searchClear");
+const searchCount=document.getElementById("searchCount");
+let curDist="all";
+
+function applyFilters(){
+  const q=searchInput.value.trim().toLowerCase();
+  searchClear.classList.toggle("show",q.length>0);
+  let shown=0;
+  document.querySelectorAll(".card").forEach(c=>{
+    const okDist=(curDist==="all"||c.dataset.dist===curDist);
+    const okQ=(!q || c.dataset.hay.indexOf(q)!==-1);
+    const st=wantState[c.dataset.pid]||{};
+    const okWant=(!onlyWantActive || !!st[currentWho]);
+    const show=okDist&&okQ&&okWant;
+    c.style.display=show?"":"none";
+    if(show)shown++;
+    // 高亮店名中的關鍵字
+    const nameEl=c.querySelector(".name");
+    if(nameEl){
+      const raw=c.dataset.name;
+      if(q && raw.toLowerCase().indexOf(q)!==-1){
+        const i=raw.toLowerCase().indexOf(q);
+        nameEl.innerHTML=raw.slice(0,i)+"<mark>"+raw.slice(i,i+q.length)+"</mark>"+raw.slice(i+q.length)+' <span class="pin">📍</span>';
+      }else{
+        nameEl.innerHTML=raw+' <span class="pin">📍</span>';
+      }
+    }
+  });
+  document.querySelectorAll("section").forEach(sec=>{
+    const any=[...sec.querySelectorAll(".card")].some(c=>c.style.display!=="none");
+    sec.style.display=any?"":"none";
+  });
+  document.querySelectorAll(".group-div").forEach(div=>{
+    const secs=document.querySelectorAll('section[data-group="'+div.id+'"]');
+    const any=[...secs].some(s=>s.style.display!=="none");
+    div.style.display=any?"":"none";
+  });
+  searchCount.textContent = q ? `找到 ${shown} 個符合「${searchInput.value.trim()}」的結果` : (onlyWantActive ? `共 ${shown} 個想去的地點` : "");
+}
+
+filter.addEventListener("click",e=>{
+  if(!e.target.classList.contains("chip"))return;
+  [...filter.children].forEach(c=>c.classList.remove("active"));
+  e.target.classList.add("active");
+  curDist=e.target.dataset.d;
+  applyFilters();
+});
+searchInput.addEventListener("input",applyFilters);
+searchClear.addEventListener("click",()=>{searchInput.value="";searchInput.focus();applyFilters();});
+
+/* ---------- 浮動回頂 ---------- */
+const fab=document.getElementById("fab");
+addEventListener("scroll",()=>{fab.classList.toggle("show",scrollY>500)},{passive:true});
+fab.addEventListener("click",()=>scrollTo({top:0,behavior:"smooth"}));
+</script>
+</body>
+</html>

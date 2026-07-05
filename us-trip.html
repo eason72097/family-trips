@@ -101,7 +101,15 @@
   .search-clear.show{display:block;}
 
   .chiprow{
-    display:flex;flex-wrap:wrap;gap:8px;justify-content:center;margin-bottom:8px;
+    display:flex;flex-wrap:wrap;gap:6px;justify-content:flex-start;margin-bottom:0;
+  }
+
+  .filter-row-wrap{
+    display:flex;align-items:center;gap:8px;margin-bottom:7px;flex-wrap:wrap;
+  }
+  .filter-row-label{
+    font-family:'Oswald',sans-serif;font-size:11px;letter-spacing:.06em;
+    color:var(--ink-soft);white-space:nowrap;min-width:56px;
   }
   .chip{
     font-family:'Oswald',sans-serif;font-size:12.5px;letter-spacing:.03em;
@@ -454,15 +462,23 @@
       <input id="searchInput" type="text" placeholder="搜尋地點名稱、關鍵字…">
       <button class="search-clear" id="searchClear">✕</button>
     </div>
-    <div class="chiprow" id="distanceChips">
-      <button class="chip active" data-tier="all">全部</button>
-      <button class="chip" data-tier="near">近・20分內</button>
-      <button class="chip" data-tier="mid">中・20–45分</button>
-      <button class="chip" data-tier="far">遠・45–80分</button>
-      <button class="chip" data-tier="furthest">📍最遠・80分＋</button>
-      <button class="chip" id="topOnlyChip">⭐ 只看首選</button>
-      <button class="chip" id="wantOnlyChip">❤️ 只看想去<span class="want-count-badge" id="wantCountBadge">0</span></button>
-      <button class="chip" id="customOnlyChip">🛠️ 只看自訂新增</button>
+    <div class="filter-row-wrap">
+      <span class="filter-row-label">🚗 車程距離</span>
+      <div class="chiprow" id="distanceChips">
+        <button class="chip active" data-tier="all">全部</button>
+        <button class="chip" data-tier="near">20分內</button>
+        <button class="chip" data-tier="mid">20–45分</button>
+        <button class="chip" data-tier="far">45–80分</button>
+        <button class="chip" data-tier="furthest">80分以上</button>
+      </div>
+    </div>
+    <div class="filter-row-wrap">
+      <span class="filter-row-label">🔍 快速篩選</span>
+      <div class="chiprow" id="quickFilterChips">
+        <button class="chip" id="topOnlyChip">⭐ 只看首選</button>
+        <button class="chip" id="wantOnlyChip">❤️ 只看想去<span class="want-count-badge" id="wantCountBadge">0</span></button>
+        <button class="chip" id="customOnlyChip">🛠️ 只看自訂新增</button>
+      </div>
     </div>
     <div class="cat-toolbar">
       <span class="cat-toolbar-label">📂 分類（可多選，點下方或地圖圖例切換顯示）</span>

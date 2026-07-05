@@ -678,18 +678,13 @@ async function generateAIDescription(name, catLabel, addr, time){
 只輸出介紹文字本身。`;
 
   // 自動辨識 Key 類型
-  if(key.startsWith("sk-ant-")){
-    // === Claude (Anthropic) ===
+  if(key.startsWith("https://")){
+    // === Cloudflare Worker 中繼站（解決 CORS，支援 Claude）===
     let resp, d;
     try{
-      resp = await fetch("https://api.anthropic.com/v1/messages",{
+      resp = await fetch(key,{
         method:"POST",
-        headers:{
-          "Content-Type":"application/json",
-          "x-api-key": key,
-          "anthropic-version":"2023-06-01",
-          "anthropic-dangerous-direct-browser-access":"true"
-        },
+        headers:{"Content-Type":"application/json"},
         body:JSON.stringify({
           model:"claude-haiku-4-5-20251001",
           max_tokens:300,
@@ -697,7 +692,33 @@ async function generateAIDescription(name, catLabel, addr, time){
         })
       });
       d = await resp.json();
-    } catch(e){ throw new Error("網路錯誤："+e.message); }
+    } catch(e){ throw new Error("Worker 連線失敗："+e.message); }
+    if(!resp.ok){
+      const msg = d.error?.message||JSON.stringify(d).slice(0,150);
+      if(resp.status===401||resp.status===403){setGeminiKey(""); throw new Error("KEY_INVALID: "+msg);}
+      throw new Error("[Worker] HTTP "+resp.status+": "+msg);
+    }
+    const text = d.content?.[0]?.text?.trim();
+    if(!text) throw new Error("Worker 回應格式異常");
+    return text;
+  }
+
+  if(key.startsWith("sk-ant-")){
+    // === Claude 直接呼叫（可能因 CORS 失敗，建議改用 Worker）===
+    let resp, d;
+    try{
+      resp = await fetch("https://api.anthropic.com/v1/messages",{
+        method:"POST",
+        headers:{
+          "Content-Type":"application/json",
+          "x-api-key":key,
+          "anthropic-version":"2023-06-01",
+          "anthropic-dangerous-direct-browser-access":"true"
+        },
+        body:JSON.stringify({model:"claude-haiku-4-5-20251001",max_tokens:300,messages:[{role:"user",content:prompt_text}]})
+      });
+      d = await resp.json();
+    } catch(e){ throw new Error("Claude API CORS 被瀏覽器擋住，請改用 Cloudflare Worker 方案。錯誤："+e.message); }
     if(!resp.ok){
       const msg = d.error?.message||JSON.stringify(d).slice(0,150);
       if(resp.status===401||resp.status===403){setGeminiKey(""); throw new Error("KEY_INVALID: "+msg);}
@@ -1470,8 +1491,8 @@ document.getElementById("apAI").addEventListener("click",async()=>{
 document.getElementById("apKeyBtn").addEventListener("click",()=>{
   const current = getGeminiKey();
   const msg = current
-    ? `目前已儲存的 Key：\n${current.slice(0,8)}…（後面隱藏）\n\n請輸入新的 AI API Key（支援以下三種，留白送出則清除）：\n• Claude Key：以 sk-ant- 開頭，從 console.anthropic.com/settings/keys 取得\n• OpenAI Key：以 sk- 開頭，從 platform.openai.com/api-keys 取得\n• Gemini Key：以 AIzaSy 開頭，從 aistudio.google.com/app/apikey 取得\n\n新 Key：`
-    : `請輸入 AI API Key（支援三種，貼入後自動辨識）：\n\n• Claude Key（推薦，速度快）：\n  前往 https://console.anthropic.com/settings/keys 取得\n  格式：sk-ant-api03-...\n\n• OpenAI Key：\n  前往 https://platform.openai.com/api-keys 取得\n  格式：sk-...\n\n• Gemini Key（台灣需開啟 GCP Billing）：\n  前往 https://aistudio.google.com/app/apikey 取得\n  格式：AIzaSy...\n\nKey 僅存在你的瀏覽器，不會上傳：`;
+    ? `目前已儲存的 Key：\n${current.slice(0,8)}…（後面隱藏）\n\n請輸入新的設定（留白送出則清除）：\n• Cloudflare Worker URL（推薦用 Claude）：https://你的worker.workers.dev\n• OpenAI Key：sk- 開頭\n• Gemini Key：AIzaSy 開頭（台灣需開啟 GCP Billing）\n\n新設定：`
+    : `請輸入 AI 設定（自動辨識類型）：\n\n推薦方案①：Cloudflare Worker（免費，用 Claude）\n  貼入 Worker 網址，格式：https://xxx.workers.dev\n  → 架設說明請看網站說明\n\n推薦方案②：OpenAI Key（最快，$5 儲值）\n  前往 https://platform.openai.com/api-keys 取得\n  格式：sk-...\n\n方案③：Gemini Key（台灣需開啟 Billing）\n  前往 https://aistudio.google.com/app/apikey 取得\n  格式：AIzaSy...\n\n貼入後自動辨識，Key 僅存在瀏覽器中：`;
   const newKey = prompt(msg);
   if(newKey === null) return;
   if(newKey.trim()===""){

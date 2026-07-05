@@ -1,0 +1,919 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="color-scheme" content="light">
+<meta name="theme-color" content="#F5EFE0">
+<title>美國賓州＆紐約 美國行</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;500;600;700&family=Noto+Serif+TC:wght@600;700;900&family=Noto+Sans+TC:wght@400;500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.css">
+<style>
+  :root{
+    color-scheme: only light;
+    --cream:#F5EFE0;
+    --paper:#FCF9EF;
+    --ink:#2B2420;
+    --ink-soft:#5b5249;
+    --navy:#1F3A5F;
+    --rust:#B33A2E;
+    --mustard:#D9A441;
+    --forest:#3F6B4A;
+    --teal:#2D6E73;
+    --brown:#7A4B32;
+    --ochre:#C98A2C;
+    --plum:#8E4A6B;
+    --line:#E2D6B8;
+    --shadow: 0 2px 0 rgba(43,36,32,.06), 0 8px 20px -10px rgba(43,36,32,.25);
+  }
+  *{box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{
+    margin:0;
+    background:var(--cream);
+    color:var(--ink);
+    font-family:'Noto Sans TC',sans-serif;
+    -webkit-font-smoothing:antialiased;
+  }
+  .display{font-family:'Noto Serif TC',serif;}
+  .mono{font-family:'Oswald',sans-serif; letter-spacing:.02em;}
+
+  body{
+    background-image:
+      radial-gradient(circle at 1px 1px, rgba(43,36,32,.05) 1px, transparent 0);
+    background-size: 22px 22px;
+  }
+
+  a{color:inherit;text-decoration:none;}
+
+  /* ---------- HERO ---------- */
+  .hero{
+    max-width:980px;margin:0 auto;padding:38px 20px 18px;text-align:center;
+  }
+  .hero .eyebrow{
+    display:inline-flex;align-items:center;gap:8px;
+    font-family:'Oswald',sans-serif;font-size:13px;letter-spacing:.18em;
+    color:var(--rust);text-transform:uppercase;font-weight:600;
+  }
+  .hero h1{
+    font-size:clamp(28px,5vw,44px);
+    margin:10px 0 6px;line-height:1.25;font-weight:900;
+  }
+  .hero h1 .accent{color:var(--rust);}
+  .hero p.lead{
+    color:var(--ink-soft);font-size:15px;line-height:1.8;max-width:640px;margin:0 auto;
+  }
+  .stats-row{
+    display:flex;flex-wrap:wrap;justify-content:center;gap:10px;margin-top:18px;
+  }
+  .stat-pill{
+    background:var(--paper);border:1px solid var(--line);border-radius:999px;
+    padding:7px 16px;font-size:13px;color:var(--ink-soft);
+    box-shadow:var(--shadow);
+  }
+  .stat-pill b{color:var(--ink);font-family:'Oswald',sans-serif;}
+
+  /* ---------- STICKY CONTROL BAR ---------- */
+  .controlbar{
+    position:sticky;top:0;z-index:50;
+    background:rgba(245,239,224,.92);
+    backdrop-filter: blur(6px);
+    border-bottom:1px solid var(--line);
+    padding:10px 16px;
+  }
+  .controlbar-inner{max-width:1080px;margin:0 auto;}
+  .search-wrap{
+    display:flex;align-items:center;gap:8px;background:var(--paper);
+    border:1px solid var(--line);border-radius:12px;padding:8px 12px;margin-bottom:8px;
+    max-width:520px;margin-left:auto;margin-right:auto;
+  }
+  .search-wrap input{
+    flex:1;border:none;outline:none;background:transparent;font-size:14px;
+    font-family:'Noto Sans TC',sans-serif;color:var(--ink);
+  }
+  .search-wrap span.icon{opacity:.55;font-size:14px;}
+  .search-clear{
+    cursor:pointer;border:none;background:var(--line);color:var(--ink);
+    width:20px;height:20px;border-radius:50%;font-size:12px;line-height:20px;
+    text-align:center;display:none;flex-shrink:0;
+  }
+  .search-clear.show{display:block;}
+
+  .chiprow{
+    display:flex;flex-wrap:wrap;gap:8px;justify-content:center;margin-bottom:8px;
+  }
+  .chip{
+    font-family:'Oswald',sans-serif;font-size:12.5px;letter-spacing:.03em;
+    border:1px solid var(--line);background:var(--paper);color:var(--ink-soft);
+    padding:6px 14px;border-radius:999px;cursor:pointer;transition:all .15s ease;
+    white-space:nowrap;
+  }
+  .chip:hover{border-color:var(--navy);color:var(--navy);}
+  .chip.active{background:var(--navy);border-color:var(--navy);color:#fff;}
+
+  .jumprow{
+    display:flex;gap:6px;overflow-x:auto;padding-bottom:2px;
+    -ms-overflow-style:none;scrollbar-width:none;
+  }
+  .jumprow::-webkit-scrollbar{display:none;}
+  .jumpchip{
+    flex-shrink:0;font-family:'Oswald',sans-serif;font-size:12px;
+    border:1px solid var(--line);background:var(--paper);
+    padding:6px 12px;border-radius:8px;cursor:pointer;white-space:nowrap;
+    color:var(--ink-soft);
+  }
+  .jumpchip:hover{background:#fff;}
+  .jumpchip.active{color:#fff;border-color:transparent;}
+
+  .cat-toolbar{
+    display:flex;align-items:center;justify-content:center;gap:8px;flex-wrap:wrap;
+    margin-bottom:6px;
+  }
+  .cat-toolbar-label{font-size:11.5px;color:var(--ink-soft);}
+  .mini-btn{
+    font-family:'Oswald',sans-serif;font-size:11px;border:1px solid var(--line);
+    background:#fff;color:var(--ink-soft);padding:3px 10px;border-radius:7px;cursor:pointer;
+  }
+  .mini-btn:hover{border-color:var(--navy);color:var(--navy);}
+
+  .empty-prompt{
+    max-width:520px;margin:30px auto 50px;padding:18px 20px;text-align:center;
+    background:var(--paper);border:1px dashed var(--line);border-radius:14px;
+    color:var(--ink-soft);font-size:13.5px;line-height:1.8;display:none;
+  }
+  .empty-prompt.show{display:block;}
+  .empty-prompt .mini-btn{margin-top:8px;font-size:12px;padding:5px 14px;}
+
+  .legend-chip{
+    font-family:'Oswald',sans-serif;font-size:11.5px;letter-spacing:.02em;
+    border:1px solid var(--line);background:#fff;color:var(--ink-soft);
+    padding:4px 10px;border-radius:999px;cursor:pointer;display:inline-flex;
+    align-items:center;gap:6px;
+  }
+  .legend-chip:hover{border-color:var(--navy);}
+  .legend-chip.active{color:#fff;border-color:transparent;}
+  .legend-chip .dot{
+    display:inline-block;width:8px;height:8px;border-radius:50%;
+  }
+  .legend-chip.home{cursor:default;background:var(--paper);color:var(--ink-soft);border-color:var(--line);}
+
+  /* ---------- MAP ---------- */
+  .map-wrap{max-width:1080px;margin:22px auto 0;padding:0 16px;}
+  .map-card{
+    background:var(--paper);border:1px solid var(--line);border-radius:16px;
+    box-shadow:var(--shadow);padding:14px;
+  }
+  .map-card-head{
+    display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px;
+    margin-bottom:10px;
+  }
+  .map-card-head h2{font-size:16px;margin:0;font-weight:900;}
+  .map-btns{display:flex;gap:6px;}
+  .map-btn{
+    font-family:'Oswald',sans-serif;font-size:11.5px;border:1px solid var(--line);
+    background:#fff;color:var(--ink-soft);padding:5px 10px;border-radius:8px;cursor:pointer;
+  }
+  .map-btn:hover{border-color:var(--navy);color:var(--navy);}
+  #leafletMap{
+    width:100%;height:420px;border-radius:12px;background:#e9e3d2;
+    border:1px solid var(--line);
+  }
+  .map-legend{
+    display:flex;flex-wrap:wrap;gap:6px;margin-top:10px;font-size:11.5px;
+    color:var(--ink-soft);
+  }
+  .leaflet-popup-content{font-family:'Noto Sans TC',sans-serif;font-size:12.5px;line-height:1.6;}
+  .leaflet-popup-content b{font-size:13.5px;}
+  .popup-link{color:var(--rust);font-weight:600;display:inline-block;margin-top:4px;}
+  @media (max-width:520px){
+    #leafletMap{height:300px;}
+  }
+
+  /* ---------- SECTIONS ---------- */
+  .wrap{max-width:1080px;margin:0 auto;padding:18px 16px 10px;}
+  .section{margin:34px 0;}
+  .section-head{
+    display:flex;align-items:baseline;gap:12px;margin-bottom:14px;
+    border-bottom:3px solid var(--cat-color, var(--navy));
+    padding-bottom:8px;
+  }
+  .section-head .emoji{font-size:22px;}
+  .section-head h2{
+    font-size:20px;margin:0;font-weight:900;
+  }
+  .section-head .count{
+    font-family:'Oswald',sans-serif;font-size:12px;color:#fff;
+    background:var(--cat-color,var(--navy));padding:2px 9px;border-radius:999px;
+  }
+  .section-head .sub{font-size:12.5px;color:var(--ink-soft);margin-left:auto;}
+
+  .grid{
+    display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));
+    gap:16px;
+  }
+
+  /* ---------- CARD ---------- */
+  .card{
+    position:relative;background:var(--paper);border:1px solid var(--line);
+    border-radius:14px;padding:18px 16px 16px 16px;box-shadow:var(--shadow);
+    transition:transform .15s ease, box-shadow .15s ease;
+  }
+  .card:hover{transform:translateY(-3px);box-shadow:0 4px 0 rgba(43,36,32,.08), 0 14px 26px -10px rgba(43,36,32,.32);}
+  .stamp{
+    position:absolute;top:-12px;left:-10px;width:40px;height:40px;border-radius:50%;
+    background:var(--paper);border:2px dashed var(--cat-color,var(--navy));
+    display:flex;align-items:center;justify-content:center;font-size:18px;
+    transform:rotate(-10deg);box-shadow:var(--shadow);
+  }
+  .card-top{display:flex;justify-content:flex-end;margin-bottom:6px;}
+  .time-pill{
+    font-family:'Oswald',sans-serif;font-size:12px;font-weight:600;
+    background:#E4E9EF;color:var(--navy);padding:3px 10px;
+    border-radius:999px;white-space:nowrap;
+  }
+  .card h3{
+    margin:2px 0 6px;font-size:16.5px;line-height:1.4;font-weight:700;
+    padding-right:4px;
+  }
+  .card h3 a{border-bottom:1px dashed var(--rust);}
+  .card h3 a:hover{color:var(--rust);}
+  .tagrow{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:8px;}
+  .tag{
+    font-size:11px;font-family:'Oswald',sans-serif;letter-spacing:.02em;
+    background:#ECE4CD;color:var(--ink-soft);padding:2px 8px;border-radius:6px;
+  }
+  .tag.top{background:var(--rust);color:#fff;}
+  .card p{font-size:13.3px;line-height:1.7;color:var(--ink-soft);margin:0;}
+  mark{background:#FCE39A;color:inherit;border-radius:2px;padding:0 1px;}
+
+  .empty-msg{
+    text-align:center;color:var(--ink-soft);padding:50px 0;font-size:14px;display:none;
+  }
+  .empty-msg.show{display:block;}
+
+  /* ---------- FOOTER ---------- */
+  footer{
+    max-width:980px;margin:40px auto 60px;padding:0 20px;color:var(--ink-soft);
+    font-size:12.8px;line-height:1.9;
+  }
+  footer .legend{
+    background:var(--paper);border:1px solid var(--line);border-radius:12px;
+    padding:14px 18px;margin-bottom:14px;
+  }
+  footer .legend b{color:var(--ink);}
+  footer .tips{margin-bottom:14px;}
+  footer .tips li{margin-bottom:4px;}
+  footer .meta{text-align:center;opacity:.75;font-size:11.5px;}
+
+  /* ---------- BACK TO TOP ---------- */
+  .top-btn{
+    position:fixed;right:18px;bottom:18px;width:42px;height:42px;border-radius:50%;
+    background:var(--navy);color:#fff;border:none;font-size:18px;cursor:pointer;
+    box-shadow:0 6px 16px rgba(31,58,95,.4);opacity:0;pointer-events:none;
+    transition:opacity .2s ease;z-index:60;
+  }
+  .top-btn.show{opacity:1;pointer-events:auto;}
+
+  @media (max-width:520px){
+    .hero h1{font-size:26px;}
+    .grid{grid-template-columns:1fr;}
+  }
+</style>
+</head>
+<body>
+
+<div class="hero">
+  <span class="eyebrow">⚾ 二姊家（Warrington）出發 · 美國親子探索</span>
+  <h1>賓州 ＆ 紐約<span class="accent">美國行</span></h1>
+  <p class="lead">從二姊家（Warrington, PA）出發整理的活動收藏清單。上方可依車程篩選，也可點選想看的分類（可多選，預設不顯示，避免太雜亂）；點地點名稱即可一鍵開 Google 地圖路線（從二姊家出發）；下方地圖會跟著你選的分類即時更新。</p>
+  <div class="stats-row">
+    <span class="stat-pill">📍 以 <b>二姊家</b>（Warrington, PA）為起點</span>
+    <span class="stat-pill">🗂️ <b id="statCat">-</b> 大類・<b id="statCount">-</b> 個地點</span>
+    <span class="stat-pill">🚗 依車程分 <b>4</b> 級</span>
+    <span class="stat-pill">🔄 持續擴充中</span>
+  </div>
+</div>
+
+<div class="controlbar">
+  <div class="controlbar-inner">
+    <div class="search-wrap">
+      <span class="icon">🔍</span>
+      <input id="searchInput" type="text" placeholder="搜尋地點名稱、關鍵字…">
+      <button class="search-clear" id="searchClear">✕</button>
+    </div>
+    <div class="chiprow" id="distanceChips">
+      <button class="chip active" data-tier="all">全部</button>
+      <button class="chip" data-tier="near">近・20分內</button>
+      <button class="chip" data-tier="mid">中・20–45分</button>
+      <button class="chip" data-tier="far">遠・45–80分</button>
+      <button class="chip" data-tier="furthest">📍最遠・80分＋</button>
+      <button class="chip" id="topOnlyChip">⭐ 只看首選</button>
+    </div>
+    <div class="cat-toolbar">
+      <span class="cat-toolbar-label">📂 分類（可多選，點下方或地圖圖例切換顯示）</span>
+      <button class="mini-btn" id="catSelectAll">全部顯示</button>
+      <button class="mini-btn" id="catClearAll">清除</button>
+    </div>
+    <div class="jumprow" id="jumpRow"></div>
+  </div>
+</div>
+
+<div class="map-wrap">
+  <div class="map-card">
+    <div class="map-card-head">
+      <h2>🗺️ 地點分佈地圖</h2>
+      <div class="map-btns">
+        <button class="map-btn" id="mapFitAll">縮放到目前顯示範圍</button>
+        <button class="map-btn" id="mapFitHome">回到二姊家周邊</button>
+      </div>
+    </div>
+    <div id="leafletMap"></div>
+    <div class="map-legend" id="mapLegend"></div>
+  </div>
+</div>
+
+<div class="wrap" id="contentWrap"></div>
+<p class="empty-msg" id="emptyMsg">沒有符合的結果，換個關鍵字或距離篩選看看 🙂</p>
+<div class="empty-prompt" id="emptyPrompt">
+  👆 上面或地圖圖例還沒選分類唷～點選想探索的類別（可多選），相關地點才會顯示出來。
+  <br><button class="mini-btn" id="emptyPromptAll">先全部顯示看看</button>
+</div>
+
+<footer>
+  <div class="legend">
+    <b>圖例說明：</b> 🚗 數字 = 從 Warrington 二姊家出發的預估開車時間（分鐘，無車流狀況下參考值）｜
+    <span class="tag top" style="position:relative;top:-1px;">首選</span> = 同類別中最推薦的選項｜
+    點卡片上的<b>地點名稱</b>會開啟 Google 地圖「從二姊家出發」的路線規劃｜地圖上的 ❤️ 即為二姊家位置｜
+    分類預設<b>不會全部顯示</b>，點上方或地圖圖例的分類按鈕（可多選）才會秀出對應地點，避免一次塞太多東西在地圖上。
+  </div>
+  <ul class="tips">
+    <b>通用提醒：</b>
+    <li>🎯 實彈靶場需護照即可租槍體驗，但外國旅客<b>不能購買</b>槍枝帶走；飛靶／不定向飛靶場通常<b>不提供租槍</b>，需自備或詢問現場。</li>
+    <li>🏞️ 河流泳圈漂流（River Country）多為<b>週末限定</b>，且需要提前預約，請先上官網確認當週開放狀況。</li>
+    <li>⚾ MLB 比賽日期需配合球隊賽程，建議出發前先查好 Warrington 停留期間（7/17–8/1）的主場賽程再排進行程。</li>
+    <li>🏛️ 多數博物館固定<b>公休日（常見為週一）</b>，出發前務必上官網確認當日開放時間。</li>
+    <li>🌡️ 七月底紐約／賓州正值盛夏，戶外行程建議上午較早或下午較晚出發，中午時段安排室內知識／美食類較舒適。</li>
+    <li>🗽 紐約相關地點車程較遠（80分鐘以上），建議併入專門安排的「紐約一日／兩日」行程，不要和賓州當地行程混排在同一天。</li>
+    <li>🛍️ 美國標價大多<b>不含稅</b>，結帳時會加收賓州州稅（約6%），且沒有像歐洲那種離境退稅機制，買的時候要記得心理加價。</li>
+  </ul>
+  <p class="meta">建立日期：2026 年 6 月｜資料來源：Google 地圖評價與官方資訊整理，實際開放時間／票價／預約規定請以官方網站為準。</p>
+</footer>
+
+<button class="top-btn" id="topBtn">↑</button>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.js"></script>
+<script>
+/* =========================================================
+   DATA
+========================================================= */
+const ORIGIN = "712 Conrad Dr, Warrington, PA 18976";
+const ORIGIN_LAT = 40.2560824;
+const ORIGIN_LNG = -75.1723344;
+
+const CATS = [
+  {id:"outdoor",   emoji:"🏞️", label:"戶外自然", color:"#3F6B4A"},
+  {id:"animal",    emoji:"🐾", label:"動物",     color:"#C98A2C", textOnActive:"#2B2420"},
+  {id:"knowledge", emoji:"🔬", label:"室內知識", color:"#2D6E73"},
+  {id:"culture",   emoji:"🏛️", label:"文化懷舊", color:"#7A4B32"},
+  {id:"sports",    emoji:"⚾", label:"運動",     color:"#B33A2E"},
+  {id:"shooting",  emoji:"🎯", label:"射擊",     color:"#1F3A5F"},
+  {id:"town",      emoji:"🏘️", label:"特色小鎮", color:"#D9A441", textOnActive:"#2B2420"},
+  {id:"food",      emoji:"🍴", label:"在地美食", color:"#8E4A6B"},
+  {id:"shopping",  emoji:"🛍️", label:"購物",     color:"#46627E"},
+  {id:"coffee",    emoji:"☕", label:"咖啡店",   color:"#3E2723"},
+  {id:"bookstore", emoji:"📚", label:"書店",     color:"#6B2737"},
+];
+
+const DATA = [
+  // ---------------- 戶外自然 ----------------
+  {cat:"outdoor", name:"Peace Valley Park（Lake Galena）", time:10, addr:"Peace Valley Park, New Britain, PA", lat:40.3197083, lng:-75.1929667,
+   tags:["首選","免費"], top:true,
+   desc:"環湖步道＋大草地，適合野餐、騎車、賞鳥，離二姊家最近的綠地選擇，平日傍晚散步首選。"},
+  {cat:"outdoor", name:"Tyler State Park", time:20, addr:"Tyler State Park, Newtown, PA", lat:40.2306318, lng:-74.9749189,
+   tags:["可租獨木舟"],
+   desc:"大型州立公園，步道平緩好走，可租腳踏車或獨木舟，沿 Neshaminy Creek 風景優美。"},
+  {cat:"outdoor", name:"Nockamixon State Park", time:25, addr:"Nockamixon State Park, Quakertown, PA", lat:40.4517265, lng:-75.2349338,
+   tags:["可釣魚划船"],
+   desc:"5,000 英畝大型州立公園，環湖步道、釣魚、划船、騎馬都有，孩子可以放電一整個下午。"},
+  {cat:"outdoor", name:"Bowman's Hill Wildflower Preserve", time:25, addr:"Bowman's Hill Wildflower Preserve, New Hope, PA", lat:40.331366, lng:-74.939198,
+   tags:["賞蝴蝶"],
+   desc:"賓州原生植物保護區，林間步道平緩，夏天可賞蝴蝶與野花，適合帶小小孩慢慢走。"},
+  {cat:"outdoor", name:"Ringing Rocks Park", time:30, addr:"Ringing Rocks Park, Upper Black Eddy, PA", lat:40.5625875, lng:-75.1280213,
+   tags:["記得帶錘子"],
+   desc:"敲擊巨石會發出像鐘聲的金屬聲響，獨特地質奇景，小孩超愛帶錘子去「玩石頭」，公園內還有全郡最大瀑布。"},
+  {cat:"outdoor", name:"Ralph Stover State Park / High Rocks", time:30, addr:"Ralph Stover State Park, Pipersville, PA", lat:40.4348869, lng:-75.0989228,
+   tags:["中等難度"],
+   desc:"沿 Tohickon Creek 而行，High Rocks 觀景點可俯瞰 200 英呎峽谷景觀，適合喜歡稍微挑戰的家庭。"},
+  {cat:"outdoor", name:"Washington Crossing／Delaware Canal Towpath", time:25, addr:"Delaware Canal State Park, Washington Crossing, PA", lat:40.295619, lng:-74.8718427,
+   tags:["推車友善"],
+   desc:"沿運河的平緩步道，推車、輪椅都能輕鬆走，適合飯後散步或單車漫遊，沿途有歷史古蹟可順遊。"},
+  {cat:"outdoor", name:"Bucks County River Country（德拉瓦河漂浮）", time:30, addr:"Bucks County River Country, Point Pleasant, PA", lat:40.423861, lng:-75.063893,
+   tags:["週末限定","需預約"],
+   desc:"夏天經典體驗：泳圈漂流德拉瓦河，順流而下約 2–4 小時，僅週末開放且需提前線上預約。"},
+  {cat:"outdoor", name:"Central Park（紐約）", time:105, addr:"Central Park, New York, NY", lat:40.7825547, lng:-73.9655834,
+   tags:["紐約行程"],
+   desc:"紐約市中心大型都市公園，可散步、划船、騎協力車，適合安排在紐約一日遊裡的悠閒時段。"},
+
+  // ---------------- 動物 ----------------
+  {cat:"animal", name:"Elmwood Park Zoo", time:35, addr:"Elmwood Park Zoo, Norristown, PA", lat:40.1327855, lng:-75.3385921,
+   tags:["首選","可餵長頸鹿"], top:true,
+   desc:"小巧精緻的動物園，可近距離餵長頸鹿、看美洲豹，還有高空滑索可以直接飛越動物展區，免費停車。"},
+  {cat:"animal", name:"Philadelphia Zoo", time:45, addr:"Philadelphia Zoo, Philadelphia, PA", lat:39.9714959, lng:-75.1955383,
+   tags:["規模最大"],
+   desc:"美國第一座動物園，展區齊全、規模較大，適合安排一整個白天，建議事先線上訂票省排隊時間。"},
+  {cat:"animal", name:"Adventure Aquarium", time:55, addr:"Adventure Aquarium, Camden, NJ", lat:39.9460868, lng:-75.1311712,
+   tags:["河馬","鯊魚隧道"],
+   desc:"位於德拉瓦河對岸紐澤西，西半球唯一展示河馬的水族館，還有鯊魚隧道與水獺，適合全家。"},
+  {cat:"animal", name:"Six Flags Wild Safari（野生動物開車探險）", time:105, addr:"Six Flags Great Adventure, Jackson, NJ", lat:40.1360605, lng:-74.4361629,
+   tags:["紐約途中","台灣沒有的體驗"],
+   desc:"開自己的車穿越非洲草原野放保護區，長頸鹿、犀牛、獅子近在車窗外，台灣完全沒有的獨特體驗，可併紐約行程。"},
+
+  // ---------------- 室內知識 ----------------
+  {cat:"knowledge", name:"The Franklin Institute（科學博物館）", time:45, addr:"The Franklin Institute, Philadelphia, PA", lat:39.9582109, lng:-75.1731347,
+   tags:["首選","IMAX/天文館"], top:true,
+   desc:"美國知名科學博物館，巨型人體心臟模型可走進去、互動式物理展區、天文館放映，大小孩都會著迷。"},
+  {cat:"knowledge", name:"Academy of Natural Sciences", time:45, addr:"Academy of Natural Sciences, Philadelphia, PA", lat:39.9568422, lng:-75.1712897,
+   tags:["恐龍化石"],
+   desc:"美洲最古老的自然科學博物館，42 英呎暴龍化石、35 個動物立體透視展區，週末還能體驗模擬挖化石。"},
+  {cat:"knowledge", name:"Please Touch Museum", time:45, addr:"Please Touch Museum, Philadelphia, PA", lat:39.9794964, lng:-75.209147,
+   tags:["7歲以下適合"],
+   desc:"專為幼童設計的互動博物館，扮演超市結帳、巨大玩水池、復古旋轉木馬，適合學齡前小孩放電。"},
+  {cat:"knowledge", name:"National Constitution Center", time:45, addr:"National Constitution Center, Philadelphia, PA", lat:39.9536955, lng:-75.1491166,
+   tags:["適合大孩子"],
+   desc:"互動式美國憲法主題展覽，適合對歷史、公民教育有興趣的大孩子或大人，與獨立廳行程可一起排。"},
+  {cat:"knowledge", name:"Liberty Science Center", time:80, addr:"Liberty Science Center, Jersey City, NJ", lat:40.7082308, lng:-74.0546336,
+   tags:["紐約途中"],
+   desc:"紐澤西大型科學中心，IMAX 巨型銀幕、互動科學展區豐富，可作為前往紐約途中的中停點。"},
+  {cat:"knowledge", name:"Intrepid Sea-Air-Space Museum", time:105, addr:"Intrepid Museum, Pier 86, New York, NY", lat:40.7648801, lng:-74.0008306,
+   tags:["紐約行程","退役航艦"],
+   desc:"停泊在紐約哈德遜河畔的退役航空母艦改建博物館，可登艦參觀戰機與太空梭，喜歡軍事題材的家庭別錯過。"},
+
+  // ---------------- 文化懷舊 ----------------
+  {cat:"culture", name:"Mercer Museum ＆ Fonthill Castle", time:15, addr:"Mercer Museum, Doylestown, PA", lat:40.3077039, lng:-75.1272125,
+   tags:["首選","近"], top:true,
+   desc:"水泥城堡＋工藝博物館，建築本身就像走進童話故事，孩子很愛探險式的迴旋樓梯與秘密角落。"},
+  {cat:"culture", name:"Washington Crossing Historic Park", time:25, addr:"Washington Crossing Historic Park, Washington Crossing, PA", lat:40.295619, lng:-74.8718427,
+   tags:["歷史重演"],
+   desc:"華盛頓夜渡德拉瓦河的真實歷史現場，園區內保留 18 世紀建築，部分時節有歷史重演活動。"},
+  {cat:"culture", name:"New Hope ＆ Ivyland Railroad", time:25, addr:"New Hope and Ivyland Railroad, New Hope, PA", lat:40.3649573, lng:-74.9534253,
+   tags:["復古蒸汽火車"],
+   desc:"復古觀光列車沿德拉瓦河風光行駛，適合全家一起體驗懷舊鐵道，車程約 45 分鐘，老少咸宜。"},
+  {cat:"culture", name:"獨立廳與自由鐘（Independence Hall）", time:45, addr:"Independence Hall, Philadelphia, PA", lat:39.9488806, lng:-75.1500349,
+   tags:["美國建國地標"],
+   desc:"美國獨立宣言與憲法的誕生地，旁邊就是知名的自由鐘（Liberty Bell），費城市區必訪歷史景點。"},
+  {cat:"culture", name:"Eastern State Penitentiary", time:45, addr:"Eastern State Penitentiary, Philadelphia, PA", lat:39.9683364, lng:-75.1726648,
+   tags:["建議10歲以上"],
+   desc:"廢棄古監獄遺跡改建的歷史博物館，氛圍較陰森懸疑，適合大孩子或大人，建議避開太小的孩子。"},
+  {cat:"culture", name:"阿米許人聚落（Lancaster／Bird-in-Hand）", time:75, addr:"Bird-in-Hand, PA", lat:40.0387098, lng:-76.1821771,
+   tags:["遠程半日遊"],
+   desc:"拜訪維持傳統生活方式的阿米許人社區，可坐馬車、逛農夫市集、買手工被毯與果醬，體驗截然不同的生活方式。"},
+  {cat:"culture", name:"自由女神像與艾利斯島（紐約）", time:105, addr:"Statue of Liberty, New York, NY", lat:40.6892494, lng:-74.0445004,
+   tags:["紐約行程","需搭渡輪"],
+   desc:"美國最具代表性的地標，建議事先預約渡輪票，可同時參觀移民歷史博物館艾利斯島。"},
+  {cat:"culture", name:"9/11 Memorial ＆ Museum（紐約）", time:100, addr:"9/11 Memorial Museum, New York, NY", lat:40.7115776, lng:-74.0133362,
+   tags:["紐約行程","氣氛沉重"],
+   desc:"紀念 2001 年事件的紀念廣場與博物館，氣氛較沉重，適合大孩子，建議大人先評估孩子年齡是否合適。"},
+
+  // ---------------- 運動 ----------------
+  {cat:"sports", name:"Citizens Bank Park（費城人 MLB）", time:45, addr:"Citizens Bank Park, Philadelphia, PA", lat:39.9059183, lng:-75.1665197,
+   tags:["首選","建議買內野票"], top:true,
+   desc:"費城人主場，美式職業棒球現場震撼力十足，啦啦隊、熱狗、全壘打煙火都是台灣球場沒有的體驗。"},
+  {cat:"sports", name:"Topgolf King of Prussia", time:40, addr:"Topgolf King of Prussia, King of Prussia, PA", lat:40.0937303, lng:-75.4146828,
+   tags:["大人小孩都能玩"],
+   desc:"科技互動高爾夫打擊練習場，包廂式座位附餐廳酒吧，不會打高爾夫也能輕鬆上手，適合多代同遊。"},
+  {cat:"sports", name:"Bowlero Bristol（保齡球）", time:25, addr:"Bowlero Bristol, Bensalem, PA", lat:40.0977738, lng:-74.8844334,
+   tags:["大團體首選"],
+   desc:"48 條球道＋電競酒吧氛圍，適合人數較多的大團體一起同樂，小孩大人都能玩得開心。"},
+  {cat:"sports", name:"Yankee Stadium（紐約洋基）", time:100, addr:"Yankee Stadium, Bronx, NY", lat:40.8296426, lng:-73.9261745,
+   tags:["紐約行程"],
+   desc:"若行程安排到紐約，可順道安排洋基主場看球，建議先查好停留期間的賽程再決定日期。"},
+  {cat:"sports", name:"Citi Field（紐約大都會）", time:105, addr:"Citi Field, Queens, NY", lat:40.7570024, lng:-73.8459084,
+   tags:["紐約行程"],
+   desc:"紐約大都會隊主場，是另一個可選的 MLB 觀賽選項，皇后區交通也相對方便。"},
+
+  // ---------------- 射擊 ----------------
+  {cat:"shooting", name:"Guardian Training Center（室內實彈・首選）", time:10, addr:"Guardian Training Center, Warminster, PA", lat:40.2241964, lng:-75.077506,
+   tags:["首選","評分4.7","200+把可租"], top:true,
+   desc:"離二姊家最近，室內 20 條靶道，租槍選擇最多（含手槍、步槍、全自動體驗），新手友善、有 VR 戰術模擬室。"},
+  {cat:"shooting", name:"Wicen's Shooting Range（戶外實彈）", time:10, addr:"Wicen's Shooting Range, Wrightstown, PA", lat:40.2723139, lng:-75.060612,
+   tags:["戶外農場風格"],
+   desc:"戶外農場風格靶場，氣氛和室內靶場完全不同，喜歡開放空間打靶的話可以來試試。"},
+  {cat:"shooting", name:"Bucks County Fish ＆ Game（飛靶／不定向飛靶）", time:15, addr:"Bucks County Fish and Game Associates, Pipersville, PA", lat:40.2782045, lng:-75.1349403,
+   tags:["週末限定","不提供租槍"],
+   desc:"5-Stand Sporting Clays（不定向飛靶）＋ Trap／Skeet，公眾週末開放，費用親民，但需自備霰彈槍，無租借服務。"},
+  {cat:"shooting", name:"Classic Pistol Inc", time:20, addr:"Classic Pistol Inc, Willow Grove, PA", lat:40.1608278, lng:-75.0331019,
+   tags:["室內手槍道"],
+   desc:"室內手槍靶場，距離適中，可作為 Guardian 之外的第二選擇。"},
+  {cat:"shooting", name:"Survival Trail（評分最高）", time:40, addr:"Survival Trail, Pipersville, PA", lat:40.4181728, lng:-75.1475856,
+   tags:["評分4.9","稍遠但值得"],
+   desc:"12 條現代化靶道，隔音與空調設計舒適，手槍、步槍、霰彈槍都能租，對外國旅客非常友善，評價最高。"},
+
+  // ---------------- 特色小鎮 ----------------
+  {cat:"town", name:"Doylestown", time:15, addr:"Doylestown, PA", lat:40.3101063, lng:-75.1298939,
+   tags:["首選","最近"], top:true,
+   desc:"Bucks County 縣治小鎮，歷史建築、獨立書店、咖啡館林立，適合輕鬆散步吃個下午茶。"},
+  {cat:"town", name:"Peddler's Village（Lahaska）", time:20, addr:"Peddler's Village, Lahaska, PA", lat:40.347529, lng:-75.0327215,
+   tags:["鵝卵石購物村"],
+   desc:"鵝卵石步道串聯的精品購物村，餐廳、手工藝品店密集，適合全家逛街放鬆的半天行程。"},
+  {cat:"town", name:"New Hope", time:25, addr:"New Hope, PA", lat:40.3642728, lng:-74.9512785,
+   tags:["藝術氣息"],
+   desc:"河岸藝術小鎮，畫廊、精品店、河景咖啡廳，氛圍悠閒，傍晚河岸散步特別舒服。"},
+  {cat:"town", name:"Lambertville（紐澤西對岸）", time:25, addr:"Lambertville, NJ", lat:40.3660877, lng:-74.9428462,
+   tags:["古董店"],
+   desc:"與 New Hope 隔河相望的紐澤西小鎮，古董店與河岸風情濃厚，兩鎮可以一次逛完。"},
+  {cat:"town", name:"Bird-in-Hand ＆ Intercourse（Lancaster）", time:75, addr:"Intercourse, PA", lat:40.0383787, lng:-76.1075043,
+   tags:["遠程半日遊","手工藝市集"],
+   desc:"Lancaster 阿米許風情小鎮群，手工藝市集、自製果醬與被毯，適合安排成遠程的整天行程。"},
+
+  // ---------------- 在地美食 ----------------
+  {cat:"food", name:"Reading Terminal Market", time:45, addr:"Reading Terminal Market, Philadelphia, PA", lat:39.9531593, lng:-75.1590984,
+   tags:["首選","小吃一次吃齊"], top:true,
+   desc:"百年室內市集，起司牛肉堡、阿米許烘焙、Bassetts 冰淇淋（美國最古老冰淇淋品牌）一次吃齊。"},
+  {cat:"food", name:"Pat's King of Steaks ＆ Geno's Steaks", time:50, addr:"1237 E Passyunk Ave, Philadelphia, PA", lat:39.9331995, lng:-75.1592409,
+   tags:["起司牛肉堡始祖對決"],
+   desc:"兩家對街相望的起司牛肉堡創始名店，深夜也營業，適合排進費城市區行程的宵夜或午餐。"},
+  {cat:"food", name:"Tony and Nick's Steaks（原Tony Luke's創始店）", time:50, addr:"Tony and Nick's Steaks, Philadelphia, PA", lat:39.914085, lng:-75.1487668,
+   tags:["本地人推薦"],
+   desc:"1992年創立的起司牛肉堡創始名店原址，現址因家族分家改名經營，豬肉三明治（Pork Sandwich）也是必點招牌。"},
+  {cat:"food", name:"John's Roast Pork", time:50, addr:"John's Roast Pork, Philadelphia, PA", lat:39.9210754, lng:-75.1450699,
+   tags:["隱藏版美食"],
+   desc:"James Beard 獎得主的豬肉三明治，外觀低調但在地饕客必訪，建議避開正午排隊人潮。"},
+  {cat:"food", name:"Federal Donuts", time:45, addr:"Federal Donuts, Philadelphia, PA", lat:39.9512423, lng:-75.1726225,
+   tags:["炸雞＋甜甜圈"],
+   desc:"炸雞配甜甜圈的奇妙組合，費城在地人氣早餐／點心選擇，多個分店方便順路。"},
+  {cat:"food", name:"Hershey's Chocolate World", time:90, addr:"Hershey's Chocolate World, Hershey, PA", lat:40.288359, lng:-76.6602457,
+   tags:["免費","可順遊Hersheypark"],
+   desc:"免費巧克力工廠觀光列車，適合安排在去 Hersheypark 玩樂園的同一天順遊。"},
+
+  // ---------------- 購物 ----------------
+  {cat:"shopping", name:"Wegmans Warrington", time:5, addr:"Wegmans, 1405 Main St, Warrington, PA", lat:40.230393, lng:-75.131956,
+   tags:["首選","超市","最近"], top:true,
+   desc:"美國評價第一的連鎖超市，二姊家附近就有一家！生鮮熟食、起司、烘焙選擇超豐富，買零食當伴手禮也方便，還有現做壽司和起司試吃。"},
+  {cat:"shopping", name:"Wawa（在地超商）", time:5, addr:"Wawa, 550 Easton Rd, Warrington, PA", lat:40.228138, lng:-75.139781,
+   tags:["在地體驗","最近"],
+   desc:"賓州／紐澤西地區代表性連鎖超商，自助點餐機點熱壓三明治、現煮咖啡，24小時營業，體驗一下在地人的日常生活感。"},
+  {cat:"shopping", name:"Trader Joe's North Wales", time:15, addr:"Trader Joe's, 1460 Bethlehem Pike, North Wales, PA", lat:40.2081638, lng:-75.2230414,
+   tags:["伴手禮熱門","超市"],
+   desc:"台灣遊客愛逛的美式超市，自家品牌零食（餅乾、果乾、堅果醬、調味料）便宜好吃又特別，是買伴手禮的熱門首選之一。"},
+  {cat:"shopping", name:"GNC（保健食品）", time:15, addr:"GNC, 476 N Main St, Doylestown, PA", lat:40.3219754, lng:-75.1327619,
+   tags:["伴手禮","保健食品"],
+   desc:"美國連鎖保健食品店，魚油、益生菌、葉黃素、維他命等常是長輩指定的「美國貨」伴手禮，可順道安排在 Doylestown 逛街時購買。"},
+  {cat:"shopping", name:"King of Prussia Mall", time:40, addr:"King of Prussia Mall, King of Prussia, PA", lat:40.088518, lng:-75.3908645,
+   tags:["全美最大商場之一","精品"],
+   desc:"450+ 家品牌、6 大百貨公司，從精品名牌到平價服飾一次逛齊，是全美規模數一數二的購物中心，適合安排一整個下午。"},
+  {cat:"shopping", name:"Philadelphia Premium Outlets", time:50, addr:"Philadelphia Premium Outlets, Pottstown, PA", lat:40.235357, lng:-75.574173,
+   tags:["Outlet折扣"],
+   desc:"Nike、Under Armour、Coach、Michael Kors 等美國品牌的 Outlet 折扣商場，適合想大採購运動鞋／包包的人，平日去人較少。"},
+  {cat:"shopping", name:"Bass Pro Shops（Harrisburg）", time:100, addr:"Bass Pro Shops, 3501 Paxton St, Harrisburg, PA", lat:40.2525465, lng:-76.8281972,
+   tags:["特色賣場","可併Hershey行程"],
+   desc:"戶外狩獵／釣魚主題大賣場，本身就像個景點，店內還有水族缸和獵物標本展示，獵刀、戶外裝備、特色紀念品好逛，建議跟 Hershey 排在同一天的路上。"},
+
+  // ---------------- 咖啡店 ----------------
+  {cat:"coffee", name:"Cowabunga Coffee Roasters", time:5, addr:"Cowabunga Coffee Roasters, Warrington, PA", lat:40.2328798, lng:-75.1356802,
+   tags:["首選","最近","自烘阿拉比卡豆"], top:true,
+   desc:"二姊家附近的自家烘豆咖啡店，100% 阿拉比卡豆，招牌 Bucks County Light Blend 順口、Jersey Devil Blend 較濃厚，買豆子也方便。"},
+  {cat:"coffee", name:"Wheat & Vine Provisions", time:15, addr:"Wheat & Vine Provisions, Doylestown, PA", lat:40.3043136, lng:-75.1291349,
+   tags:["鹹派必吃"],
+   desc:"Doylestown 人氣咖啡＋鹹派專賣店，鹹派口味多樣、每天現做，配咖啡或抹茶拿鐵都合拍，常常一開門就賣到缺貨。"},
+  {cat:"coffee", name:"Nonno's Italian Coffee Parlor", time:15, addr:"Nonno's Italian Coffee Parlor, Doylestown, PA", lat:40.3099574, lng:-75.1302126,
+   tags:["義式冰淇淋"],
+   desc:"道地義式咖啡館，現烘咖啡配自製義式冰淇淋（Gelato），開到比其他 Doylestown 咖啡店晚，老闆夫婦會記住熟客的名字。"},
+  {cat:"coffee", name:"Amsterdam Coffee Bar", time:20, addr:"Amsterdam Coffee Bar, New Hope, PA", lat:40.3443274, lng:-75.0378321,
+   tags:["特色拿鐵","盆栽美學"],
+   desc:"小巧但很有氣氛的咖啡吧，手工特調拿鐵（檸檬可頌拿鐵、巧克力花生拿鐵）很有創意，店內滿滿的盆栽植物，適合悠閒坐一下。"},
+  {cat:"coffee", name:"Mama Hawk's Kitchen & Coffee", time:20, addr:"Mama Hawk's Kitchen & Coffee, Peddler's Village, Lahaska, PA", lat:40.3485358, lng:-75.0332701,
+   tags:["IG打卡熱門"],
+   desc:"位在 Peddler's Village 裡的人氣咖啡店，單品豆＋創意拿鐵組合多變，時常有主題快閃（如 Gilmore Girls 主題），逛街順路最方便。"},
+  {cat:"coffee", name:"Vanilla Café", time:25, addr:"Vanilla Cafe, New Hope, PA", lat:40.3657397, lng:-74.9523074,
+   tags:["河景咖啡廳"],
+   desc:"德拉瓦河畔的精緻咖啡廳，裝潢走「夢幻甜美」風，主打早午餐＋手沖咖啡＋甜點，邊喝咖啡邊看河景很放鬆。"},
+  {cat:"coffee", name:"Homestead Coffee Roasters", time:35, addr:"Homestead Coffee Roasters, Upper Black Eddy, PA", lat:40.5660278, lng:-75.1033167,
+   tags:["百年雜貨店自烘豆","運河旁"],
+   desc:"開業超過35年的歷史雜貨店兼自家烘豆咖啡館，就在德拉瓦運河旁，可以坐在運河邊喝咖啡，順遊 Ringing Rocks Park 時最適合停靠。"},
+  {cat:"coffee", name:"La Colombe Coffee Workshop（Fishtown創始店）", time:45, addr:"La Colombe Coffee Workshop, Philadelphia, PA", lat:39.971241, lng:-75.134027,
+   tags:["首選","費城起家連鎖名店"], top:true,
+   desc:"從費城發跡、現已紅遍全美的連鎖咖啡品牌創始旗艦店，空間挑高寬敞、氣氛很潮，招牌 Draft Latte（罐裝冷萃拿鐵）就是從這裡發明的。"},
+  {cat:"coffee", name:"Elixr Coffee Roasters", time:45, addr:"Elixr Coffee Roasters, Philadelphia, PA", lat:39.9582804, lng:-75.1583082,
+   tags:["獲獎烘豆"],
+   desc:"費城獲獎連連的精品咖啡烘豆品牌，Callowhill 店是日式侘寂風格的烘豆坊兼咖啡館，單品咖啡選擇豐富，咖啡迷必訪。"},
+  {cat:"coffee", name:"Devoción（紐約）", time:110, addr:"Devocion, Williamsburg, Brooklyn, NY", lat:40.714774, lng:-73.9622189,
+   tags:["紐約行程","溫室造景超美"],
+   desc:"布魯克林威廉斯堡人氣咖啡店，玻璃屋＋滿滿熱帶植物的溫室造景超好拍，咖啡豆從產地到烘焙只要7天，新鮮度是招牌賣點。"},
+
+  // ---------------- 書店 ----------------
+  {cat:"bookstore", name:"Doylestown Bookshop", time:15, addr:"Doylestown Bookshop, Doylestown, PA", lat:40.3096072, lng:-75.1304124,
+   tags:["首選","近","禮品文具豐富"], top:true,
+   desc:"Bucks County 在地超人氣獨立書店，書籤、文具、小禮物選擇也很豐富，員工選書（Staff Picks）區特別推薦，逛起來很有溫度。"},
+  {cat:"bookstore", name:"Farley's Bookshop", time:25, addr:"Farley's Bookshop, New Hope, PA", lat:40.3631067, lng:-74.9510417,
+   tags:["Bucks County最老獨立書店"],
+   desc:"1967年創立，Bucks County 最老的獨立書店，店員對書的熟悉度被許多客人形容「像是過目不忘」，童書區也很受好評。"},
+  {cat:"bookstore", name:"Joseph Fox Bookshop", time:45, addr:"Joseph Fox Bookshop, Philadelphia, PA", lat:39.9507072, lng:-75.1697672,
+   tags:["費城最老獨立書店"],
+   desc:"費城歷史最久的獨立書店之一，空間雖小但選書精準，建築、藝術、人文類特別強，書店人都推薦的「真正愛書人」去處。"},
+  {cat:"bookstore", name:"Harriett's Bookshop", time:50, addr:"Harriett's Bookshop, Philadelphia, PA", lat:39.9694965, lng:-75.1318914,
+   tags:["特色選書"],
+   desc:"以「逃奴鐵路」領袖 Harriet Tubman 命名的特色書店，主打女性與黑人作家作品，店主經常舉辦簽書會與社區活動，是費城書店圈的代表人物之一。"},
+  {cat:"bookstore", name:"Strand Book Store（紐約）", time:110, addr:"Strand Book Store, New York, NY", lat:40.7332515, lng:-73.9909532,
+   tags:["紐約行程","18英里的書"],
+   desc:"紐約最具代表性的獨立書店，自稱店內書架總長「18英里」，新書、二手書、絕版書都找得到，逛一整個下午都不會無聊。"},
+  {cat:"bookstore", name:"Books of Wonder（紐約）", time:110, addr:"Books of Wonder, New York, NY", lat:40.7386956, lng:-73.9943253,
+   tags:["紐約行程","童書專門店"],
+   desc:"紐約老字號童書專門店，許多繪本都有作者親筆簽名版，店員對童書如數家珍，帶小孩來挑書是很特別的體驗。"},
+];
+
+/* =========================================================
+   RENDER (cards)
+========================================================= */
+const catMap = Object.fromEntries(CATS.map(c=>[c.id,c]));
+
+function tierOf(t){
+  if(t<=20) return "near";
+  if(t<=45) return "mid";
+  if(t<=80) return "far";
+  return "furthest";
+}
+
+function mapsUrl(addr){
+  return "https://www.google.com/maps/dir/?api=1&origin="+encodeURIComponent(ORIGIN)+"&destination="+encodeURIComponent(addr)+"&travelmode=driving";
+}
+
+function cardHtml(item, idx){
+  const cat = catMap[item.cat];
+  const tags = (item.tags||[]).map(t=>`<span class="tag${item.top && t==='首選' ? ' top':''}">${t}</span>`).join("");
+  return `
+  <div class="card" data-idx="${idx}" data-cat="${item.cat}" data-time="${item.time}" data-tier="${tierOf(item.time)}" data-search="${(item.name+" "+item.desc).toLowerCase()}">
+    <div class="stamp" style="--cat-color:${cat.color}">${cat.emoji}</div>
+    <div class="card-top"><span class="time-pill">🚗 ${item.time} 分</span></div>
+    <h3><a href="${mapsUrl(item.addr)}" target="_blank" rel="noopener">${item.name}</a></h3>
+    <div class="tagrow">${tags}</div>
+    <p>${item.desc}</p>
+  </div>`;
+}
+
+function buildSections(){
+  const wrap = document.getElementById("contentWrap");
+  const jumpRow = document.getElementById("jumpRow");
+  let html = "";
+  let jumpHtml = "";
+  CATS.forEach(cat=>{
+    const items = DATA.filter(d=>d.cat===cat.id);
+    if(items.length===0) return;
+    jumpHtml += `<button class="jumpchip" data-cat="${cat.id}">${cat.emoji} ${cat.label}</button>`;
+    html += `
+    <div class="section" id="sec-${cat.id}" data-section="${cat.id}" style="--cat-color:${cat.color}">
+      <div class="section-head" style="--cat-color:${cat.color}">
+        <span class="emoji">${cat.emoji}</span>
+        <h2>${cat.label}</h2>
+        <span class="count">${items.length}</span>
+      </div>
+      <div class="grid">
+        ${items.map((it)=>cardHtml(it, DATA.indexOf(it))).join("")}
+      </div>
+    </div>`;
+  });
+  wrap.innerHTML = html;
+  jumpRow.innerHTML = jumpHtml;
+
+  document.getElementById("statCat").textContent = CATS.filter(c=>DATA.some(d=>d.cat===c.id)).length;
+  document.getElementById("statCount").textContent = DATA.length;
+}
+
+/* =========================================================
+   CATEGORY TOGGLE (multi-select, syncs top row + map legend)
+========================================================= */
+let activeCats = new Set();
+let onlyTop = false;
+
+function availableCatIds(){
+  return CATS.filter(c=>DATA.some(d=>d.cat===c.id)).map(c=>c.id);
+}
+
+function renderCatToggleStates(){
+  document.querySelectorAll(".jumpchip[data-cat], .legend-chip[data-cat]").forEach(el=>{
+    const id = el.dataset.cat;
+    const cat = catMap[id];
+    const isActive = activeCats.has(id);
+    el.classList.toggle("active", isActive);
+    if(isActive){
+      el.style.background = cat.color;
+      el.style.borderColor = cat.color;
+      el.style.color = cat.textOnActive || "#fff";
+    } else {
+      el.style.background = "";
+      el.style.borderColor = "";
+      el.style.color = "";
+    }
+  });
+}
+
+function scrollToSection(catId){
+  const el = document.getElementById("sec-"+catId);
+  if(!el || el.style.display === "none") return;
+  const offset = document.querySelector(".controlbar").offsetHeight + 10;
+  const top = el.getBoundingClientRect().top + window.scrollY - offset;
+  window.scrollTo({top, behavior:"smooth"});
+}
+
+function toggleCategory(catId, opts){
+  opts = opts || {};
+  const turningOn = !activeCats.has(catId);
+  if(turningOn) activeCats.add(catId); else activeCats.delete(catId);
+  renderCatToggleStates();
+  applyFilters();
+  if(turningOn && opts.scroll){
+    setTimeout(()=>scrollToSection(catId), 50);
+  }
+}
+
+function selectAllCats(){
+  activeCats = new Set(availableCatIds());
+  renderCatToggleStates();
+  applyFilters();
+}
+
+function clearAllCats(){
+  activeCats = new Set();
+  renderCatToggleStates();
+  applyFilters();
+}
+
+/* =========================================================
+   MAP (Leaflet)
+========================================================= */
+let map, allMarkers = [];
+
+function initMap(){
+  map = L.map('leafletMap', {scrollWheelZoom:false}).setView([ORIGIN_LAT, ORIGIN_LNG], 11);
+  L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+    attribution:'&copy; OpenStreetMap contributors',
+    maxZoom:18
+  }).addTo(map);
+
+  // home marker (heart) — always visible, not tied to category filters
+  const homeIcon = L.divIcon({
+    html: '<div style="font-size:26px;line-height:26px;text-shadow:0 0 3px #fff,0 0 3px #fff;">❤️</div>',
+    className:'', iconSize:[26,26], iconAnchor:[13,13]
+  });
+  L.marker([ORIGIN_LAT, ORIGIN_LNG], {icon:homeIcon, zIndexOffset:1000})
+    .addTo(map)
+    .bindPopup("<b>❤️ 二姊家</b><br>712 Conrad Dr, Warrington, PA");
+
+  DATA.forEach((item)=>{
+    if(item.lat==null || item.lng==null) return;
+    const cat = catMap[item.cat];
+    const marker = L.circleMarker([item.lat, item.lng], {
+      radius:7, color:"#fff", weight:1.5, fillColor:cat.color, fillOpacity:.9
+    });
+    const popupHtml = `<b>${cat.emoji} ${item.name}</b><br>🚗 約 ${item.time} 分鐘<br><a class="popup-link" href="${mapsUrl(item.addr)}" target="_blank" rel="noopener">開啟路線 →</a>`;
+    marker.bindPopup(popupHtml);
+    item._marker = marker;
+    allMarkers.push(marker);
+    // not added to map yet — visibility controlled by applyFilters/category toggles
+  });
+
+  document.getElementById("mapFitAll").addEventListener("click", fitMapToVisible);
+  document.getElementById("mapFitHome").addEventListener("click", ()=>{
+    map.setView([ORIGIN_LAT, ORIGIN_LNG], 11);
+  });
+
+  // legend doubles as a toggle control, synced with the top category row
+  const legend = document.getElementById("mapLegend");
+  let legendHtml = `<span class="legend-chip home">❤️ 二姊家</span>`;
+  CATS.forEach(c=>{
+    if(DATA.some(d=>d.cat===c.id)){
+      legendHtml += `<button class="legend-chip" data-cat="${c.id}"><span class="dot" style="background:${c.color}"></span>${c.emoji} ${c.label}</button>`;
+    }
+  });
+  legend.innerHTML = legendHtml;
+}
+
+function fitMapToVisible(){
+  if(!map) return;
+  const pts = [[ORIGIN_LAT, ORIGIN_LNG]];
+  DATA.forEach(item=>{
+    if(item._marker && map.hasLayer(item._marker)) pts.push([item.lat, item.lng]);
+  });
+  if(pts.length<=1){
+    map.setView([ORIGIN_LAT, ORIGIN_LNG], 11);
+  } else {
+    map.fitBounds(L.latLngBounds(pts), {padding:[28,28], maxZoom:13});
+  }
+}
+
+function syncMapWithFilters(q){
+  DATA.forEach(item=>{
+    if(!item._marker) return;
+    const catOk = activeCats.has(item.cat);
+    const tierOk = activeTier==="all" || tierOf(item.time)===activeTier;
+    const searchOk = !q || (item.name+" "+item.desc).toLowerCase().includes(q);
+    const topOk = !onlyTop || item.top===true;
+    const show = catOk && tierOk && searchOk && topOk;
+    if(show){
+      if(!map.hasLayer(item._marker)) item._marker.addTo(map);
+    } else {
+      if(map.hasLayer(item._marker)) map.removeLayer(item._marker);
+    }
+  });
+  fitMapToVisible();
+}
+
+/* =========================================================
+   FILTER
+========================================================= */
+let activeTier = "all";
+
+function highlight(text, q){
+  if(!q) return text;
+  const idx = text.toLowerCase().indexOf(q.toLowerCase());
+  if(idx===-1) return text;
+  return text.slice(0,idx)+"<mark>"+text.slice(idx, idx+q.length)+"</mark>"+text.slice(idx+q.length);
+}
+
+function applyFilters(){
+  const q = document.getElementById("searchInput").value.trim().toLowerCase();
+  document.getElementById("searchClear").classList.toggle("show", q.length>0);
+
+  let anyVisible = false;
+  const noCatSelected = activeCats.size === 0;
+
+  document.querySelectorAll(".section").forEach(sec=>{
+    const catId = sec.dataset.section;
+    const catOk = activeCats.has(catId);
+    let visibleInSection = 0;
+    sec.querySelectorAll(".card").forEach(card=>{
+      const tierOk = activeTier==="all" || card.dataset.tier===activeTier;
+      const searchOk = !q || card.dataset.search.includes(q);
+      const idx = card.dataset.idx;
+      const item = DATA[idx];
+      const topOk = !onlyTop || item.top===true;
+      const show = catOk && tierOk && searchOk && topOk;
+      card.style.display = show ? "" : "none";
+
+      const h3a = card.querySelector("h3 a");
+      const p = card.querySelector("p");
+      if(h3a) h3a.innerHTML = highlight(item.name, q);
+      if(p) p.innerHTML = highlight(item.desc, q);
+
+      if(show){ visibleInSection++; anyVisible = true; }
+    });
+    sec.style.display = visibleInSection>0 ? "" : "none";
+  });
+
+  document.getElementById("emptyPrompt").classList.toggle("show", noCatSelected);
+  document.getElementById("emptyMsg").classList.toggle("show", !noCatSelected && !anyVisible);
+
+  if(map) syncMapWithFilters(q);
+}
+
+/* =========================================================
+   INIT
+========================================================= */
+buildSections();
+initMap();
+renderCatToggleStates();
+applyFilters();
+
+document.getElementById("searchInput").addEventListener("input", applyFilters);
+document.getElementById("searchClear").addEventListener("click", ()=>{
+  document.getElementById("searchInput").value = "";
+  applyFilters();
+});
+
+document.getElementById("distanceChips").querySelectorAll(".chip[data-tier]").forEach(chip=>{
+  chip.addEventListener("click", ()=>{
+    document.querySelectorAll("#distanceChips .chip[data-tier]").forEach(c=>c.classList.remove("active"));
+    chip.classList.add("active");
+    activeTier = chip.dataset.tier;
+    applyFilters();
+  });
+});
+
+document.getElementById("topOnlyChip").addEventListener("click", (e)=>{
+  onlyTop = !onlyTop;
+  e.currentTarget.classList.toggle("active", onlyTop);
+  applyFilters();
+});
+
+document.getElementById("jumpRow").addEventListener("click", (e)=>{
+  const btn = e.target.closest(".jumpchip");
+  if(btn) toggleCategory(btn.dataset.cat, {scroll:true});
+});
+
+document.getElementById("mapLegend").addEventListener("click", (e)=>{
+  const btn = e.target.closest(".legend-chip[data-cat]");
+  if(btn) toggleCategory(btn.dataset.cat, {scroll:true});
+});
+
+document.getElementById("catSelectAll").addEventListener("click", selectAllCats);
+document.getElementById("catClearAll").addEventListener("click", clearAllCats);
+document.getElementById("emptyPromptAll").addEventListener("click", selectAllCats);
+
+const topBtn = document.getElementById("topBtn");
+window.addEventListener("scroll", ()=>{
+  topBtn.classList.toggle("show", window.scrollY>400);
+});
+topBtn.addEventListener("click", ()=>window.scrollTo({top:0,behavior:"smooth"}));
+</script>
+</body>
+</html>

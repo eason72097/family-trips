@@ -968,9 +968,10 @@ function rebuildCats(){
     .filter(([,c])=> c && c.id)
     .map(([,c])=> c);
   CATS = [...BASE_CATS, ...extra];
-  // 重建 catMap（直接覆寫物件 properties 保持同一參考）
   Object.keys(catMap).forEach(k=> delete catMap[k]);
   CATS.forEach(c=> catMap[c.id]=c);
+  // 任何新出現的分類自動加入 activeCats（確保自訂分類載入後也顯示）
+  CATS.forEach(c=>{ if(!activeCats.has(c.id)) activeCats.add(c.id); });
   buildSections();
   rebuildMapLegend();
   renderCatToggleStates();
@@ -1317,7 +1318,7 @@ function buildSections(){
 /* =========================================================
    CATEGORY TOGGLE (multi-select, syncs top row + map legend)
 ========================================================= */
-let activeCats = new Set();
+let activeCats = new Set(CATS.map(c=>c.id));
 let onlyTop = false;
 
 function availableCatIds(){

@@ -462,6 +462,7 @@
       <button class="chip" data-tier="furthest">📍最遠・80分＋</button>
       <button class="chip" id="topOnlyChip">⭐ 只看首選</button>
       <button class="chip" id="wantOnlyChip">❤️ 只看想去<span class="want-count-badge" id="wantCountBadge">0</span></button>
+      <button class="chip" id="customOnlyChip">🛠️ 只看自訂新增</button>
     </div>
     <div class="cat-toolbar">
       <span class="cat-toolbar-label">📂 分類（可多選，點下方或地圖圖例切換顯示）</span>
@@ -1422,7 +1423,8 @@ function syncMapWithFilters(q){
     const uid = item._uid || "";
     const wantOk = !wantOnly || wantSet.has(uid);
     const deletedOk = !deletedSet.has(uid);
-    const show = catOk && tierOk && searchOk && topOk && wantOk && deletedOk;
+    const customOk = !onlyCustom || uid.startsWith("custom_");
+    const show = catOk && tierOk && searchOk && topOk && wantOk && deletedOk && customOk;
     if(show){
       if(!map.hasLayer(item._marker)) item._marker.addTo(map);
     } else {
@@ -1469,6 +1471,7 @@ function syncCustomMarkers(q){
    FILTER
 ========================================================= */
 let activeTier = "all";
+let onlyCustom = false;
 
 function highlight(text, q){
   if(!q) return text;
@@ -1497,7 +1500,8 @@ function applyFilters(){
       const searchOk = !q || card.dataset.search.includes(q);
       const topOk = !onlyTop || item.top===true;
       const wantOk = !wantOnly || wantSet.has(uid);
-      const show = catOk && tierOk && searchOk && topOk && wantOk;
+      const customOk = !onlyCustom || uid.startsWith("custom_");
+      const show = catOk && tierOk && searchOk && topOk && wantOk && customOk;
       card.style.display = show ? "" : "none";
 
       const h3a = card.querySelector("h3 a");
@@ -1549,6 +1553,12 @@ document.getElementById("topOnlyChip").addEventListener("click", (e)=>{
 document.getElementById("wantOnlyChip").addEventListener("click", (e)=>{
   wantOnly = !wantOnly;
   e.currentTarget.classList.toggle("active", wantOnly);
+  applyFilters();
+});
+
+document.getElementById("customOnlyChip").addEventListener("click", (e)=>{
+  onlyCustom = !onlyCustom;
+  e.currentTarget.classList.toggle("active", onlyCustom);
   applyFilters();
 });
 

@@ -490,6 +490,7 @@
   <div class="ap-row">
     <button class="ap-save" id="apSave">💾 儲存</button>
     <button class="ap-ai" id="apAI">✨ AI 幫我寫介紹</button>
+    <button class="ap-ai" id="apKeyBtn" style="background:var(--brown)" title="設定或更換 Gemini API Key">🔑 設定 Key</button>
     <button class="ap-cancel" id="apCancel">取消</button>
   </div>
 </div>
@@ -1399,7 +1400,21 @@ document.getElementById("apAI").addEventListener("click",async()=>{
   }
 });
 
-document.getElementById("jumpRow").addEventListener("click", (e)=>{
+document.getElementById("apKeyBtn").addEventListener("click",()=>{
+  const current = getGeminiKey();
+  const msg = current
+    ? `目前已儲存的 Key：\n${current.slice(0,8)}…（後面隱藏）\n\n請輸入新的 Gemini API Key（從 aistudio.google.com 取得，以 AIzaSy 開頭）\n留白送出則清除現有 Key：`
+    : `請輸入 Gemini API Key\n（從 https://aistudio.google.com/app/apikey 取得，以 AIzaSy 開頭）：`;
+  const newKey = prompt(msg);
+  if(newKey === null) return; // 按取消
+  if(newKey.trim()===""){
+    setGeminiKey("");
+    document.getElementById("aiStatus").textContent = "✅ Key 已清除，下次點 AI 生成時會重新提示輸入。";
+  } else {
+    setGeminiKey(newKey.trim());
+    document.getElementById("aiStatus").textContent = "✅ Key 已更新，可以點「✨ AI 幫我寫介紹」測試。";
+  }
+});
   const btn = e.target.closest(".jumpchip");
   if(btn) toggleCategory(btn.dataset.cat, {scroll:true});
 });

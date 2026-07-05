@@ -1321,7 +1321,7 @@ let activeCats = new Set();
 let onlyTop = false;
 
 function availableCatIds(){
-  return CATS.filter(c=>DATA.some(d=>d.cat===c.id)).map(c=>c.id);
+  return CATS.map(c=>c.id);
 }
 
 function renderCatToggleStates(){

@@ -963,10 +963,12 @@ function rebuildCats(){
 function rebuildMapLegend(){
   const legend = document.getElementById("mapLegend");
   if(!legend) return;
+  const isCustomCat = (id)=> !BASE_CATS.some(b=>b.id===id);
   const hasData = (id)=> DATA.some(d=>d.cat===id) || Object.values(customPlaces).some(cp=>cp&&cp.cat===id);
   let html = `<span class="legend-chip home">❤️ 二姊家</span>`;
   CATS.forEach(c=>{
-    if(hasData(c.id)){
+    // 有資料的分類 + 所有自訂分類都顯示
+    if(hasData(c.id) || isCustomCat(c.id)){
       html += `<button class="legend-chip" data-cat="${c.id}"><span class="dot" style="background:${c.color}"></span>${c.emoji} ${c.label}</button>`;
     }
   });
@@ -1259,27 +1261,39 @@ function buildSections(){
   const jumpRow = document.getElementById("jumpRow");
   let html = "";
   let jumpHtml = "";
+  const isCustomCat = (id)=> !BASE_CATS.some(b=>b.id===id);
   CATS.forEach(cat=>{
     const items = DATA.filter(d=>d.cat===cat.id);
-    if(items.length===0) return;
+    const customItems = Object.entries(customPlaces).filter(([uid,cp])=>cp&&cp.cat===cat.id);
+    // 自訂分類：即使沒有地點也要顯示（讓使用者能新增地點進去）
+    // 內建分類：沒有任何地點才略過
+    if(items.length===0 && customItems.length===0 && !isCustomCat(cat.id)) return;
+    const totalCount = items.length + customItems.length;
     jumpHtml += `<button class="jumpchip" data-cat="${cat.id}">${cat.emoji} ${cat.label}</button>`;
+    const emptyHint = totalCount===0
+      ? `<div style="padding:20px 10px;text-align:center;color:var(--ink-soft);font-size:13px;">
+           還沒有地點 — 點右下角 <b>＋</b> 新增地點，選擇「${cat.emoji} ${cat.label}」分類
+         </div>`
+      : "";
     html += `
     <div class="section" id="sec-${cat.id}" data-section="${cat.id}" style="--cat-color:${cat.color}">
       <div class="section-head" style="--cat-color:${cat.color}">
         <span class="emoji">${cat.emoji}</span>
         <h2>${cat.label}</h2>
-        <span class="count">${items.length}</span>
+        ${totalCount>0 ? `<span class="count">${totalCount}</span>` : ""}
+        ${isCustomCat(cat.id) ? '<span style="font-size:11px;color:var(--ink-soft);margin-left:4px;">自訂</span>' : ""}
       </div>
       <div class="grid">
         ${items.map((it)=>cardHtml(it, "us_"+DATA.indexOf(it))).join("")}
-        ${Object.entries(customPlaces).filter(([uid,cp])=>cp&&cp.cat===cat.id).map(([uid,cp])=>cardHtml({...cp,isCustom:true},uid)).join("")}
+        ${customItems.map(([uid,cp])=>cardHtml({...cp,isCustom:true},uid)).join("")}
+        ${emptyHint}
       </div>
     </div>`;
   });
   wrap.innerHTML = html;
   jumpRow.innerHTML = jumpHtml;
 
-  document.getElementById("statCat").textContent = CATS.filter(c=>DATA.some(d=>d.cat===c.id)).length;
+  document.getElementById("statCat").textContent = CATS.filter(c=>DATA.some(d=>d.cat===c.id)||Object.values(customPlaces).some(cp=>cp&&cp.cat===c.id)||isCustomCat(c.id)).length;
   document.getElementById("statCount").textContent = DATA.length;
 }
 

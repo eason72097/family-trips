@@ -1432,7 +1432,7 @@ function fitMapToVisible(){
 function syncMapWithFilters(q){
   DATA.forEach(item=>{
     if(!item._marker) return;
-    const catOk = activeCats.has(item.cat);
+    const catOk = q ? true : activeCats.has(item.cat);
     const tierOk = activeTier==="all" || tierOf(item.time)===activeTier;
     const searchOk = !q || (item.name+" "+item.desc).toLowerCase().includes(q);
     const topOk = !onlyTop || item.top===true;
@@ -1498,14 +1498,16 @@ function highlight(text, q){
 
 function applyFilters(){
   const q = document.getElementById("searchInput").value.trim().toLowerCase();
-  document.getElementById("searchClear").classList.toggle("show", q.length>0);
+  const isSearching = q.length > 0;
+  document.getElementById("searchClear").classList.toggle("show", isSearching);
 
   let anyVisible = false;
   const noCatSelected = activeCats.size === 0;
 
   document.querySelectorAll(".section").forEach(sec=>{
     const catId = sec.dataset.section;
-    const catOk = activeCats.has(catId);
+    // 搜尋模式：跳過分類限制，全站搜；非搜尋模式：遵守分類篩選
+    const catOk = isSearching || activeCats.has(catId);
     let visibleInSection = 0;
     sec.querySelectorAll(".card").forEach(card=>{
       const uid = card.dataset.uid;
@@ -1530,8 +1532,9 @@ function applyFilters(){
     sec.style.display = visibleInSection>0 ? "" : "none";
   });
 
-  document.getElementById("emptyPrompt").classList.toggle("show", noCatSelected);
-  document.getElementById("emptyMsg").classList.toggle("show", !noCatSelected && !anyVisible);
+  // 搜尋時不顯示「請先選分類」提示
+  document.getElementById("emptyPrompt").classList.toggle("show", noCatSelected && !isSearching);
+  document.getElementById("emptyMsg").classList.toggle("show", !noCatSelected && !anyVisible && !isSearching || isSearching && !anyVisible);
 
   if(map) syncMapWithFilters(q);
 }

@@ -479,8 +479,8 @@
     <input type="number" id="apTime" placeholder="45" min="0" max="480">
   </div>
   <div class="form-row">
-    <label>地址（用於 Google 地圖導航）</label>
-    <input type="text" id="apAddr" placeholder="例：Rittenhouse Square, Philadelphia, PA">
+    <label>地址 或 Google Maps 連結（點地名後會直接開此連結）</label>
+    <input type="text" id="apAddr" placeholder="貼入 Google Maps 分享連結，或輸入地址如：Reading Terminal Market, Philadelphia, PA">
   </div>
   <div class="form-row">
     <label>介紹說明</label>
@@ -646,25 +646,48 @@ async function saveCustomPlace(data){
   catch(e){ console.error(e); delete customPlaces[uid]; buildSections(); applyFilters(); }
 }
 
-/* ====== AI 自動生介紹 ====== */
+/* ====== AI 自動生介紹 (Gemini API，免費) ====== */
+function getGeminiKey(){
+  return localStorage.getItem("geminiKey")||"";
+}
+function setGeminiKey(k){
+  if(k) localStorage.setItem("geminiKey",k.trim());
+  else localStorage.removeItem("geminiKey");
+}
+
 async function generateAIDescription(name, catLabel, addr, time){
-  const resp = await fetch("https://api.anthropic.com/v1/messages",{
-    method:"POST",
-    headers:{"Content-Type":"application/json"},
-    body:JSON.stringify({
-      model:"claude-sonnet-4-6",
-      max_tokens:200,
-      messages:[{role:"user",content:`你是美國旅遊編輯，請用繁體中文為以下地點寫一段60-80字的簡短介紹，風格親切實用，聚焦特色亮點與適合族群，不要加標題、不要換行。
+  let key = getGeminiKey();
+  if(!key){
+    key = prompt(
+      "需要 Google Gemini API Key 才能使用 AI 生成介紹功能。\n\n"+
+      "免費申請步驟（約1分鐘）：\n"+
+      "1. 前往 https://aistudio.google.com/app/apikey\n"+
+      "2. 用 Google 帳號登入 → 點「Create API key」\n"+
+      "3. 複製產生的 Key 貼到下方\n\n"+
+      "Key 只會存在你的瀏覽器裡，不會上傳到任何地方：");
+    if(!key) return "";
+    setGeminiKey(key);
+  }
+  const prompt_text = `你是美國旅遊編輯，請用繁體中文為以下地點寫一段60-80字的簡短介紹，風格親切實用，聚焦特色亮點與適合族群，不要加標題、不要換行。
 地點：${name}
 分類：${catLabel}
 地址：${addr}
 從賓州Warrington出發約${time}分鐘車程
 
-只輸出介紹文字本身。`}]
-    })
-  });
+只輸出介紹文字本身。`;
+  const resp = await fetch(
+    `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${key}`,
+    { method:"POST", headers:{"Content-Type":"application/json"},
+      body:JSON.stringify({contents:[{parts:[{text:prompt_text}]}]}) }
+  );
+  if(!resp.ok){
+    const err = await resp.json().catch(()=>({}));
+    // Key 無效就清掉，讓下次重新輸入
+    if(resp.status===400||resp.status===403){ setGeminiKey(""); }
+    throw new Error(err.error?.message||`HTTP ${resp.status}`);
+  }
   const d = await resp.json();
-  return d.content?.[0]?.text?.trim()||"";
+  return d.candidates?.[0]?.content?.parts?.[0]?.text?.trim()||"";
 }
 
 /* ====== Firebase 初始化 ====== */
@@ -973,7 +996,16 @@ function tierOf(t){
 }
 
 function mapsUrl(addr){
+  // 如果 addr 是一個 URL（使用者貼上 Google Maps 連結），直接用
+  if(addr && /^https?:\/\//i.test(addr)) return addr;
   return "https://www.google.com/maps/dir/?api=1&origin="+encodeURIComponent(ORIGIN)+"&destination="+encodeURIComponent(addr)+"&travelmode=driving";
+}
+
+// 從 Google Maps URL 嘗試解析座標（如 .../place/Name/@25.0456,121.5083,...）
+function extractLatLng(url){
+  const m = url.match(/@(-?\d+\.?\d+),(-?\d+\.?\d+)/);
+  if(m) return {lat:parseFloat(m[1]),lng:parseFloat(m[2])};
+  return null;
 }
 
 function cardHtml(item, uid){
@@ -1139,11 +1171,11 @@ function fitMapToVisible(){
   DATA.forEach(item=>{
     if(item._marker && map.hasLayer(item._marker)) pts.push([item.lat, item.lng]);
   });
-  if(pts.length<=1){
-    map.setView([ORIGIN_LAT, ORIGIN_LNG], 11);
-  } else {
-    map.fitBounds(L.latLngBounds(pts), {padding:[28,28], maxZoom:13});
-  }
+  Object.values(customMarkers).forEach(m=>{
+    if(map.hasLayer(m)){ const ll=m.getLatLng(); pts.push([ll.lat,ll.lng]); }
+  });
+  if(pts.length<=1){ map.setView([ORIGIN_LAT, ORIGIN_LNG], 11); }
+  else { map.fitBounds(L.latLngBounds(pts), {padding:[28,28], maxZoom:13}); }
 }
 
 function syncMapWithFilters(q){
@@ -1163,7 +1195,40 @@ function syncMapWithFilters(q){
       if(map.hasLayer(item._marker)) map.removeLayer(item._marker);
     }
   });
+  // 自訂地點的圓點
+  syncCustomMarkers(q);
   fitMapToVisible();
+}
+
+let customMarkers = {}; // uid → Leaflet marker
+
+function syncCustomMarkers(q){
+  if(!map) return;
+  // 新增或重新顯示
+  Object.entries(customPlaces).forEach(([uid,cp])=>{
+    if(!cp||!cp.lat||!cp.lng) return;
+    const cat = catMap[cp.cat]||{color:"#46627E",emoji:"📍"};
+    if(!customMarkers[uid]){
+      const marker = L.circleMarker([cp.lat,cp.lng],{radius:7,color:"#fff",weight:1.5,fillColor:cat.color,fillOpacity:.9});
+      marker.bindPopup(`<b>${cat.emoji} ${cp.name}</b><br>🚗 約 ${cp.time} 分鐘<br><a class="popup-link" href="${mapsUrl(cp.addr)}" target="_blank" rel="noopener">前往 →</a>`);
+      customMarkers[uid] = marker;
+    }
+    const catOk = activeCats.has(cp.cat);
+    const tierOk = activeTier==="all"||tierOf(cp.time)===activeTier;
+    const searchOk = !q||(cp.name+" "+(cp.desc||"")).toLowerCase().includes(q);
+    const wantOk = !wantOnly||wantSet.has(uid);
+    const deletedOk = !deletedSet.has(uid);
+    const show = catOk&&tierOk&&searchOk&&wantOk&&deletedOk;
+    if(show){ if(!map.hasLayer(customMarkers[uid])) customMarkers[uid].addTo(map); }
+    else { if(map.hasLayer(customMarkers[uid])) map.removeLayer(customMarkers[uid]); }
+  });
+  // 移除已刪除或不存在的自訂地點圓點
+  Object.keys(customMarkers).forEach(uid=>{
+    if(!customPlaces[uid]||deletedSet.has(uid)){
+      if(map.hasLayer(customMarkers[uid])) map.removeLayer(customMarkers[uid]);
+      delete customMarkers[uid];
+    }
+  });
 }
 
 /* =========================================================
@@ -1297,9 +1362,14 @@ document.getElementById("apSave").addEventListener("click",async()=>{
   const desc = document.getElementById("apDesc").value.trim();
   const cat  = document.getElementById("apCat").value;
   if(!name){ alert("請輸入地點名稱"); return; }
-  await saveCustomPlace({cat, name, time, addr:addr||name, desc, tags:[], top:false});
+  // 從 Google Maps URL 嘗試解析座標，讓地圖可以顯示圓點
+  let lat=null, lng=null;
+  if(/^https?:\/\//i.test(addr)){
+    const coords = extractLatLng(addr);
+    if(coords){ lat=coords.lat; lng=coords.lng; }
+  }
+  await saveCustomPlace({cat, name, time, addr:addr||name, lat, lng, desc, tags:[], top:false});
   closeAddPanel();
-  // 自動展開對應分類
   if(!activeCats.has(cat)){ activeCats.add(cat); renderCatToggleStates(); applyFilters(); }
   setTimeout(()=>{ const sec=document.getElementById("sec-"+cat); if(sec){const off=document.querySelector(".controlbar").offsetHeight+10; window.scrollTo({top:sec.getBoundingClientRect().top+window.scrollY-off,behavior:"smooth"});} },300);
 });
@@ -1316,10 +1386,14 @@ document.getElementById("apAI").addEventListener("click",async()=>{
   btn.disabled = true; statusEl.textContent = "✨ AI 正在生成介紹中…";
   try {
     const text = await generateAIDescription(name, catLabel, addr||name, time);
+    if(!text){ statusEl.textContent = "⚠️ 未收到回應，請稍後再試。"; return; }
     document.getElementById("apDesc").value = text;
     statusEl.textContent = "✅ 介紹已生成，可以直接編輯修改。";
   } catch(e){
-    statusEl.textContent = "⚠️ 生成失敗，請手動輸入介紹。";
+    const isKeyErr = e.message.includes("400")||e.message.includes("403")||e.message.includes("API_KEY");
+    statusEl.textContent = isKeyErr
+      ? "❌ API Key 無效或已過期，已自動清除，點「✨ AI 幫我寫介紹」重新輸入 Key。"
+      : `⚠️ 生成失敗（${e.message}），請稍後再試或手動輸入介紹。`;
   } finally {
     btn.disabled = false;
   }

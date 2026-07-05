@@ -677,7 +677,37 @@ async function generateAIDescription(name, catLabel, addr, time){
 
 只輸出介紹文字本身。`;
 
-  // 自動辨識 Key 類型：sk- 開頭 = OpenAI，AIzaSy 開頭 = Gemini
+  // 自動辨識 Key 類型
+  if(key.startsWith("sk-ant-")){
+    // === Claude (Anthropic) ===
+    let resp, d;
+    try{
+      resp = await fetch("https://api.anthropic.com/v1/messages",{
+        method:"POST",
+        headers:{
+          "Content-Type":"application/json",
+          "x-api-key": key,
+          "anthropic-version":"2023-06-01",
+          "anthropic-dangerous-direct-browser-access":"true"
+        },
+        body:JSON.stringify({
+          model:"claude-haiku-4-5-20251001",
+          max_tokens:300,
+          messages:[{role:"user",content:prompt_text}]
+        })
+      });
+      d = await resp.json();
+    } catch(e){ throw new Error("網路錯誤："+e.message); }
+    if(!resp.ok){
+      const msg = d.error?.message||JSON.stringify(d).slice(0,150);
+      if(resp.status===401||resp.status===403){setGeminiKey(""); throw new Error("KEY_INVALID: "+msg);}
+      throw new Error("[Claude] HTTP "+resp.status+": "+msg);
+    }
+    const text = d.content?.[0]?.text?.trim();
+    if(!text) throw new Error("Claude 回應格式異常");
+    return text;
+  }
+
   if(key.startsWith("sk-")){
     // === OpenAI / gpt-4o-mini ===
     let resp, d;
@@ -1440,8 +1470,8 @@ document.getElementById("apAI").addEventListener("click",async()=>{
 document.getElementById("apKeyBtn").addEventListener("click",()=>{
   const current = getGeminiKey();
   const msg = current
-    ? `目前已儲存的 Key：\n${current.slice(0,8)}…（後面隱藏）\n\n請輸入新的 AI API Key：\n• Gemini Key（免費，需開啟 GCP Billing）：以 AIzaSy 開頭，從 aistudio.google.com 取得\n• OpenAI Key（需儲值 $5，非常便宜）：以 sk- 開頭，從 platform.openai.com 取得\n\n留白送出則清除現有 Key：`
-    : `請輸入 AI API Key（兩種都支援）：\n\n• Gemini Key（免費）：\n  前往 https://aistudio.google.com/app/apikey 取得，以 AIzaSy 開頭\n  ※ 台灣地區需在 GCP Console 開啟 Billing 才能使用免費額度\n\n• OpenAI Key（儲值 $5，1元可生成數千段介紹）：\n  前往 https://platform.openai.com/api-keys 取得，以 sk- 開頭\n\nKey 僅存在你的瀏覽器，不會上傳：`;
+    ? `目前已儲存的 Key：\n${current.slice(0,8)}…（後面隱藏）\n\n請輸入新的 AI API Key（支援以下三種，留白送出則清除）：\n• Claude Key：以 sk-ant- 開頭，從 console.anthropic.com/settings/keys 取得\n• OpenAI Key：以 sk- 開頭，從 platform.openai.com/api-keys 取得\n• Gemini Key：以 AIzaSy 開頭，從 aistudio.google.com/app/apikey 取得\n\n新 Key：`
+    : `請輸入 AI API Key（支援三種，貼入後自動辨識）：\n\n• Claude Key（推薦，速度快）：\n  前往 https://console.anthropic.com/settings/keys 取得\n  格式：sk-ant-api03-...\n\n• OpenAI Key：\n  前往 https://platform.openai.com/api-keys 取得\n  格式：sk-...\n\n• Gemini Key（台灣需開啟 GCP Billing）：\n  前往 https://aistudio.google.com/app/apikey 取得\n  格式：AIzaSy...\n\nKey 僅存在你的瀏覽器，不會上傳：`;
   const newKey = prompt(msg);
   if(newKey === null) return;
   if(newKey.trim()===""){

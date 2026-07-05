@@ -677,34 +677,52 @@ async function generateAIDescription(name, catLabel, addr, time){
 
 只輸出介紹文字本身。`;
 
-  // 依序嘗試三個穩定的免費模型
-  const MODELS = ["gemini-1.5-flash", "gemini-1.5-flash-8b", "gemini-2.0-flash"];
-  let lastMsg = "所有模型均回應失敗";
+  // 自動辨識 Key 類型：sk- 開頭 = OpenAI，AIzaSy 開頭 = Gemini
+  if(key.startsWith("sk-")){
+    // === OpenAI / gpt-4o-mini ===
+    let resp, d;
+    try{
+      resp = await fetch("https://api.openai.com/v1/chat/completions",{
+        method:"POST",
+        headers:{"Content-Type":"application/json","Authorization":"Bearer "+key},
+        body:JSON.stringify({model:"gpt-4o-mini",max_tokens:300,messages:[{role:"user",content:prompt_text}]})
+      });
+      d = await resp.json();
+    } catch(e){ throw new Error("網路錯誤："+e.message); }
+    if(!resp.ok){
+      const msg = d.error?.message||JSON.stringify(d).slice(0,150);
+      if(resp.status===401||resp.status===403){setGeminiKey(""); throw new Error("KEY_INVALID: "+msg);}
+      throw new Error("[OpenAI] HTTP "+resp.status+": "+msg);
+    }
+    const text = d.choices?.[0]?.message?.content?.trim();
+    if(!text) throw new Error("OpenAI 回應格式異常");
+    return text;
+  }
 
+  // === Gemini（AIzaSy 開頭）===
+  const MODELS = ["gemini-1.5-flash","gemini-1.5-flash-8b","gemini-2.0-flash-lite","gemini-2.0-flash"];
+  let lastMsg = "所有 Gemini 模型均失敗";
   for(const model of MODELS){
     let resp, d;
     try{
       resp = await fetch(
         `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${key}`,
-        { method:"POST", headers:{"Content-Type":"application/json"},
-          body:JSON.stringify({contents:[{parts:[{text:prompt_text}]}]}) }
+        {method:"POST",headers:{"Content-Type":"application/json"},
+         body:JSON.stringify({contents:[{parts:[{text:prompt_text}]}]})}
       );
       d = await resp.json();
-    } catch(netErr){
-      lastMsg = "網路錯誤：" + netErr.message;
-      continue;
-    }
+    } catch(e){ lastMsg="網路錯誤："+e.message; continue; }
     if(resp.ok){
       const text = d.candidates?.[0]?.content?.parts?.[0]?.text?.trim();
       if(text) return text;
-      lastMsg = "回應格式異常 (" + model + ")"; continue;
+      lastMsg="回應格式異常("+model+")"; continue;
     }
-    const apiMsg = d.error?.message || JSON.stringify(d).slice(0,150);
-    lastMsg = "[" + model + "] HTTP " + resp.status + ": " + apiMsg;
-    // Key 真的無效 → 清掉，停止嘗試
-    if(d.error?.status==="PERMISSION_DENIED" || resp.status===403){
-      setGeminiKey(""); throw new Error("KEY_INVALID: " + apiMsg);
+    const apiMsg = d.error?.message||JSON.stringify(d).slice(0,150);
+    lastMsg = "["+model+"] HTTP "+resp.status+": "+apiMsg;
+    if(d.error?.status==="PERMISSION_DENIED"||resp.status===403){
+      setGeminiKey(""); throw new Error("KEY_INVALID: "+apiMsg);
     }
+    // 429 quota 超過 → 繼續試下一個模型
   }
   throw new Error(lastMsg);
 }
@@ -1422,8 +1440,8 @@ document.getElementById("apAI").addEventListener("click",async()=>{
 document.getElementById("apKeyBtn").addEventListener("click",()=>{
   const current = getGeminiKey();
   const msg = current
-    ? `目前已儲存的 Key：\n${current.slice(0,8)}…（後面隱藏）\n\n請輸入新的 Gemini API Key（從 aistudio.google.com 取得，以 AIzaSy 開頭）\n留白送出則清除現有 Key：`
-    : `請輸入 Gemini API Key\n（從 https://aistudio.google.com/app/apikey 取得，以 AIzaSy 開頭）：`;
+    ? `目前已儲存的 Key：\n${current.slice(0,8)}…（後面隱藏）\n\n請輸入新的 AI API Key：\n• Gemini Key（免費，需開啟 GCP Billing）：以 AIzaSy 開頭，從 aistudio.google.com 取得\n• OpenAI Key（需儲值 $5，非常便宜）：以 sk- 開頭，從 platform.openai.com 取得\n\n留白送出則清除現有 Key：`
+    : `請輸入 AI API Key（兩種都支援）：\n\n• Gemini Key（免費）：\n  前往 https://aistudio.google.com/app/apikey 取得，以 AIzaSy 開頭\n  ※ 台灣地區需在 GCP Console 開啟 Billing 才能使用免費額度\n\n• OpenAI Key（儲值 $5，1元可生成數千段介紹）：\n  前往 https://platform.openai.com/api-keys 取得，以 sk- 開頭\n\nKey 僅存在你的瀏覽器，不會上傳：`;
   const newKey = prompt(msg);
   if(newKey === null) return;
   if(newKey.trim()===""){

@@ -231,6 +231,83 @@
   .want-btn:hover{border-color:var(--rust);color:var(--rust);}
   .want-btn.wanted{background:#FFF0F0;border-color:var(--rust);color:var(--rust);font-weight:700;}
 
+  /* --- 刪除按鈕 --- */
+  .delete-btn{
+    position:absolute;top:9px;right:10px;width:22px;height:22px;border-radius:50%;
+    border:1px solid var(--line);background:#fff;color:var(--ink-soft);
+    font-size:11px;cursor:pointer;display:flex;align-items:center;justify-content:center;
+    opacity:0;transition:opacity .15s ease;z-index:2;padding:0;line-height:1;
+  }
+  .card:hover .delete-btn{opacity:1;}
+  .delete-btn:hover{background:var(--rust);border-color:var(--rust);color:#fff;}
+
+  /* --- 刪除確認 overlay --- */
+  .delete-confirm{
+    position:absolute;inset:0;border-radius:14px;
+    background:rgba(252,249,239,.96);backdrop-filter:blur(2px);
+    display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;
+    z-index:10;
+  }
+  .delete-confirm p{margin:0;font-weight:700;font-size:14px;}
+  .delete-confirm .dc-row{display:flex;gap:8px;}
+  .dc-yes{background:var(--rust);color:#fff;border:none;border-radius:8px;padding:6px 18px;cursor:pointer;font-family:'Oswald',sans-serif;font-size:13px;}
+  .dc-no{background:#fff;color:var(--ink-soft);border:1px solid var(--line);border-radius:8px;padding:6px 14px;cursor:pointer;font-family:'Oswald',sans-serif;font-size:13px;}
+
+  /* --- 新增地點面板 --- */
+  .add-overlay{position:fixed;inset:0;background:rgba(43,36,32,.4);z-index:200;display:none;}
+  .add-overlay.show{display:block;}
+  .add-panel{
+    position:fixed;bottom:0;left:0;right:0;max-height:88vh;overflow-y:auto;
+    background:var(--paper);border-top:2px solid var(--line);border-radius:20px 20px 0 0;
+    padding:20px 20px 36px;z-index:201;
+    transform:translateY(100%);transition:transform .3s ease;
+  }
+  .add-panel.show{transform:translateY(0);}
+  .add-panel h3{margin:0 0 14px;font-size:18px;font-weight:900;}
+  .form-row{margin-bottom:11px;}
+  .form-row label{display:block;font-size:11.5px;font-weight:600;color:var(--ink-soft);margin-bottom:3px;font-family:'Oswald',sans-serif;letter-spacing:.04em;}
+  .form-row input,.form-row select,.form-row textarea{
+    width:100%;padding:8px 10px;border:1px solid var(--line);border-radius:9px;
+    font-family:'Noto Sans TC',sans-serif;font-size:13.5px;color:var(--ink);
+    background:#fff;outline:none;box-sizing:border-box;
+  }
+  .form-row input:focus,.form-row select:focus,.form-row textarea:focus{border-color:var(--navy);}
+  .form-row textarea{min-height:80px;resize:vertical;}
+  .ap-row{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px;}
+  .ap-save{background:var(--forest);color:#fff;border:none;border-radius:9px;padding:8px 20px;cursor:pointer;font-family:'Oswald',sans-serif;font-size:13px;font-weight:700;}
+  .ap-ai{background:var(--navy);color:#fff;border:none;border-radius:9px;padding:8px 14px;cursor:pointer;font-family:'Oswald',sans-serif;font-size:13px;}
+  .ap-cancel{background:#fff;color:var(--ink-soft);border:1px solid var(--line);border-radius:9px;padding:8px 14px;cursor:pointer;font-family:'Oswald',sans-serif;font-size:13px;}
+  .ai-status{font-size:12px;color:var(--ink-soft);margin-top:5px;min-height:16px;}
+  .custom-badge{background:var(--navy);color:#fff;}
+
+  /* --- 已刪除備份區 --- */
+  .deleted-section{max-width:1080px;margin:0 auto 16px;padding:0 16px;}
+  .deleted-head{
+    display:flex;align-items:center;gap:10px;padding:10px 0;cursor:pointer;
+    border-top:1px dashed var(--line);user-select:none;
+  }
+  .deleted-head span.title{font-size:14px;font-weight:700;color:var(--ink-soft);}
+  .deleted-head .dc-count{font-family:'Oswald',sans-serif;font-size:12px;background:var(--line);color:var(--ink-soft);padding:1px 8px;border-radius:999px;}
+  .deleted-head .arrow{margin-left:auto;font-size:12px;color:var(--ink-soft);}
+  .deleted-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:10px;padding:10px 0 4px;}
+  .d-card{background:#f0ead6;border:1px dashed var(--line);border-radius:11px;padding:12px;opacity:.75;}
+  .d-card h4{margin:0 0 4px;font-size:13.5px;font-weight:700;color:var(--ink-soft);}
+  .d-card .d-desc{font-size:11.5px;color:var(--ink-soft);margin:0 0 9px;}
+  .d-row{display:flex;gap:6px;flex-wrap:wrap;}
+  .restore-btn{font-family:'Oswald',sans-serif;font-size:11.5px;border:1px solid var(--line);background:#fff;color:var(--forest);padding:3px 11px;border-radius:999px;cursor:pointer;}
+  .restore-btn:hover{border-color:var(--forest);}
+  .perm-del-btn{font-family:'Oswald',sans-serif;font-size:11.5px;border:1px solid var(--line);background:#fff;color:var(--rust);padding:3px 11px;border-radius:999px;cursor:pointer;}
+  .perm-del-btn:hover{border-color:var(--rust);}
+
+  /* --- FAB --- */
+  .add-fab{
+    position:fixed;right:18px;bottom:70px;width:46px;height:46px;border-radius:50%;
+    background:var(--forest);color:#fff;border:none;font-size:24px;cursor:pointer;
+    box-shadow:0 4px 14px rgba(63,107,74,.45);z-index:60;
+    display:flex;align-items:center;justify-content:center;transition:transform .15s ease;
+  }
+  .add-fab:hover{transform:scale(1.08);}
+
   .sync-bar{
     text-align:center;font-size:11.5px;color:var(--ink-soft);
     padding:6px;background:var(--paper);border-bottom:1px solid var(--line);
@@ -385,6 +462,50 @@
   <p class="meta">建立日期：2026 年 6 月｜資料來源：Google 地圖評價與官方資訊整理，實際開放時間／票價／預約規定請以官方網站為準。</p>
 </footer>
 
+<!-- ========== 新增地點面板 ========== -->
+<div class="add-overlay" id="addOverlay"></div>
+<div class="add-panel" id="addPanel">
+  <h3>➕ 新增地點</h3>
+  <div class="form-row">
+    <label>分類</label>
+    <select id="apCat"></select>
+  </div>
+  <div class="form-row">
+    <label>地點名稱</label>
+    <input type="text" id="apName" placeholder="例：Rittenhouse Square">
+  </div>
+  <div class="form-row">
+    <label>車程（分鐘，從二姊家出發）</label>
+    <input type="number" id="apTime" placeholder="45" min="0" max="480">
+  </div>
+  <div class="form-row">
+    <label>地址（用於 Google 地圖導航）</label>
+    <input type="text" id="apAddr" placeholder="例：Rittenhouse Square, Philadelphia, PA">
+  </div>
+  <div class="form-row">
+    <label>介紹說明</label>
+    <textarea id="apDesc" placeholder="手動輸入介紹文字，或點「AI 幫我寫」自動產生…"></textarea>
+    <p class="ai-status" id="aiStatus"></p>
+  </div>
+  <div class="ap-row">
+    <button class="ap-save" id="apSave">💾 儲存</button>
+    <button class="ap-ai" id="apAI">✨ AI 幫我寫介紹</button>
+    <button class="ap-cancel" id="apCancel">取消</button>
+  </div>
+</div>
+
+<!-- ========== 已刪除備份區 ========== -->
+<div class="deleted-section" id="deletedSection" style="display:none">
+  <div class="deleted-head" id="deletedHead">
+    <span class="title">🗑️ 已刪除的地點</span>
+    <span class="dc-count" id="deletedCount">0</span>
+    <span class="arrow" id="deletedArrow">▼</span>
+  </div>
+  <div class="deleted-grid" id="deletedGrid" style="display:none"></div>
+</div>
+
+<button class="add-fab" id="addFab" title="新增地點">＋</button>
+
 <button class="top-btn" id="topBtn">↑</button>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.js"></script>
@@ -405,11 +526,23 @@ const firebaseConfig = {
 };
 const fbApp = initializeApp(firebaseConfig);
 const db = getFirestore(fbApp);
-const US_DOC = doc(db, "usTrip", "wants");
+const US_DOC     = doc(db, "usTrip", "wants");
+const DELETED_DOC = doc(db, "usTrip", "deleted");
+const CUSTOM_DOC  = doc(db, "usTrip", "custom");
 
 let wantSet = new Set();
 let wantOnly = false;
+let deletedSet = new Set();
+let customPlaces = {}; // uid → place object
 
+/* --- 根據 uid 查出地點物件 --- */
+function getItemByUid(uid){
+  if(uid.startsWith("custom_")) return customPlaces[uid] || null;
+  const idx = parseInt(uid.replace("us_",""));
+  return isNaN(idx) ? null : (DATA[idx] || null);
+}
+
+/* ====== 想去功能 ====== */
 function updateWantUI(){
   document.querySelectorAll(".want-btn").forEach(btn=>{
     const uid = btn.dataset.uid;
@@ -438,23 +571,134 @@ async function toggleWant(uid){
   }
 }
 
+/* ====== 刪除 / 還原 ====== */
+function showDeleteConfirm(uid){
+  const card = document.querySelector(`.card[data-uid="${uid}"]`);
+  if(!card) return;
+  card.querySelectorAll(".delete-confirm").forEach(e=>e.remove());
+  const ov = document.createElement("div");
+  ov.className = "delete-confirm";
+  ov.innerHTML = `<p>刪除這個地點？</p><div class="dc-row"><button class="dc-yes">刪除</button><button class="dc-no">取消</button></div>`;
+  ov.querySelector(".dc-yes").addEventListener("click",()=>confirmDelete(uid));
+  ov.querySelector(".dc-no").addEventListener("click",()=>ov.remove());
+  card.appendChild(ov);
+}
+
+async function confirmDelete(uid){
+  deletedSet.add(uid);
+  applyFilters(); renderDeletedSection();
+  try{ await setDoc(DELETED_DOC,{[uid]:true},{merge:true}); }
+  catch(e){ console.error(e); deletedSet.delete(uid); applyFilters(); renderDeletedSection(); }
+}
+
+async function restorePlace(uid){
+  deletedSet.delete(uid);
+  applyFilters(); renderDeletedSection();
+  try{ await setDoc(DELETED_DOC,{[uid]:false},{merge:true}); }
+  catch(e){ console.error(e); deletedSet.add(uid); applyFilters(); renderDeletedSection(); }
+}
+
+async function permanentRemoveCustom(uid){
+  if(!confirm("確定要永久刪除這個自訂地點？無法還原。")) return;
+  deletedSet.delete(uid);
+  delete customPlaces[uid];
+  buildSections(); applyFilters(); renderDeletedSection();
+  try{
+    await setDoc(DELETED_DOC,{[uid]:false},{merge:true});
+    await setDoc(CUSTOM_DOC,{[uid]:false},{merge:true});
+  } catch(e){ console.error(e); }
+}
+
+function renderDeletedSection(){
+  const sec = document.getElementById("deletedSection");
+  const grid = document.getElementById("deletedGrid");
+  const countEl = document.getElementById("deletedCount");
+  if(!sec) return;
+  const items = [];
+  deletedSet.forEach(uid=>{
+    const it = getItemByUid(uid);
+    if(it) items.push({uid, name:it.name, desc:it.desc||"", cat:it.cat, isCustom:uid.startsWith("custom_")});
+  });
+  countEl.textContent = items.length;
+  sec.style.display = items.length > 0 ? "" : "none";
+  if(grid.style.display === "none") return; // collapsed, don't render inner
+  grid.innerHTML = items.map(it=>{
+    const cat = catMap[it.cat]||{emoji:"📍"};
+    return `<div class="d-card">
+      <h4>${cat.emoji} ${it.name}</h4>
+      <p class="d-desc">${it.desc.slice(0,60)}${it.desc.length>60?"…":""}</p>
+      <div class="d-row">
+        <button class="restore-btn" data-restore="${it.uid}">↩ 還原</button>
+        ${it.isCustom?`<button class="perm-del-btn" data-perm="${it.uid}">✕ 永久刪除</button>`:""}
+      </div>
+    </div>`;
+  }).join("");
+  grid.querySelectorAll("[data-restore]").forEach(b=>b.addEventListener("click",()=>restorePlace(b.dataset.restore)));
+  grid.querySelectorAll("[data-perm]").forEach(b=>b.addEventListener("click",()=>permanentRemoveCustom(b.dataset.perm)));
+}
+
+/* ====== 自訂地點 ====== */
+async function saveCustomPlace(data){
+  const uid = "custom_" + Date.now();
+  customPlaces[uid] = data;
+  buildSections(); applyFilters(); renderDeletedSection();
+  try{ await setDoc(CUSTOM_DOC,{[uid]:data},{merge:true}); }
+  catch(e){ console.error(e); delete customPlaces[uid]; buildSections(); applyFilters(); }
+}
+
+/* ====== AI 自動生介紹 ====== */
+async function generateAIDescription(name, catLabel, addr, time){
+  const resp = await fetch("https://api.anthropic.com/v1/messages",{
+    method:"POST",
+    headers:{"Content-Type":"application/json"},
+    body:JSON.stringify({
+      model:"claude-sonnet-4-6",
+      max_tokens:200,
+      messages:[{role:"user",content:`你是美國旅遊編輯，請用繁體中文為以下地點寫一段60-80字的簡短介紹，風格親切實用，聚焦特色亮點與適合族群，不要加標題、不要換行。
+地點：${name}
+分類：${catLabel}
+地址：${addr}
+從賓州Warrington出發約${time}分鐘車程
+
+只輸出介紹文字本身。`}]
+    })
+  });
+  const d = await resp.json();
+  return d.content?.[0]?.text?.trim()||"";
+}
+
+/* ====== Firebase 初始化 ====== */
 function initFirebase(){
   const syncBar = document.getElementById("syncBar");
-  onSnapshot(US_DOC, (snap)=>{
+  onSnapshot(US_DOC,(snap)=>{
     if(snap.exists()){
-      const data = snap.data();
-      wantSet = new Set(Object.keys(data).filter(k=>data[k]===true));
-    } else {
-      wantSet = new Set();
-    }
-    updateWantUI();
-    applyFilters();
+      const d = snap.data();
+      wantSet = new Set(Object.keys(d).filter(k=>d[k]===true));
+    } else { wantSet = new Set(); }
+    updateWantUI(); applyFilters();
     syncBar.textContent = "☁️ 「想去」清單已同步，點愛心即可標記，跨裝置即時更新。";
     syncBar.classList.remove("error");
-  }, (err)=>{
-    console.error("Firestore error:", err);
+  },(err)=>{
+    console.error("Firestore error:",err);
     syncBar.textContent = "⚠️ 同步連線失敗，想去功能暫時無法使用（地圖與篩選功能不受影響）";
     syncBar.classList.add("error");
+  });
+
+  onSnapshot(DELETED_DOC,(snap)=>{
+    if(snap.exists()){
+      const d = snap.data();
+      deletedSet = new Set(Object.keys(d).filter(k=>d[k]===true));
+    } else { deletedSet = new Set(); }
+    applyFilters(); renderDeletedSection();
+  });
+
+  onSnapshot(CUSTOM_DOC,(snap)=>{
+    if(snap.exists()){
+      const d = snap.data();
+      customPlaces = {};
+      Object.entries(d).forEach(([uid,val])=>{ if(val && typeof val==="object") customPlaces[uid]=val; });
+    } else { customPlaces = {}; }
+    buildSections(); applyFilters(); renderDeletedSection();
   });
 }
 
@@ -732,18 +976,20 @@ function mapsUrl(addr){
   return "https://www.google.com/maps/dir/?api=1&origin="+encodeURIComponent(ORIGIN)+"&destination="+encodeURIComponent(addr)+"&travelmode=driving";
 }
 
-function cardHtml(item, idx){
+function cardHtml(item, uid){
   const cat = catMap[item.cat];
   const tags = (item.tags||[]).map(t=>`<span class="tag${item.top && t==='首選' ? ' top':''}">${t}</span>`).join("");
+  const customBadge = item.isCustom ? '<span class="tag custom-badge">自訂</span>' : '';
   return `
-  <div class="card" data-idx="${idx}" data-cat="${item.cat}" data-time="${item.time}" data-tier="${tierOf(item.time)}" data-search="${(item.name+" "+item.desc).toLowerCase()}">
+  <div class="card" data-uid="${uid}" data-cat="${item.cat}" data-time="${item.time}" data-tier="${tierOf(item.time)}" data-search="${(item.name+" "+(item.desc||"")).toLowerCase()}">
     <div class="stamp" style="--cat-color:${cat.color}">${cat.emoji}</div>
+    <button class="delete-btn" data-del="${uid}" title="刪除">✕</button>
     <div class="card-top"><span class="time-pill">🚗 ${item.time} 分</span></div>
     <h3><a href="${mapsUrl(item.addr)}" target="_blank" rel="noopener">${item.name}</a></h3>
-    <div class="tagrow">${tags}</div>
-    <p>${item.desc}</p>
+    <div class="tagrow">${customBadge}${tags}</div>
+    <p>${item.desc||""}</p>
     <div class="card-footer">
-      <button class="want-btn" data-uid="us_${idx}">🤍 想去</button>
+      <button class="want-btn" data-uid="${uid}">🤍 想去</button>
     </div>
   </div>`;
 }
@@ -765,7 +1011,8 @@ function buildSections(){
         <span class="count">${items.length}</span>
       </div>
       <div class="grid">
-        ${items.map((it)=>cardHtml(it, DATA.indexOf(it))).join("")}
+        ${items.map((it)=>cardHtml(it, "us_"+DATA.indexOf(it))).join("")}
+        ${Object.entries(customPlaces).filter(([uid,cp])=>cp&&cp.cat===cat.id).map(([uid,cp])=>cardHtml({...cp,isCustom:true},uid)).join("")}
       </div>
     </div>`;
   });
@@ -856,8 +1103,9 @@ function initMap(){
     .addTo(map)
     .bindPopup("<b>❤️ 二姊家</b><br>712 Conrad Dr, Warrington, PA");
 
-  DATA.forEach((item)=>{
+  DATA.forEach((item, idx)=>{
     if(item.lat==null || item.lng==null) return;
+    item._uid = "us_" + idx;
     const cat = catMap[item.cat];
     const marker = L.circleMarker([item.lat, item.lng], {
       radius:7, color:"#fff", weight:1.5, fillColor:cat.color, fillOpacity:.9
@@ -905,8 +1153,10 @@ function syncMapWithFilters(q){
     const tierOk = activeTier==="all" || tierOf(item.time)===activeTier;
     const searchOk = !q || (item.name+" "+item.desc).toLowerCase().includes(q);
     const topOk = !onlyTop || item.top===true;
-    const wantOk = !wantOnly || wantSet.has("us_"+DATA.indexOf(item));
-    const show = catOk && tierOk && searchOk && topOk && wantOk;
+    const uid = item._uid || "";
+    const wantOk = !wantOnly || wantSet.has(uid);
+    const deletedOk = !deletedSet.has(uid);
+    const show = catOk && tierOk && searchOk && topOk && wantOk && deletedOk;
     if(show){
       if(!map.hasLayer(item._marker)) item._marker.addTo(map);
     } else {
@@ -940,19 +1190,21 @@ function applyFilters(){
     const catOk = activeCats.has(catId);
     let visibleInSection = 0;
     sec.querySelectorAll(".card").forEach(card=>{
+      const uid = card.dataset.uid;
+      if(!uid || deletedSet.has(uid)){ card.style.display="none"; return; }
+      const item = getItemByUid(uid);
+      if(!item){ card.style.display="none"; return; }
       const tierOk = activeTier==="all" || card.dataset.tier===activeTier;
       const searchOk = !q || card.dataset.search.includes(q);
-      const idx = card.dataset.idx;
-      const item = DATA[idx];
       const topOk = !onlyTop || item.top===true;
-      const wantOk = !wantOnly || wantSet.has("us_"+idx);
+      const wantOk = !wantOnly || wantSet.has(uid);
       const show = catOk && tierOk && searchOk && topOk && wantOk;
       card.style.display = show ? "" : "none";
 
       const h3a = card.querySelector("h3 a");
       const p = card.querySelector("p");
       if(h3a) h3a.innerHTML = highlight(item.name, q);
-      if(p) p.innerHTML = highlight(item.desc, q);
+      if(p) p.innerHTML = highlight(item.desc||"", q);
 
       if(show){ visibleInSection++; anyVisible = true; }
     });
@@ -1002,8 +1254,75 @@ document.getElementById("wantOnlyChip").addEventListener("click", (e)=>{
 });
 
 document.getElementById("contentWrap").addEventListener("click", (e)=>{
-  const btn = e.target.closest(".want-btn");
-  if(btn) toggleWant(btn.dataset.uid);
+  const wb = e.target.closest(".want-btn");
+  if(wb){ toggleWant(wb.dataset.uid); return; }
+  const db = e.target.closest("[data-del]");
+  if(db){ showDeleteConfirm(db.dataset.del); return; }
+});
+
+/* --- 已刪除備份區 收合切換 --- */
+let deletedOpen = false;
+document.getElementById("deletedHead").addEventListener("click",()=>{
+  deletedOpen = !deletedOpen;
+  document.getElementById("deletedGrid").style.display = deletedOpen ? "" : "none";
+  document.getElementById("deletedArrow").textContent = deletedOpen ? "▲" : "▼";
+  if(deletedOpen) renderDeletedSection();
+});
+
+/* --- 新增地點面板 --- */
+function openAddPanel(catId){
+  const sel = document.getElementById("apCat");
+  sel.innerHTML = CATS.map(c=>`<option value="${c.id}"${c.id===catId?" selected":""}>${c.emoji} ${c.label}</option>`).join("");
+  document.getElementById("apName").value = "";
+  document.getElementById("apTime").value = "";
+  document.getElementById("apAddr").value = "";
+  document.getElementById("apDesc").value = "";
+  document.getElementById("aiStatus").textContent = "";
+  document.getElementById("addOverlay").classList.add("show");
+  document.getElementById("addPanel").classList.add("show");
+  document.getElementById("apName").focus();
+}
+function closeAddPanel(){
+  document.getElementById("addOverlay").classList.remove("show");
+  document.getElementById("addPanel").classList.remove("show");
+}
+document.getElementById("addFab").addEventListener("click",()=>openAddPanel(CATS[0].id));
+document.getElementById("addOverlay").addEventListener("click",closeAddPanel);
+document.getElementById("apCancel").addEventListener("click",closeAddPanel);
+
+document.getElementById("apSave").addEventListener("click",async()=>{
+  const name = document.getElementById("apName").value.trim();
+  const time = parseInt(document.getElementById("apTime").value)||30;
+  const addr = document.getElementById("apAddr").value.trim();
+  const desc = document.getElementById("apDesc").value.trim();
+  const cat  = document.getElementById("apCat").value;
+  if(!name){ alert("請輸入地點名稱"); return; }
+  await saveCustomPlace({cat, name, time, addr:addr||name, desc, tags:[], top:false});
+  closeAddPanel();
+  // 自動展開對應分類
+  if(!activeCats.has(cat)){ activeCats.add(cat); renderCatToggleStates(); applyFilters(); }
+  setTimeout(()=>{ const sec=document.getElementById("sec-"+cat); if(sec){const off=document.querySelector(".controlbar").offsetHeight+10; window.scrollTo({top:sec.getBoundingClientRect().top+window.scrollY-off,behavior:"smooth"});} },300);
+});
+
+document.getElementById("apAI").addEventListener("click",async()=>{
+  const name = document.getElementById("apName").value.trim();
+  const addr = document.getElementById("apAddr").value.trim();
+  const time = document.getElementById("apTime").value||"30";
+  const catId = document.getElementById("apCat").value;
+  const catLabel = CATS.find(c=>c.id===catId)?.label||catId;
+  if(!name){ alert("請先填入地點名稱"); return; }
+  const statusEl = document.getElementById("aiStatus");
+  const btn = document.getElementById("apAI");
+  btn.disabled = true; statusEl.textContent = "✨ AI 正在生成介紹中…";
+  try {
+    const text = await generateAIDescription(name, catLabel, addr||name, time);
+    document.getElementById("apDesc").value = text;
+    statusEl.textContent = "✅ 介紹已生成，可以直接編輯修改。";
+  } catch(e){
+    statusEl.textContent = "⚠️ 生成失敗，請手動輸入介紹。";
+  } finally {
+    btn.disabled = false;
+  }
 });
 
 document.getElementById("jumpRow").addEventListener("click", (e)=>{

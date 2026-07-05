@@ -667,7 +667,7 @@ async function generateAIDescription(name, catLabel, addr, time){
       "3. 複製產生的 Key 貼到下方\n\n"+
       "Key 只會存在你的瀏覽器裡，不會上傳到任何地方：");
     if(!key) return "";
-    setGeminiKey(key);
+    setGeminiKey(key.trim()); key = key.trim();
   }
   const prompt_text = `你是美國旅遊編輯，請用繁體中文為以下地點寫一段60-80字的簡短介紹，風格親切實用，聚焦特色亮點與適合族群，不要加標題、不要換行。
 地點：${name}
@@ -676,19 +676,37 @@ async function generateAIDescription(name, catLabel, addr, time){
 從賓州Warrington出發約${time}分鐘車程
 
 只輸出介紹文字本身。`;
-  const resp = await fetch(
-    `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${key}`,
-    { method:"POST", headers:{"Content-Type":"application/json"},
-      body:JSON.stringify({contents:[{parts:[{text:prompt_text}]}]}) }
-  );
-  if(!resp.ok){
-    const err = await resp.json().catch(()=>({}));
-    // Key 無效就清掉，讓下次重新輸入
-    if(resp.status===400||resp.status===403){ setGeminiKey(""); }
-    throw new Error(err.error?.message||`HTTP ${resp.status}`);
+
+  // 依序嘗試三個穩定的免費模型
+  const MODELS = ["gemini-1.5-flash", "gemini-1.5-flash-8b", "gemini-2.0-flash"];
+  let lastMsg = "所有模型均回應失敗";
+
+  for(const model of MODELS){
+    let resp, d;
+    try{
+      resp = await fetch(
+        `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${key}`,
+        { method:"POST", headers:{"Content-Type":"application/json"},
+          body:JSON.stringify({contents:[{parts:[{text:prompt_text}]}]}) }
+      );
+      d = await resp.json();
+    } catch(netErr){
+      lastMsg = "網路錯誤：" + netErr.message;
+      continue;
+    }
+    if(resp.ok){
+      const text = d.candidates?.[0]?.content?.parts?.[0]?.text?.trim();
+      if(text) return text;
+      lastMsg = "回應格式異常 (" + model + ")"; continue;
+    }
+    const apiMsg = d.error?.message || JSON.stringify(d).slice(0,150);
+    lastMsg = "[" + model + "] HTTP " + resp.status + ": " + apiMsg;
+    // Key 真的無效 → 清掉，停止嘗試
+    if(d.error?.status==="PERMISSION_DENIED" || resp.status===403){
+      setGeminiKey(""); throw new Error("KEY_INVALID: " + apiMsg);
+    }
   }
-  const d = await resp.json();
-  return d.candidates?.[0]?.content?.parts?.[0]?.text?.trim()||"";
+  throw new Error(lastMsg);
 }
 
 /* ====== Firebase 初始化 ====== */
@@ -1391,10 +1409,11 @@ document.getElementById("apAI").addEventListener("click",async()=>{
     document.getElementById("apDesc").value = text;
     statusEl.textContent = "✅ 介紹已生成，可以直接編輯修改。";
   } catch(e){
-    const isKeyErr = e.message.includes("400")||e.message.includes("403")||e.message.includes("API_KEY");
-    statusEl.textContent = isKeyErr
-      ? "❌ API Key 無效或已過期，已自動清除，點「✨ AI 幫我寫介紹」重新輸入 Key。"
-      : `⚠️ 生成失敗（${e.message}），請稍後再試或手動輸入介紹。`;
+    if(e.message.startsWith("KEY_INVALID")){
+      statusEl.textContent = "❌ Key 無效或沒有 Gemini 權限，已自動清除。請點「🔑 設定 Key」重新輸入正確的 Key（需從 aistudio.google.com 取得）。";
+    } else {
+      statusEl.textContent = "⚠️ 失敗：" + e.message;
+    }
   } finally {
     btn.disabled = false;
   }

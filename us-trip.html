@@ -241,6 +241,15 @@
   .card:hover .delete-btn{opacity:1;}
   .delete-btn:hover{background:var(--rust);border-color:var(--rust);color:#fff;}
 
+  .edit-btn{
+    position:absolute;top:9px;right:38px;width:22px;height:22px;border-radius:50%;
+    border:1px solid var(--line);background:#fff;color:var(--ink-soft);
+    font-size:11px;cursor:pointer;display:flex;align-items:center;justify-content:center;
+    opacity:0;transition:opacity .15s ease;z-index:2;padding:0;line-height:1;
+  }
+  .card:hover .edit-btn{opacity:1;}
+  .edit-btn:hover{background:var(--navy);border-color:var(--navy);color:#fff;}
+
   /* --- 刪除確認 overlay --- */
   .delete-confirm{
     position:absolute;inset:0;border-radius:14px;
@@ -1104,6 +1113,7 @@ function cardHtml(item, uid){
   <div class="card" data-uid="${uid}" data-cat="${item.cat}" data-time="${item.time}" data-tier="${tierOf(item.time)}" data-search="${(item.name+" "+(item.desc||"")).toLowerCase()}">
     <div class="stamp" style="--cat-color:${cat.color}">${cat.emoji}</div>
     <button class="delete-btn" data-del="${uid}" title="刪除">✕</button>
+    ${item.isCustom ? `<button class="edit-btn" data-edit="${uid}" title="編輯">✏️</button>` : ''}
     <div class="card-top"><span class="time-pill">🚗 ${item.time} 分</span></div>
     <h3><a href="${mapsUrl(item.addr)}" target="_blank" rel="noopener">${item.name}</a></h3>
     <div class="tagrow">${customBadge}${tags}</div>
@@ -1411,6 +1421,13 @@ document.getElementById("contentWrap").addEventListener("click", (e)=>{
   if(wb){ toggleWant(wb.dataset.uid); return; }
   const db = e.target.closest("[data-del]");
   if(db){ showDeleteConfirm(db.dataset.del); return; }
+  const eb = e.target.closest("[data-edit]");
+  if(eb){
+    const uid = eb.dataset.edit;
+    const cp = customPlaces[uid];
+    if(cp) openAddPanel(cp.cat, {...cp, _uid: uid});
+    return;
+  }
 });
 
 /* --- 已刪除備份區 收合切換 --- */
@@ -1423,19 +1440,25 @@ document.getElementById("deletedHead").addEventListener("click",()=>{
 });
 
 /* --- 新增地點面板 --- */
-function openAddPanel(catId){
+let editingUid = null;
+
+function openAddPanel(catId, prefill){
+  editingUid = prefill ? prefill._uid : null;
   const sel = document.getElementById("apCat");
-  sel.innerHTML = CATS.map(c=>`<option value="${c.id}"${c.id===catId?" selected":""}>${c.emoji} ${c.label}</option>`).join("");
-  document.getElementById("apName").value = "";
-  document.getElementById("apTime").value = "";
-  document.getElementById("apAddr").value = "";
-  document.getElementById("apDesc").value = "";
+  sel.innerHTML = CATS.map(c=>`<option value="${c.id}"${c.id===(prefill?.cat||catId)?" selected":""}>${c.emoji} ${c.label}</option>`).join("");
+  document.getElementById("apName").value = prefill?.name || "";
+  document.getElementById("apTime").value = prefill?.time || "";
+  document.getElementById("apAddr").value = prefill?.addr || "";
+  document.getElementById("apDesc").value = prefill?.desc || "";
   document.getElementById("aiStatus").textContent = "";
+  document.getElementById("addPanel").querySelector("h3").textContent = editingUid ? "✏️ 編輯地點" : "➕ 新增地點";
+  document.getElementById("apSave").textContent = editingUid ? "💾 儲存修改" : "💾 儲存";
   document.getElementById("addOverlay").classList.add("show");
   document.getElementById("addPanel").classList.add("show");
   document.getElementById("apName").focus();
 }
 function closeAddPanel(){
+  editingUid = null;
   document.getElementById("addOverlay").classList.remove("show");
   document.getElementById("addPanel").classList.remove("show");
 }
@@ -1450,16 +1473,30 @@ document.getElementById("apSave").addEventListener("click",async()=>{
   const desc = document.getElementById("apDesc").value.trim();
   const cat  = document.getElementById("apCat").value;
   if(!name){ alert("請輸入地點名稱"); return; }
-  // 從 Google Maps URL 嘗試解析座標，讓地圖可以顯示圓點
   let lat=null, lng=null;
   if(/^https?:\/\//i.test(addr)){
     const coords = extractLatLng(addr);
     if(coords){ lat=coords.lat; lng=coords.lng; }
   }
-  await saveCustomPlace({cat, name, time, addr:addr||name, lat, lng, desc, tags:[], top:false});
-  closeAddPanel();
-  if(!activeCats.has(cat)){ activeCats.add(cat); renderCatToggleStates(); applyFilters(); }
-  setTimeout(()=>{ const sec=document.getElementById("sec-"+cat); if(sec){const off=document.querySelector(".controlbar").offsetHeight+10; window.scrollTo({top:sec.getBoundingClientRect().top+window.scrollY-off,behavior:"smooth"});} },300);
+  const data = {cat, name, time, addr:addr||name, lat, lng, desc, tags:[], top:false};
+
+  if(editingUid){
+    // ── 編輯模式：更新現有自訂地點 ──
+    const uid = editingUid;
+    customPlaces[uid] = data;
+    buildSections(); applyFilters(); renderDeletedSection();
+    closeAddPanel();
+    try{ await setDoc(CUSTOM_DOC, {[uid]: data}, {merge:true}); }
+    catch(e){ console.error(e); }
+    // 捲到更新後的卡片位置
+    setTimeout(()=>{ const sec=document.getElementById("sec-"+cat); if(sec){const off=document.querySelector(".controlbar").offsetHeight+10; window.scrollTo({top:sec.getBoundingClientRect().top+window.scrollY-off,behavior:"smooth"});} },300);
+  } else {
+    // ── 新增模式 ──
+    await saveCustomPlace(data);
+    closeAddPanel();
+    if(!activeCats.has(cat)){ activeCats.add(cat); renderCatToggleStates(); applyFilters(); }
+    setTimeout(()=>{ const sec=document.getElementById("sec-"+cat); if(sec){const off=document.querySelector(".controlbar").offsetHeight+10; window.scrollTo({top:sec.getBoundingClientRect().top+window.scrollY-off,behavior:"smooth"});} },300);
+  }
 });
 
 document.getElementById("apAI").addEventListener("click",async()=>{

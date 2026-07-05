@@ -220,6 +220,28 @@
     transition:transform .15s ease, box-shadow .15s ease;
   }
   .card:hover{transform:translateY(-3px);box-shadow:0 4px 0 rgba(43,36,32,.08), 0 14px 26px -10px rgba(43,36,32,.32);}
+
+  .card-footer{display:flex;justify-content:space-between;align-items:center;margin-top:10px;}
+  .want-btn{
+    font-family:'Oswald',sans-serif;font-size:12px;font-weight:600;
+    border:1px solid var(--line);background:#fff;color:var(--ink-soft);
+    padding:5px 12px;border-radius:999px;cursor:pointer;
+    transition:all .15s ease;white-space:nowrap;
+  }
+  .want-btn:hover{border-color:var(--rust);color:var(--rust);}
+  .want-btn.wanted{background:#FFF0F0;border-color:var(--rust);color:var(--rust);font-weight:700;}
+
+  .sync-bar{
+    text-align:center;font-size:11.5px;color:var(--ink-soft);
+    padding:6px;background:var(--paper);border-bottom:1px solid var(--line);
+  }
+  .sync-bar.error{color:var(--rust);}
+
+  .want-count-badge{
+    display:none;font-family:'Oswald',sans-serif;font-size:11px;
+    background:var(--rust);color:#fff;padding:1px 7px;border-radius:999px;margin-left:4px;
+  }
+  .want-count-badge.show{display:inline;}
   .stamp{
     position:absolute;top:-12px;left:-10px;width:40px;height:40px;border-radius:50%;
     background:var(--paper);border:2px dashed var(--cat-color,var(--navy));
@@ -283,6 +305,8 @@
 </head>
 <body>
 
+<div class="sync-bar" id="syncBar">☁️ 正在連線同步「想去」清單…</div>
+
 <div class="hero">
   <span class="eyebrow">⚾ 二姊家（Warrington）出發 · 美國親子探索</span>
   <h1>賓州 ＆ 紐約<span class="accent">美國行</span></h1>
@@ -309,6 +333,7 @@
       <button class="chip" data-tier="far">遠・45–80分</button>
       <button class="chip" data-tier="furthest">📍最遠・80分＋</button>
       <button class="chip" id="topOnlyChip">⭐ 只看首選</button>
+      <button class="chip" id="wantOnlyChip">❤️ 只看想去<span class="want-count-badge" id="wantCountBadge">0</span></button>
     </div>
     <div class="cat-toolbar">
       <span class="cat-toolbar-label">📂 分類（可多選，點下方或地圖圖例切換顯示）</span>
@@ -363,7 +388,76 @@
 <button class="top-btn" id="topBtn">↑</button>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.js"></script>
-<script>
+<script type="module">
+/* =========================================================
+   FIREBASE — 想去清單跨裝置同步
+========================================================= */
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+import { getFirestore, doc, setDoc, onSnapshot } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+
+const firebaseConfig = {
+  apiKey: "AIzaSyD68ASVlyKiBOdvcyqIjil1DLNhibaxiaM",
+  authDomain: "ppl-plan.firebaseapp.com",
+  projectId: "ppl-plan",
+  storageBucket: "ppl-plan.firebasestorage.app",
+  messagingSenderId: "91585219195",
+  appId: "1:91585219195:web:f1ce4e153622965f1930de"
+};
+const fbApp = initializeApp(firebaseConfig);
+const db = getFirestore(fbApp);
+const US_DOC = doc(db, "usTrip", "wants");
+
+let wantSet = new Set();
+let wantOnly = false;
+
+function updateWantUI(){
+  document.querySelectorAll(".want-btn").forEach(btn=>{
+    const uid = btn.dataset.uid;
+    const w = wantSet.has(uid);
+    btn.textContent = w ? "❤️ 想去" : "🤍 想去";
+    btn.classList.toggle("wanted", w);
+  });
+  const count = wantSet.size;
+  const badge = document.getElementById("wantCountBadge");
+  if(badge){
+    badge.textContent = count;
+    badge.classList.toggle("show", count > 0);
+  }
+}
+
+async function toggleWant(uid){
+  const isWanted = wantSet.has(uid);
+  if(isWanted) wantSet.delete(uid); else wantSet.add(uid);
+  updateWantUI();
+  try {
+    await setDoc(US_DOC, { [uid]: !isWanted }, { merge: true });
+  } catch(e){
+    console.error("Firestore write error:", e);
+    if(isWanted) wantSet.add(uid); else wantSet.delete(uid);
+    updateWantUI();
+  }
+}
+
+function initFirebase(){
+  const syncBar = document.getElementById("syncBar");
+  onSnapshot(US_DOC, (snap)=>{
+    if(snap.exists()){
+      const data = snap.data();
+      wantSet = new Set(Object.keys(data).filter(k=>data[k]===true));
+    } else {
+      wantSet = new Set();
+    }
+    updateWantUI();
+    applyFilters();
+    syncBar.textContent = "☁️ 「想去」清單已同步，點愛心即可標記，跨裝置即時更新。";
+    syncBar.classList.remove("error");
+  }, (err)=>{
+    console.error("Firestore error:", err);
+    syncBar.textContent = "⚠️ 同步連線失敗，想去功能暫時無法使用（地圖與篩選功能不受影響）";
+    syncBar.classList.add("error");
+  });
+}
+
 /* =========================================================
    DATA
 ========================================================= */
@@ -648,6 +742,9 @@ function cardHtml(item, idx){
     <h3><a href="${mapsUrl(item.addr)}" target="_blank" rel="noopener">${item.name}</a></h3>
     <div class="tagrow">${tags}</div>
     <p>${item.desc}</p>
+    <div class="card-footer">
+      <button class="want-btn" data-uid="us_${idx}">🤍 想去</button>
+    </div>
   </div>`;
 }
 
@@ -808,7 +905,8 @@ function syncMapWithFilters(q){
     const tierOk = activeTier==="all" || tierOf(item.time)===activeTier;
     const searchOk = !q || (item.name+" "+item.desc).toLowerCase().includes(q);
     const topOk = !onlyTop || item.top===true;
-    const show = catOk && tierOk && searchOk && topOk;
+    const wantOk = !wantOnly || wantSet.has("us_"+DATA.indexOf(item));
+    const show = catOk && tierOk && searchOk && topOk && wantOk;
     if(show){
       if(!map.hasLayer(item._marker)) item._marker.addTo(map);
     } else {
@@ -847,7 +945,8 @@ function applyFilters(){
       const idx = card.dataset.idx;
       const item = DATA[idx];
       const topOk = !onlyTop || item.top===true;
-      const show = catOk && tierOk && searchOk && topOk;
+      const wantOk = !wantOnly || wantSet.has("us_"+idx);
+      const show = catOk && tierOk && searchOk && topOk && wantOk;
       card.style.display = show ? "" : "none";
 
       const h3a = card.querySelector("h3 a");
@@ -871,6 +970,7 @@ function applyFilters(){
 ========================================================= */
 buildSections();
 initMap();
+initFirebase();
 renderCatToggleStates();
 applyFilters();
 
@@ -893,6 +993,17 @@ document.getElementById("topOnlyChip").addEventListener("click", (e)=>{
   onlyTop = !onlyTop;
   e.currentTarget.classList.toggle("active", onlyTop);
   applyFilters();
+});
+
+document.getElementById("wantOnlyChip").addEventListener("click", (e)=>{
+  wantOnly = !wantOnly;
+  e.currentTarget.classList.toggle("active", wantOnly);
+  applyFilters();
+});
+
+document.getElementById("contentWrap").addEventListener("click", (e)=>{
+  const btn = e.target.closest(".want-btn");
+  if(btn) toggleWant(btn.dataset.uid);
 });
 
 document.getElementById("jumpRow").addEventListener("click", (e)=>{

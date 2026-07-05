@@ -317,6 +317,48 @@
   }
   .add-fab:hover{transform:scale(1.08);}
 
+  .cat-fab{
+    position:fixed;right:18px;bottom:124px;width:42px;height:42px;border-radius:50%;
+    background:var(--navy);color:#fff;border:none;font-size:18px;cursor:pointer;
+    box-shadow:0 4px 14px rgba(31,58,95,.4);z-index:60;
+    display:flex;align-items:center;justify-content:center;transition:transform .15s ease;
+    font-family:'Oswald',sans-serif;letter-spacing:0;
+  }
+  .cat-fab:hover{transform:scale(1.08);}
+
+  /* --- 分類管理面板 --- */
+  .catmgr-overlay{position:fixed;inset:0;background:rgba(43,36,32,.4);z-index:200;display:none;}
+  .catmgr-overlay.show{display:block;}
+  .catmgr-panel{
+    position:fixed;bottom:0;left:0;right:0;max-height:88vh;overflow-y:auto;
+    background:var(--paper);border-top:2px solid var(--line);border-radius:20px 20px 0 0;
+    padding:20px 20px 36px;z-index:201;
+    transform:translateY(100%);transition:transform .3s ease;
+  }
+  .catmgr-panel.show{transform:translateY(0);}
+  .catmgr-panel h3{margin:0 0 4px;font-size:18px;font-weight:900;}
+  .catmgr-panel .sub{font-size:12px;color:var(--ink-soft);margin:0 0 14px;display:block;}
+  .cat-list{display:flex;flex-direction:column;gap:8px;margin-bottom:18px;}
+  .cat-item{
+    display:flex;align-items:center;gap:10px;background:#fff;
+    border:1px solid var(--line);border-radius:10px;padding:8px 10px;
+  }
+  .cat-swatch{width:22px;height:22px;border-radius:50%;flex-shrink:0;}
+  .cat-item-name{flex:1;font-size:14px;font-weight:700;}
+  .cat-item-built{font-size:11px;color:var(--ink-soft);}
+  .cat-edit-btn{font-family:'Oswald',sans-serif;font-size:11px;border:1px solid var(--line);background:#fff;color:var(--navy);padding:2px 9px;border-radius:6px;cursor:pointer;}
+  .cat-del-btn{font-family:'Oswald',sans-serif;font-size:11px;border:1px solid var(--line);background:#fff;color:var(--rust);padding:2px 9px;border-radius:6px;cursor:pointer;}
+  .cat-form{background:#fff;border:1px solid var(--line);border-radius:12px;padding:14px;margin-top:4px;}
+  .cat-form h4{margin:0 0 12px;font-size:15px;font-weight:900;}
+  .color-swatches{display:flex;flex-wrap:wrap;gap:8px;margin-top:6px;}
+  .color-swatch{
+    width:28px;height:28px;border-radius:50%;cursor:pointer;border:2px solid transparent;
+    transition:transform .12s ease;flex-shrink:0;
+  }
+  .color-swatch:hover{transform:scale(1.15);}
+  .color-swatch.selected{border-color:var(--ink);transform:scale(1.18);}
+  .cat-form .ap-row{margin-top:12px;}
+
   .sync-bar{
     text-align:center;font-size:11.5px;color:var(--ink-soft);
     padding:6px;background:var(--paper);border-bottom:1px solid var(--line);
@@ -514,6 +556,38 @@
   <div class="deleted-grid" id="deletedGrid" style="display:none"></div>
 </div>
 
+<!-- ========== 分類管理面板 ========== -->
+<div class="catmgr-overlay" id="catmgrOverlay"></div>
+<div class="catmgr-panel" id="catmgrPanel">
+  <h3>🗂️ 管理分類</h3>
+  <span class="sub">內建分類不能刪除；自訂分類可以編輯或刪除（有地點在使用的分類無法刪除）。</span>
+  <div class="cat-list" id="catList"></div>
+  <div class="cat-form" id="catForm">
+    <h4 id="catFormTitle">➕ 新增分類</h4>
+    <div class="form-row">
+      <label>Emoji 圖示（一個字元）</label>
+      <input type="text" id="catEmoji" placeholder="例：🎡" maxlength="4" style="width:80px">
+    </div>
+    <div class="form-row">
+      <label>分類名稱</label>
+      <input type="text" id="catName" placeholder="例：親子遊樂">
+    </div>
+    <div class="form-row">
+      <label>顏色</label>
+      <div class="color-swatches" id="colorSwatches"></div>
+    </div>
+    <div class="ap-row">
+      <button class="ap-save" id="catSaveBtn">💾 儲存分類</button>
+      <button class="ap-cancel" id="catFormCancel">取消</button>
+    </div>
+  </div>
+  <div class="ap-row" style="margin-top:14px">
+    <button class="ap-cancel" id="catmgrClose">關閉</button>
+  </div>
+</div>
+
+<button class="cat-fab" id="catFab" title="管理分類">🗂️</button>
+
 <button class="add-fab" id="addFab" title="新增地點">＋</button>
 
 <button class="top-btn" id="topBtn">↑</button>
@@ -536,9 +610,10 @@ const firebaseConfig = {
 };
 const fbApp = initializeApp(firebaseConfig);
 const db = getFirestore(fbApp);
-const US_DOC     = doc(db, "usTrip", "wants");
-const DELETED_DOC = doc(db, "usTrip", "deleted");
-const CUSTOM_DOC  = doc(db, "usTrip", "custom");
+const US_DOC          = doc(db, "usTrip", "wants");
+const DELETED_DOC     = doc(db, "usTrip", "deleted");
+const CUSTOM_DOC      = doc(db, "usTrip", "custom");
+const CUSTOM_CATS_DOC = doc(db, "usTrip", "customCats");
 
 let wantSet = new Set();
 let wantOnly = false;
@@ -648,6 +723,23 @@ function renderDeletedSection(){
 }
 
 /* ====== 自訂地點 ====== */
+/* ====== 自訂分類 ====== */
+async function saveCustomCat(uid, data){
+  customCats[uid] = data;
+  rebuildCats();
+  try{ await setDoc(CUSTOM_CATS_DOC,{[uid]:data},{merge:true}); }
+  catch(e){ console.error(e); delete customCats[uid]; rebuildCats(); }
+}
+
+async function deleteCustomCat(uid){
+  const inUse = Object.values(customPlaces).some(cp=>cp&&cp.cat===uid);
+  if(inUse){ alert("這個分類還有地點在使用，請先將這些地點移到其他分類，才能刪除此分類。"); return; }
+  delete customCats[uid];
+  rebuildCats();
+  try{ await setDoc(CUSTOM_CATS_DOC,{[uid]:false},{merge:true}); }
+  catch(e){ console.error(e); rebuildCats(); }
+}
+
 async function saveCustomPlace(data){
   const uid = "custom_" + Date.now();
   customPlaces[uid] = data;
@@ -820,6 +912,15 @@ function initFirebase(){
     } else { customPlaces = {}; }
     buildSections(); applyFilters(); renderDeletedSection();
   });
+
+  onSnapshot(CUSTOM_CATS_DOC,(snap)=>{
+    if(snap.exists()){
+      const d = snap.data();
+      customCats = {};
+      Object.entries(d).forEach(([uid,val])=>{ if(val && typeof val==="object") customCats[uid]=val; });
+    } else { customCats = {}; }
+    rebuildCats();
+  });
 }
 
 /* =========================================================
@@ -829,7 +930,7 @@ const ORIGIN = "712 Conrad Dr, Warrington, PA 18976";
 const ORIGIN_LAT = 40.2560824;
 const ORIGIN_LNG = -75.1723344;
 
-const CATS = [
+const BASE_CATS = [
   {id:"outdoor",   emoji:"🏞️", label:"戶外自然", color:"#3F6B4A"},
   {id:"animal",    emoji:"🐾", label:"動物",     color:"#C98A2C", textOnActive:"#2B2420"},
   {id:"knowledge", emoji:"🔬", label:"室內知識", color:"#2D6E73"},
@@ -842,6 +943,35 @@ const CATS = [
   {id:"coffee",    emoji:"☕", label:"咖啡店",   color:"#3E2723"},
   {id:"bookstore", emoji:"📚", label:"書店",     color:"#6B2737"},
 ];
+let CATS = [...BASE_CATS];
+let customCats = {}; // uid → {id, emoji, label, color}
+
+function rebuildCats(){
+  const extra = Object.entries(customCats)
+    .filter(([,c])=> c && c.id)
+    .map(([,c])=> c);
+  CATS = [...BASE_CATS, ...extra];
+  // 重建 catMap（直接覆寫物件 properties 保持同一參考）
+  Object.keys(catMap).forEach(k=> delete catMap[k]);
+  CATS.forEach(c=> catMap[c.id]=c);
+  buildSections();
+  rebuildMapLegend();
+  renderCatToggleStates();
+  applyFilters();
+}
+
+function rebuildMapLegend(){
+  const legend = document.getElementById("mapLegend");
+  if(!legend) return;
+  const hasData = (id)=> DATA.some(d=>d.cat===id) || Object.values(customPlaces).some(cp=>cp&&cp.cat===id);
+  let html = `<span class="legend-chip home">❤️ 二姊家</span>`;
+  CATS.forEach(c=>{
+    if(hasData(c.id)){
+      html += `<button class="legend-chip" data-cat="${c.id}"><span class="dot" style="background:${c.color}"></span>${c.emoji} ${c.label}</button>`;
+    }
+  });
+  legend.innerHTML = html;
+}
 
 const DATA = [
   // ---------------- 戶外自然 ----------------
@@ -1083,7 +1213,7 @@ const DATA = [
 /* =========================================================
    RENDER (cards)
 ========================================================= */
-const catMap = Object.fromEntries(CATS.map(c=>[c.id,c]));
+let catMap = Object.fromEntries(CATS.map(c=>[c.id,c]));
 
 function tierOf(t){
   if(t<=20) return "near";
@@ -1252,15 +1382,7 @@ function initMap(){
     map.setView([ORIGIN_LAT, ORIGIN_LNG], 11);
   });
 
-  // legend doubles as a toggle control, synced with the top category row
-  const legend = document.getElementById("mapLegend");
-  let legendHtml = `<span class="legend-chip home">❤️ 二姊家</span>`;
-  CATS.forEach(c=>{
-    if(DATA.some(d=>d.cat===c.id)){
-      legendHtml += `<button class="legend-chip" data-cat="${c.id}"><span class="dot" style="background:${c.color}"></span>${c.emoji} ${c.label}</button>`;
-    }
-  });
-  legend.innerHTML = legendHtml;
+  rebuildMapLegend();
 }
 
 function fitMapToVisible(){
@@ -1560,6 +1682,112 @@ window.addEventListener("scroll", ()=>{
   topBtn.classList.toggle("show", window.scrollY>400);
 });
 topBtn.addEventListener("click", ()=>window.scrollTo({top:0,behavior:"smooth"}));
+
+/* =========================================================
+   分類管理面板
+========================================================= */
+const CAT_COLORS = [
+  "#3F6B4A","#2D6E73","#1F3A5F","#7A4B32","#B33A2E","#8E4A6B",
+  "#46627E","#6B2737","#3E2723","#556B2F","#7B5EA7","#B5651D",
+  "#4A7C6F","#8B0000","#2F4F4F","#654321"
+];
+let catEditingUid = null;
+let selectedColor = CAT_COLORS[0];
+
+function renderColorSwatches(){
+  const wrap = document.getElementById("colorSwatches");
+  wrap.innerHTML = CAT_COLORS.map(c=>
+    `<div class="color-swatch${c===selectedColor?" selected":""}" style="background:${c}" data-color="${c}"></div>`
+  ).join("");
+  wrap.querySelectorAll(".color-swatch").forEach(sw=>{
+    sw.addEventListener("click",()=>{
+      selectedColor = sw.dataset.color;
+      wrap.querySelectorAll(".color-swatch").forEach(s=>s.classList.toggle("selected",s.dataset.color===selectedColor));
+    });
+  });
+}
+
+function renderCatList(){
+  const list = document.getElementById("catList");
+  list.innerHTML = "";
+  // 內建分類
+  BASE_CATS.forEach(c=>{
+    const div = document.createElement("div");
+    div.className = "cat-item";
+    div.innerHTML = `<div class="cat-swatch" style="background:${c.color}"></div>
+      <span class="cat-item-name">${c.emoji} ${c.label}</span>
+      <span class="cat-item-built">內建</span>`;
+    list.appendChild(div);
+  });
+  // 自訂分類
+  Object.entries(customCats).forEach(([uid,c])=>{
+    if(!c||!c.id) return;
+    const div = document.createElement("div");
+    div.className = "cat-item";
+    div.innerHTML = `<div class="cat-swatch" style="background:${c.color||"#46627E"}"></div>
+      <span class="cat-item-name">${c.emoji||"📍"} ${c.label}</span>
+      <button class="cat-edit-btn" data-uid="${uid}">✏️ 編輯</button>
+      <button class="cat-del-btn" data-uid="${uid}">✕ 刪除</button>`;
+    div.querySelector(".cat-edit-btn").addEventListener("click",()=>startEditCat(uid,c));
+    div.querySelector(".cat-del-btn").addEventListener("click",()=>deleteCustomCat(uid).then(()=>renderCatList()));
+    list.appendChild(div);
+  });
+}
+
+function startEditCat(uid, c){
+  catEditingUid = uid;
+  selectedColor = c.color || CAT_COLORS[0];
+  document.getElementById("catFormTitle").textContent = "✏️ 編輯分類";
+  document.getElementById("catSaveBtn").textContent = "💾 儲存修改";
+  document.getElementById("catEmoji").value = c.emoji || "";
+  document.getElementById("catName").value = c.label || "";
+  renderColorSwatches();
+  document.getElementById("catEmoji").focus();
+}
+
+function resetCatForm(){
+  catEditingUid = null;
+  selectedColor = CAT_COLORS[0];
+  document.getElementById("catFormTitle").textContent = "➕ 新增分類";
+  document.getElementById("catSaveBtn").textContent = "💾 儲存分類";
+  document.getElementById("catEmoji").value = "";
+  document.getElementById("catName").value = "";
+  renderColorSwatches();
+}
+
+function openCatPanel(){
+  renderCatList();
+  resetCatForm();
+  document.getElementById("catmgrOverlay").classList.add("show");
+  document.getElementById("catmgrPanel").classList.add("show");
+}
+function closeCatPanel(){
+  document.getElementById("catmgrOverlay").classList.remove("show");
+  document.getElementById("catmgrPanel").classList.remove("show");
+}
+
+document.getElementById("catFab").addEventListener("click", openCatPanel);
+document.getElementById("catmgrOverlay").addEventListener("click", closeCatPanel);
+document.getElementById("catmgrClose").addEventListener("click", closeCatPanel);
+document.getElementById("catFormCancel").addEventListener("click", resetCatForm);
+
+document.getElementById("catSaveBtn").addEventListener("click", async()=>{
+  const emoji = document.getElementById("catEmoji").value.trim() || "📍";
+  const label = document.getElementById("catName").value.trim();
+  if(!label){ alert("請輸入分類名稱"); return; }
+
+  const uid = catEditingUid || ("cat_" + Date.now());
+  const id  = catEditingUid ? customCats[catEditingUid].id : ("custom_" + Date.now());
+  const data = { id, emoji, label, color: selectedColor };
+  await saveCustomCat(uid, data);
+  renderCatList();
+  resetCatForm();
+  // 自動把新分類加入 activeCats 讓它立刻可見
+  if(!activeCats.has(id)){ activeCats.add(id); renderCatToggleStates(); applyFilters(); }
+});
+
+// 初始化顏色盤
+renderColorSwatches();
 </script>
 </body>
 </html>

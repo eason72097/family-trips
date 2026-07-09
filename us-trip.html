@@ -258,6 +258,14 @@
     transition:transform .15s ease, box-shadow .15s ease;
   }
   .card:hover{transform:translateY(-3px);box-shadow:0 4px 0 rgba(43,36,32,.08), 0 14px 26px -10px rgba(43,36,32,.32);}
+  .card{cursor:pointer;}
+  .card button, .card a{cursor:pointer;}
+  @keyframes cardFlash{
+    0%{box-shadow:0 0 0 0 rgba(179,58,46,.6);}
+    70%{box-shadow:0 0 0 14px rgba(179,58,46,0);}
+    100%{box-shadow:0 0 0 0 rgba(179,58,46,0);}
+  }
+  .card.flash{animation:cardFlash 1.1s ease-out 2;border-color:var(--rust);}
 
   .card-footer{display:flex;justify-content:space-between;align-items:center;margin-top:10px;}
   .want-btn{
@@ -1440,6 +1448,12 @@ const DATA = [
   {cat:"hiking", name:"Playwicki Farm Park", time:30, addr:"Playwicki Farm, Feasterville-Trevose, PA", lat:40.170348, lng:-74.97226,
    tags:["🟢輕鬆","鋪面步道","可看鹿群"],
    desc:"以前的老農場改建的公園，鋪面環狀步道約1英里，地勢平坦好走，園區內常能看到鹿群出沒，還保留舊採石場遺跡，散步中帶點小驚喜。"},
+  {cat:"hiking", name:"Churchville Nature Center", time:22, addr:"Churchville Nature Center, Churchville, PA", lat:40.186006, lng:-74.992908,
+   tags:["🟢輕鬆","無障礙棧道","蝴蝶屋"],
+   desc:"2英里彩色標記步道，部分路段是無障礙木棧道，適合長輩和推車，園內有蝴蝶屋和賞鳥小屋，常能看到鹿和烏龜，很適合帶小孩認識自然。"},
+  {cat:"hiking", name:"Five Mile Woods Preserve", time:22, addr:"Five Mile Woods Preserve, Yardley, PA", lat:40.2041629, lng:-74.8500789,
+   tags:["🟢輕鬆","樹蔭遮陽","夏天涼爽"],
+   desc:"285英畝樹蔭濃密的保護區，夏天走起來特別涼爽不曬，地勢平緩偶有小坡，木棧道路段也很好走，人潮不多、適合安靜散步。"},
   {cat:"hiking", name:"Goat Hill Overlook", time:35, addr:"Goat Hill Overlook, Lambertville, NJ", lat:40.3543441, lng:-74.94015,
    tags:["🟡中等","展望台","日落美景"],
    desc:"跨過德拉瓦河到紐澤西這一側，步行約10–15分鐘就能到觀景台，眺望整個德拉瓦河谷，秋天楓紅時景色更美，適合傍晚看夕陽。"},
@@ -1667,6 +1681,7 @@ function initMap(){
     });
     const popupHtml = `<b>${cat.emoji} ${item.name}</b><br>🚗 約 ${item.time} 分鐘<br><a class="popup-link" href="${mapsUrl(item.addr)}" target="_blank" rel="noopener">開啟路線 →</a>`;
     marker.bindPopup(popupHtml);
+    marker.on("click", ()=> scrollToCardFromMap("us_"+idx));
     item._marker = marker;
     allMarkers.push(marker);
     // not added to map yet — visibility controlled by applyFilters/category toggles
@@ -1678,6 +1693,59 @@ function initMap(){
   });
 
   rebuildMapLegend();
+}
+
+/* =========================================================
+   地圖 ↔ 卡片 雙向連動
+========================================================= */
+function ensureVisible(uid){
+  // 為了保證目標地點一定可見，暫時重置會遮蔽它的快速篩選條件
+  document.getElementById("searchInput").value = "";
+  document.querySelectorAll("#distanceChips .chip").forEach(c=>c.classList.toggle("active", c.dataset.tier==="all"));
+  activeTier = "all";
+  if(onlyTop){ onlyTop=false; document.getElementById("topOnlyChip").classList.remove("active"); }
+  if(wantOnly){ wantOnly=false; document.getElementById("wantOnlyChip").classList.remove("active"); }
+  if(onlyCustom){ onlyCustom=false; document.getElementById("customOnlyChip").classList.remove("active"); }
+  const item = getItemByUid(uid);
+  if(item && !activeCats.has(item.cat)){
+    activeCats.add(item.cat);
+    renderCatToggleStates();
+  }
+  applyFilters();
+}
+
+function scrollToCardFromMap(uid){
+  ensureVisible(uid);
+  // 篩選面板若收合，展開讓使用者看到分類已切換
+  setTimeout(()=>{
+    const card = document.querySelector(`.card[data-uid="${uid}"]`);
+    if(!card) return;
+    const offset = 70;
+    const top = card.getBoundingClientRect().top + window.scrollY - offset;
+    window.scrollTo({top, behavior:"smooth"});
+    card.classList.add("flash");
+    setTimeout(()=> card.classList.remove("flash"), 2400);
+  }, 80);
+}
+
+function highlightOnMap(uid){
+  ensureVisible(uid);
+  setTimeout(()=>{
+    const item = getItemByUid(uid);
+    if(!item || !map) return;
+    const marker = uid.startsWith("custom_") ? customMarkers[uid] : item._marker;
+    if(!marker) return;
+    map.setView([item.lat, item.lng], Math.max(map.getZoom(), 13), {animate:true});
+    marker.openPopup();
+    if(marker.bringToFront) marker.bringToFront();
+    if(marker.setStyle){
+      const original = { radius:7, color:"#fff", weight:1.5, fillColor:catMap[item.cat]?.color||"#46627E", fillOpacity:.9 };
+      marker.setStyle({ radius:16, color:"#2B2420", weight:3, fillColor:"#FFD34D", fillOpacity:1 });
+      setTimeout(()=>{ if(marker.setStyle) marker.setStyle(original); }, 2600);
+    }
+    // 捲動地圖進入視野
+    document.getElementById("leafletMap").scrollIntoView({behavior:"smooth", block:"center"});
+  }, 80);
 }
 
 function fitMapToVisible(){
@@ -1727,6 +1795,7 @@ function syncCustomMarkers(q){
     if(!customMarkers[uid]){
       const marker = L.circleMarker([cp.lat,cp.lng],{radius:7,color:"#fff",weight:1.5,fillColor:cat.color,fillOpacity:.9});
       marker.bindPopup(`<b>${cat.emoji} ${cp.name}</b><br>🚗 約 ${cp.time} 分鐘<br><a class="popup-link" href="${mapsUrl(cp.addr)}" target="_blank" rel="noopener">前往 →</a>`);
+      marker.on("click", ()=> scrollToCardFromMap(uid));
       customMarkers[uid] = marker;
     }
     const catOk = activeCats.has(cp.cat);
@@ -1878,6 +1947,10 @@ document.getElementById("contentWrap").addEventListener("click", (e)=>{
     if(cp) openAddPanel(cp.cat, {...cp, _uid: uid});
     return;
   }
+  // 點卡片本身（非按鈕/連結）→ 在地圖上高亮顯示該地點
+  if(e.target.closest("a, button")) return;
+  const card = e.target.closest(".card");
+  if(card && card.dataset.uid) highlightOnMap(card.dataset.uid);
 });
 
 /* --- 已刪除備份區 收合切換 --- */

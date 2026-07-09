@@ -100,6 +100,26 @@
   }
   .search-clear.show{display:block;}
 
+  .filter-toggle{
+    width:100%;display:flex;align-items:center;gap:8px;
+    background:var(--paper);border:1px solid var(--line);border-radius:10px;
+    padding:9px 14px;margin-bottom:6px;cursor:pointer;
+    font-family:'Oswald',sans-serif;font-size:13.5px;color:var(--ink);font-weight:600;
+    letter-spacing:.02em;
+  }
+  .filter-toggle:hover{border-color:var(--navy);}
+  .filter-badge{
+    background:var(--rust);color:#fff;font-size:11px;font-weight:700;
+    padding:1px 8px;border-radius:999px;font-family:'Oswald',sans-serif;
+  }
+  .chevron{margin-left:auto;transition:transform .25s ease;font-size:11px;color:var(--ink-soft);}
+  .filter-toggle.open .chevron{transform:rotate(180deg);}
+
+  .filter-panel{
+    max-height:0;overflow:hidden;transition:max-height .3s ease;
+  }
+  .filter-panel.open{max-height:900px;padding-top:8px;}
+
   .chiprow{
     display:flex;flex-wrap:wrap;gap:6px;justify-content:flex-start;margin-bottom:0;
   }
@@ -472,30 +492,39 @@
       <input id="searchInput" type="text" placeholder="搜尋地點名稱、關鍵字…">
       <button class="search-clear" id="searchClear">✕</button>
     </div>
-    <div class="filter-row-wrap">
-      <span class="filter-row-label">🚗 車程距離</span>
-      <div class="chiprow" id="distanceChips">
-        <button class="chip active" data-tier="all">全部</button>
-        <button class="chip" data-tier="near">20分內</button>
-        <button class="chip" data-tier="mid">20–45分</button>
-        <button class="chip" data-tier="far">45–80分</button>
-        <button class="chip" data-tier="furthest">80分以上</button>
+
+    <button class="filter-toggle" id="filterToggle">
+      <span>🔧 篩選與分類</span>
+      <span class="filter-badge" id="filterBadge" style="display:none">0</span>
+      <span class="chevron" id="filterChevron">▼</span>
+    </button>
+
+    <div class="filter-panel" id="filterPanel">
+      <div class="filter-row-wrap">
+        <span class="filter-row-label">🚗 車程距離</span>
+        <div class="chiprow" id="distanceChips">
+          <button class="chip active" data-tier="all">全部</button>
+          <button class="chip" data-tier="near">20分內</button>
+          <button class="chip" data-tier="mid">20–45分</button>
+          <button class="chip" data-tier="far">45–80分</button>
+          <button class="chip" data-tier="furthest">80分以上</button>
+        </div>
       </div>
-    </div>
-    <div class="filter-row-wrap">
-      <span class="filter-row-label">🔍 快速篩選</span>
-      <div class="chiprow" id="quickFilterChips">
-        <button class="chip" id="topOnlyChip">⭐ 只看首選</button>
-        <button class="chip" id="wantOnlyChip">❤️ 只看想去<span class="want-count-badge" id="wantCountBadge">0</span></button>
-        <button class="chip" id="customOnlyChip">🛠️ 只看自訂新增</button>
+      <div class="filter-row-wrap">
+        <span class="filter-row-label">🔍 快速篩選</span>
+        <div class="chiprow" id="quickFilterChips">
+          <button class="chip" id="topOnlyChip">⭐ 只看首選</button>
+          <button class="chip" id="wantOnlyChip">❤️ 只看想去<span class="want-count-badge" id="wantCountBadge">0</span></button>
+          <button class="chip" id="customOnlyChip">🛠️ 只看自訂新增</button>
+        </div>
       </div>
+      <div class="cat-toolbar">
+        <span class="cat-toolbar-label">📂 分類（可多選，點下方或地圖圖例切換顯示）</span>
+        <button class="mini-btn" id="catSelectAll">全部顯示</button>
+        <button class="mini-btn" id="catClearAll">清除</button>
+      </div>
+      <div class="jumprow" id="jumpRow"></div>
     </div>
-    <div class="cat-toolbar">
-      <span class="cat-toolbar-label">📂 分類（可多選，點下方或地圖圖例切換顯示）</span>
-      <button class="mini-btn" id="catSelectAll">全部顯示</button>
-      <button class="mini-btn" id="catClearAll">清除</button>
-    </div>
-    <div class="jumprow" id="jumpRow"></div>
   </div>
 </div>
 
@@ -1548,6 +1577,27 @@ function applyFilters(){
   document.getElementById("emptyMsg").classList.toggle("show", !noCatSelected && !anyVisible && !isSearching || isSearching && !anyVisible);
 
   if(map) syncMapWithFilters(q);
+  updateFilterBadge();
+}
+
+/* =========================================================
+   篩選面板收合（手機版節省空間）
+========================================================= */
+function countActiveFilters(){
+  let n = 0;
+  if(activeTier !== "all") n++;
+  if(onlyTop) n++;
+  if(wantOnly) n++;
+  if(onlyCustom) n++;
+  if(activeCats.size < CATS.length) n++;
+  return n;
+}
+function updateFilterBadge(){
+  const badge = document.getElementById("filterBadge");
+  if(!badge) return;
+  const n = countActiveFilters();
+  if(n>0){ badge.textContent = n; badge.style.display = ""; }
+  else { badge.style.display = "none"; }
 }
 
 /* =========================================================
@@ -1736,6 +1786,16 @@ window.addEventListener("scroll", ()=>{
   topBtn.classList.toggle("show", window.scrollY>400);
 });
 topBtn.addEventListener("click", ()=>window.scrollTo({top:0,behavior:"smooth"}));
+
+/* --- 篩選面板收合切換 --- */
+const filterToggle = document.getElementById("filterToggle");
+const filterPanel  = document.getElementById("filterPanel");
+let filterPanelOpen = false;
+filterToggle.addEventListener("click", ()=>{
+  filterPanelOpen = !filterPanelOpen;
+  filterPanel.classList.toggle("open", filterPanelOpen);
+  filterToggle.classList.toggle("open", filterPanelOpen);
+});
 
 /* =========================================================
    分類管理面板

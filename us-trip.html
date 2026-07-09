@@ -364,6 +364,40 @@
   }
   .cat-fab:hover{transform:scale(1.08);}
 
+  .nearby-fab{
+    position:fixed;right:18px;bottom:178px;width:46px;height:46px;border-radius:50%;
+    background:var(--rust);color:#fff;border:none;font-size:20px;cursor:pointer;
+    box-shadow:0 4px 14px rgba(179,58,46,.45);z-index:60;
+    display:flex;align-items:center;justify-content:center;transition:transform .15s ease;
+  }
+  .nearby-fab:hover{transform:scale(1.08);}
+
+  .nearby-overlay{position:fixed;inset:0;background:rgba(43,36,32,.4);z-index:200;display:none;}
+  .nearby-overlay.show{display:block;}
+  .nearby-panel{
+    position:fixed;bottom:0;left:0;right:0;max-height:80vh;overflow-y:auto;
+    background:var(--paper);border-top:2px solid var(--line);border-radius:20px 20px 0 0;
+    padding:20px 20px 36px;z-index:201;
+    transform:translateY(100%);transition:transform .3s ease;
+  }
+  .nearby-panel.show{transform:translateY(0);}
+  .nearby-panel h3{margin:0 0 4px;font-size:18px;font-weight:900;}
+  .nearby-panel .sub{font-size:12px;color:var(--ink-soft);margin:0 0 16px;display:block;}
+  .nearby-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;}
+  .nearby-btn{
+    display:flex;flex-direction:column;align-items:center;gap:6px;
+    background:#fff;border:1px solid var(--line);border-radius:14px;padding:16px 10px;
+    cursor:pointer;font-family:'Noto Sans TC',sans-serif;font-size:13.5px;font-weight:700;color:var(--ink);
+    transition:all .15s ease;
+  }
+  .nearby-btn:hover{border-color:var(--rust);background:#FFF5F3;}
+  .nearby-btn .emoji{font-size:26px;}
+  .nearby-status{font-size:12px;color:var(--ink-soft);margin-top:14px;text-align:center;min-height:16px;}
+  .nearby-cancel{
+    width:100%;margin-top:16px;background:#fff;color:var(--ink-soft);border:1px solid var(--line);
+    border-radius:9px;padding:9px;cursor:pointer;font-family:'Oswald',sans-serif;font-size:13px;
+  }
+
   /* --- 分類管理面板 --- */
   .catmgr-overlay{position:fixed;inset:0;background:rgba(43,36,32,.4);z-index:200;display:none;}
   .catmgr-overlay.show{display:block;}
@@ -641,6 +675,27 @@
     <button class="ap-cancel" id="catmgrClose">關閉</button>
   </div>
 </div>
+
+<!-- ========== 附近搜尋面板 ========== -->
+<div class="nearby-overlay" id="nearbyOverlay"></div>
+<div class="nearby-panel" id="nearbyPanel">
+  <h3>📍 找附近的地方</h3>
+  <span class="sub">用你目前的 GPS 位置，直接開 Google 地圖搜尋現正營業的地點（即時資料，非 AI 猜測）</span>
+  <div class="nearby-grid">
+    <button class="nearby-btn" data-q="餐廳"><span class="emoji">🍽️</span>附近餐廳</button>
+    <button class="nearby-btn" data-q="咖啡廳"><span class="emoji">☕</span>附近咖啡</button>
+    <button class="nearby-btn" data-q="好玩景點"><span class="emoji">🎯</span>好玩景點</button>
+    <button class="nearby-btn" data-q="購物中心"><span class="emoji">🛍️</span>附近購物</button>
+    <button class="nearby-btn" data-q="加油站"><span class="emoji">⛽</span>加油站</button>
+    <button class="nearby-btn" data-q="藥局"><span class="emoji">💊</span>藥局/超市</button>
+    <button class="nearby-btn" data-q="停車場"><span class="emoji">🅿️</span>停車場</button>
+    <button class="nearby-btn" data-q="洗手間"><span class="emoji">🚻</span>公共洗手間</button>
+  </div>
+  <p class="nearby-status" id="nearbyStatus"></p>
+  <button class="nearby-cancel" id="nearbyCancel">取消</button>
+</div>
+
+<button class="nearby-fab" id="nearbyFab" title="找附近的地方">📍</button>
 
 <button class="cat-fab" id="catFab" title="管理分類">🗂️</button>
 
@@ -1795,6 +1850,52 @@ filterToggle.addEventListener("click", ()=>{
   filterPanelOpen = !filterPanelOpen;
   filterPanel.classList.toggle("open", filterPanelOpen);
   filterToggle.classList.toggle("open", filterPanelOpen);
+});
+
+/* =========================================================
+   附近搜尋（GPS + Google 地圖即時資料，不用 AI）
+========================================================= */
+function openNearbyPanel(){
+  document.getElementById("nearbyStatus").textContent = "";
+  document.getElementById("nearbyOverlay").classList.add("show");
+  document.getElementById("nearbyPanel").classList.add("show");
+}
+function closeNearbyPanel(){
+  document.getElementById("nearbyOverlay").classList.remove("show");
+  document.getElementById("nearbyPanel").classList.remove("show");
+}
+
+function openNearbySearch(query){
+  const statusEl = document.getElementById("nearbyStatus");
+  if(!navigator.geolocation){
+    statusEl.textContent = "此裝置不支援定位，改用一般搜尋…";
+    window.open(`https://www.google.com/maps/search/${encodeURIComponent(query)}`, "_blank");
+    setTimeout(closeNearbyPanel, 600);
+    return;
+  }
+  statusEl.textContent = "📡 正在取得你的目前位置…";
+  navigator.geolocation.getCurrentPosition(
+    (pos)=>{
+      const {latitude, longitude} = pos.coords;
+      const url = `https://www.google.com/maps/search/${encodeURIComponent(query)}/@${latitude},${longitude},15z`;
+      window.open(url, "_blank");
+      statusEl.textContent = "✅ 已開啟地圖，顯示你附近現正營業的地點";
+      setTimeout(closeNearbyPanel, 500);
+    },
+    (err)=>{
+      statusEl.textContent = "⚠️ 無法取得定位（" + (err.message||"權限被拒絕") + "），改用一般搜尋…";
+      window.open(`https://www.google.com/maps/search/${encodeURIComponent(query)}`, "_blank");
+      setTimeout(closeNearbyPanel, 1200);
+    },
+    { enableHighAccuracy:true, timeout:8000, maximumAge:60000 }
+  );
+}
+
+document.getElementById("nearbyFab").addEventListener("click", openNearbyPanel);
+document.getElementById("nearbyOverlay").addEventListener("click", closeNearbyPanel);
+document.getElementById("nearbyCancel").addEventListener("click", closeNearbyPanel);
+document.querySelectorAll(".nearby-btn").forEach(btn=>{
+  btn.addEventListener("click", ()=> openNearbySearch(btn.dataset.q));
 });
 
 /* =========================================================

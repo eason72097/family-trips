@@ -258,14 +258,6 @@
     transition:transform .15s ease, box-shadow .15s ease;
   }
   .card:hover{transform:translateY(-3px);box-shadow:0 4px 0 rgba(43,36,32,.08), 0 14px 26px -10px rgba(43,36,32,.32);}
-  .card{cursor:pointer;}
-  .card button, .card a{cursor:pointer;}
-  @keyframes cardFlash{
-    0%{box-shadow:0 0 0 0 rgba(179,58,46,.6);}
-    70%{box-shadow:0 0 0 14px rgba(179,58,46,0);}
-    100%{box-shadow:0 0 0 0 rgba(179,58,46,0);}
-  }
-  .card.flash{animation:cardFlash 1.1s ease-out 2;border-color:var(--rust);}
 
   .card-footer{display:flex;justify-content:space-between;align-items:center;margin-top:10px;}
   .want-btn{
@@ -1681,7 +1673,6 @@ function initMap(){
     });
     const popupHtml = `<b>${cat.emoji} ${item.name}</b><br>🚗 約 ${item.time} 分鐘<br><a class="popup-link" href="${mapsUrl(item.addr)}" target="_blank" rel="noopener">開啟路線 →</a>`;
     marker.bindPopup(popupHtml);
-    marker.on("click", ()=> scrollToCardFromMap("us_"+idx));
     item._marker = marker;
     allMarkers.push(marker);
     // not added to map yet — visibility controlled by applyFilters/category toggles
@@ -1693,59 +1684,6 @@ function initMap(){
   });
 
   rebuildMapLegend();
-}
-
-/* =========================================================
-   地圖 ↔ 卡片 雙向連動
-========================================================= */
-function ensureVisible(uid){
-  // 為了保證目標地點一定可見，暫時重置會遮蔽它的快速篩選條件
-  document.getElementById("searchInput").value = "";
-  document.querySelectorAll("#distanceChips .chip").forEach(c=>c.classList.toggle("active", c.dataset.tier==="all"));
-  activeTier = "all";
-  if(onlyTop){ onlyTop=false; document.getElementById("topOnlyChip").classList.remove("active"); }
-  if(wantOnly){ wantOnly=false; document.getElementById("wantOnlyChip").classList.remove("active"); }
-  if(onlyCustom){ onlyCustom=false; document.getElementById("customOnlyChip").classList.remove("active"); }
-  const item = getItemByUid(uid);
-  if(item && !activeCats.has(item.cat)){
-    activeCats.add(item.cat);
-    renderCatToggleStates();
-  }
-  applyFilters();
-}
-
-function scrollToCardFromMap(uid){
-  ensureVisible(uid);
-  // 篩選面板若收合，展開讓使用者看到分類已切換
-  setTimeout(()=>{
-    const card = document.querySelector(`.card[data-uid="${uid}"]`);
-    if(!card) return;
-    const offset = 70;
-    const top = card.getBoundingClientRect().top + window.scrollY - offset;
-    window.scrollTo({top, behavior:"smooth"});
-    card.classList.add("flash");
-    setTimeout(()=> card.classList.remove("flash"), 2400);
-  }, 80);
-}
-
-function highlightOnMap(uid){
-  ensureVisible(uid);
-  setTimeout(()=>{
-    const item = getItemByUid(uid);
-    if(!item || !map) return;
-    const marker = uid.startsWith("custom_") ? customMarkers[uid] : item._marker;
-    if(!marker) return;
-    map.setView([item.lat, item.lng], Math.max(map.getZoom(), 13), {animate:true});
-    marker.openPopup();
-    if(marker.bringToFront) marker.bringToFront();
-    if(marker.setStyle){
-      const original = { radius:7, color:"#fff", weight:1.5, fillColor:catMap[item.cat]?.color||"#46627E", fillOpacity:.9 };
-      marker.setStyle({ radius:16, color:"#2B2420", weight:3, fillColor:"#FFD34D", fillOpacity:1 });
-      setTimeout(()=>{ if(marker.setStyle) marker.setStyle(original); }, 2600);
-    }
-    // 捲動地圖進入視野
-    document.getElementById("leafletMap").scrollIntoView({behavior:"smooth", block:"center"});
-  }, 80);
 }
 
 function fitMapToVisible(){
@@ -1795,7 +1733,6 @@ function syncCustomMarkers(q){
     if(!customMarkers[uid]){
       const marker = L.circleMarker([cp.lat,cp.lng],{radius:7,color:"#fff",weight:1.5,fillColor:cat.color,fillOpacity:.9});
       marker.bindPopup(`<b>${cat.emoji} ${cp.name}</b><br>🚗 約 ${cp.time} 分鐘<br><a class="popup-link" href="${mapsUrl(cp.addr)}" target="_blank" rel="noopener">前往 →</a>`);
-      marker.on("click", ()=> scrollToCardFromMap(uid));
       customMarkers[uid] = marker;
     }
     const catOk = activeCats.has(cp.cat);
@@ -1947,10 +1884,6 @@ document.getElementById("contentWrap").addEventListener("click", (e)=>{
     if(cp) openAddPanel(cp.cat, {...cp, _uid: uid});
     return;
   }
-  // 點卡片本身（非按鈕/連結）→ 在地圖上高亮顯示該地點
-  if(e.target.closest("a, button")) return;
-  const card = e.target.closest(".card");
-  if(card && card.dataset.uid) highlightOnMap(card.dataset.uid);
 });
 
 /* --- 已刪除備份區 收合切換 --- */

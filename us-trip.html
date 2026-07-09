@@ -372,6 +372,40 @@
   }
   .nearby-fab:hover{transform:scale(1.08);}
 
+  .prep-fab{
+    position:fixed;right:18px;bottom:232px;width:46px;height:46px;border-radius:50%;
+    background:var(--ochre);color:#fff;border:none;font-size:20px;cursor:pointer;
+    box-shadow:0 4px 14px rgba(201,138,44,.45);z-index:60;
+    display:flex;align-items:center;justify-content:center;transition:transform .15s ease;
+  }
+  .prep-fab:hover{transform:scale(1.08);}
+
+  .prep-overlay{position:fixed;inset:0;background:rgba(43,36,32,.4);z-index:200;display:none;}
+  .prep-overlay.show{display:block;}
+  .prep-panel{
+    position:fixed;bottom:0;left:0;right:0;max-height:85vh;overflow-y:auto;
+    background:var(--paper);border-top:2px solid var(--line);border-radius:20px 20px 0 0;
+    padding:20px 20px 36px;z-index:201;
+    transform:translateY(100%);transition:transform .3s ease;
+  }
+  .prep-panel.show{transform:translateY(0);}
+  .prep-panel h3{margin:0 0 4px;font-size:19px;font-weight:900;}
+  .prep-panel .sub{font-size:12px;color:var(--ink-soft);margin:0 0 16px;display:block;}
+  .prep-section{margin-bottom:18px;}
+  .prep-section-head{
+    display:flex;align-items:center;gap:8px;margin-bottom:9px;
+    padding-bottom:6px;border-bottom:2px solid var(--line);
+  }
+  .prep-section-head .emoji{font-size:19px;}
+  .prep-section-head h4{margin:0;font-size:15px;font-weight:900;}
+  .prep-list{margin:0;padding-left:20px;font-size:13px;line-height:1.9;color:var(--ink-soft);}
+  .prep-list li{margin-bottom:2px;}
+  .prep-list b{color:var(--ink);}
+  .prep-close{
+    width:100%;margin-top:6px;background:var(--navy);color:#fff;border:none;
+    border-radius:9px;padding:10px;cursor:pointer;font-family:'Oswald',sans-serif;font-size:13.5px;font-weight:700;
+  }
+
   .nearby-overlay{position:fixed;inset:0;background:rgba(43,36,32,.4);z-index:200;display:none;}
   .nearby-overlay.show{display:block;}
   .nearby-panel{
@@ -466,6 +500,11 @@
     background:#ECE4CD;color:var(--ink-soft);padding:2px 8px;border-radius:6px;
   }
   .tag.top{background:var(--rust);color:#fff;}
+  .cost-tag{font-weight:700;}
+  .cost-tag.cost-0{background:#E1EEE3;color:#2F5233;}
+  .cost-tag.cost-1{background:#F0E9D8;color:#6B5426;}
+  .cost-tag.cost-2{background:#F3DFC7;color:#7A4A0F;}
+  .cost-tag.cost-3{background:#F0D4CE;color:#8A2E1E;}
   .card p{font-size:13.3px;line-height:1.7;color:var(--ink-soft);margin:0;}
   mark{background:#FCE39A;color:inherit;border-radius:2px;padding:0 1px;}
 
@@ -702,6 +741,55 @@
 </div>
 
 <button class="nearby-fab" id="nearbyFab" title="找附近的地方">📍</button>
+
+<!-- ========== 行前準備面板 ========== -->
+<div class="prep-overlay" id="prepOverlay"></div>
+<div class="prep-panel" id="prepPanel">
+  <h3>🎒 行前準備</h3>
+  <span class="sub">出發前花 5 分鐘看一下，人生地不熟的地方，這些小提醒能省不少麻煩。</span>
+
+  <div class="prep-section">
+    <div class="prep-section-head"><span class="emoji">🎒</span><h4>打包提醒</h4></div>
+    <ul class="prep-list">
+      <li><b>護照 + 影本</b>：正本隨身，影本另外收，手機也拍一份備份</li>
+      <li><b>信用卡</b>：Visa/Mastercard 幾乎每個地方都收，記得先跟銀行說要出國刷卡</li>
+      <li><b>現金</b>：帶一些小額美金鈔票，小吃攤、投幣洗衣、小費有時用得到</li>
+      <li><b>網路</b>：出國前辦好 eSIM 或當地預付卡，落地就能用地圖</li>
+      <li><b>插頭</b>：美規插座跟台灣一樣（110V、兩孔扁插），<b>不用帶轉接頭</b></li>
+      <li><b>防曬 / 防蚊液</b>：七月戶外行程多，太陽很曬，務必補擦</li>
+      <li><b>好走的鞋</b>：很多行程走路量不小（動物園、市集、博物館）</li>
+      <li><b>薄外套</b>：美國室內冷氣通常開很強，室內室外溫差大</li>
+    </ul>
+  </div>
+
+  <div class="prep-section">
+    <div class="prep-section-head"><span class="emoji">🛡️</span><h4>安全須知</h4></div>
+    <ul class="prep-list">
+      <li><b>緊急電話：911</b>（救護車、警察、消防都打這支）</li>
+      <li>車上<b>貴重物品不要外露</b>，下車務必收進後車廂，避免砸車窗竊盜</li>
+      <li>過馬路多看兩眼：美國車輛<b>行駛方向跟台灣相同（靠右）</b>，但路口動線常跟台灣不同，務必看清楚再走</li>
+      <li>大城市（尤其紐約地鐵、人多景點）留意隨身包包，貴重物品別放後口袋</li>
+      <li>戶外行程正值夏天，注意<b>補水和防曬</b>，孩子和長輩尤其要留意中暑</li>
+      <li>射擊場全程<b>務必聽從現場人員指示</b>，安全規則不能通融</li>
+      <li>河流漂流/ 水上活動記得穿救生衣，遵守園方年齡與身高限制</li>
+    </ul>
+  </div>
+
+  <div class="prep-section">
+    <div class="prep-section-head"><span class="emoji">💰</span><h4>金錢與消費須知</h4></div>
+    <ul class="prep-list">
+      <li>美國標價<b>都不含稅</b>，結帳會加收州稅（賓州約6%），心理要多加一點預算</li>
+      <li>餐廳吃飯<b>要另外給小費</b>，一般是消費金額的 15–20%，外帶通常不用</li>
+      <li>卡片上的 <span style="background:#E1EEE3;padding:1px 6px;border-radius:5px;">免費</span> <span style="background:#F0E9D8;padding:1px 6px;border-radius:5px;">$</span> <span style="background:#F3DFC7;padding:1px 6px;border-radius:5px;">$$</span> <span style="background:#F0D4CE;padding:1px 6px;border-radius:5px;">$$$</span> 標籤是粗略消費等級，僅供參考，實際費用請以官網為準</li>
+      <li>ATM 提款機提領現金通常會被雙重收手續費（銀行+機器），盡量少次多領</li>
+      <li>停車費在大城市（費城、紐約）可能不便宜，出發前可以先查好停車場位置</li>
+    </ul>
+  </div>
+
+  <button class="prep-close" id="prepClose">知道了，關閉</button>
+</div>
+
+<button class="prep-fab" id="prepFab" title="行前準備提醒">🎒</button>
 
 <button class="cat-fab" id="catFab" title="管理分類">🗂️</button>
 
@@ -1355,10 +1443,48 @@ function extractLatLng(url){
   return null;
 }
 
+/* ====== 費用等級（粗略估計，分類預設 + 個別覆寫）====== */
+const COST_LABELS = ["免費","$","$$","$$$"];
+const CATEGORY_COST_DEFAULT = {
+  outdoor:0, animal:2, knowledge:2, culture:1, sports:3, shooting:3,
+  town:0, food:1, shopping:1, coffee:1, bookstore:1,
+};
+const COST_OVERRIDE = {
+  "Bucks County River Country（德拉瓦河漂浮）":1,
+  "Six Flags Wild Safari（野生動物開車探險）":3,
+  "Topgolf King of Prussia":2,
+  "Bowlero Bristol（保齡球）":1,
+  "Citizens Bank Park（費城人 MLB）":3,
+  "Yankee Stadium（紐約洋基）":3,
+  "Citi Field（紐約大都會）":3,
+  "Guardian Training Center（室內實彈・首選）":3,
+  "Wicen's Shooting Range（戶外實彈）":2,
+  "Bucks County Fish ＆ Game（飛靶／不定向飛靶）":2,
+  "Classic Pistol Inc":2,
+  "Survival Trail（評分最高）":3,
+  "Hershey's Chocolate World":0,
+  "Bass Pro Shops（Harrisburg）":0,
+  "Adventure Aquarium":3,
+  "Philadelphia Zoo":2,
+  "Elmwood Park Zoo":2,
+  "Intrepid Sea-Air-Space Museum":3,
+  "自由女神像與艾利斯島（紐約）":2,
+  "9/11 Memorial ＆ Museum（紐約）":2,
+  "Liberty Science Center":2,
+  "Statue of Liberty":2,
+};
+function getCostTier(item){
+  if((item.tags||[]).some(t=>t==="免費")) return 0;
+  if(COST_OVERRIDE.hasOwnProperty(item.name)) return COST_OVERRIDE[item.name];
+  return CATEGORY_COST_DEFAULT[item.cat] ?? 1;
+}
+
 function cardHtml(item, uid){
   const cat = catMap[item.cat];
   const tags = (item.tags||[]).map(t=>`<span class="tag${item.top && t==='首選' ? ' top':''}">${t}</span>`).join("");
   const customBadge = item.isCustom ? '<span class="tag custom-badge">自訂</span>' : '';
+  const costTier = getCostTier(item);
+  const costBadge = `<span class="tag cost-tag cost-${costTier}">${COST_LABELS[costTier]}</span>`;
   return `
   <div class="card" data-uid="${uid}" data-cat="${item.cat}" data-time="${item.time}" data-tier="${tierOf(item.time)}" data-search="${(item.name+" "+(item.desc||"")).toLowerCase()}">
     <div class="stamp" style="--cat-color:${cat.color}">${cat.emoji}</div>
@@ -1366,7 +1492,7 @@ function cardHtml(item, uid){
     ${item.isCustom ? `<button class="edit-btn" data-edit="${uid}" title="編輯">✏️</button>` : ''}
     <div class="card-top"><span class="time-pill">🚗 ${item.time} 分</span></div>
     <h3><a href="${mapsUrl(item.addr)}" target="_blank" rel="noopener">${item.name}</a></h3>
-    <div class="tagrow">${customBadge}${tags}</div>
+    <div class="tagrow">${customBadge}${costBadge}${tags}</div>
     <p>${item.desc||""}</p>
     <div class="card-footer">
       <button class="want-btn" data-uid="${uid}">🤍 想去</button>
@@ -1903,6 +2029,19 @@ document.getElementById("nearbyCancel").addEventListener("click", closeNearbyPan
 document.querySelectorAll(".nearby-btn").forEach(btn=>{
   btn.addEventListener("click", ()=> openNearbySearch(btn.dataset.q));
 });
+
+/* --- 行前準備面板（純資訊型）--- */
+function openPrepPanel(){
+  document.getElementById("prepOverlay").classList.add("show");
+  document.getElementById("prepPanel").classList.add("show");
+}
+function closePrepPanel(){
+  document.getElementById("prepOverlay").classList.remove("show");
+  document.getElementById("prepPanel").classList.remove("show");
+}
+document.getElementById("prepFab").addEventListener("click", openPrepPanel);
+document.getElementById("prepOverlay").addEventListener("click", closePrepPanel);
+document.getElementById("prepClose").addEventListener("click", closePrepPanel);
 
 /* =========================================================
    分類管理面板

@@ -383,15 +383,15 @@
   .nearby-panel.show{transform:translateY(0);}
   .nearby-panel h3{margin:0 0 4px;font-size:18px;font-weight:900;}
   .nearby-panel .sub{font-size:12px;color:var(--ink-soft);margin:0 0 16px;display:block;}
-  .nearby-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;}
+  .nearby-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;}
   .nearby-btn{
-    display:flex;flex-direction:column;align-items:center;gap:6px;
-    background:#fff;border:1px solid var(--line);border-radius:14px;padding:16px 10px;
-    cursor:pointer;font-family:'Noto Sans TC',sans-serif;font-size:13.5px;font-weight:700;color:var(--ink);
+    display:flex;flex-direction:column;align-items:center;gap:4px;
+    background:#fff;border:1px solid var(--line);border-radius:12px;padding:11px 4px;
+    cursor:pointer;font-family:'Noto Sans TC',sans-serif;font-size:11.5px;font-weight:700;color:var(--ink);
     transition:all .15s ease;
   }
   .nearby-btn:hover{border-color:var(--rust);background:#FFF5F3;}
-  .nearby-btn .emoji{font-size:26px;}
+  .nearby-btn .emoji{font-size:21px;}
   .nearby-status{font-size:12px;color:var(--ink-soft);margin-top:14px;text-align:center;min-height:16px;}
   .nearby-cancel{
     width:100%;margin-top:16px;background:#fff;color:var(--ink-soft);border:1px solid var(--line);
@@ -682,14 +682,20 @@
   <h3>📍 找附近的地方</h3>
   <span class="sub">用你目前的 GPS 位置，直接開 Google 地圖搜尋現正營業的地點（即時資料，非 AI 猜測）</span>
   <div class="nearby-grid">
-    <button class="nearby-btn" data-q="餐廳"><span class="emoji">🍽️</span>附近餐廳</button>
-    <button class="nearby-btn" data-q="咖啡廳"><span class="emoji">☕</span>附近咖啡</button>
-    <button class="nearby-btn" data-q="好玩景點"><span class="emoji">🎯</span>好玩景點</button>
-    <button class="nearby-btn" data-q="購物中心"><span class="emoji">🛍️</span>附近購物</button>
-    <button class="nearby-btn" data-q="加油站"><span class="emoji">⛽</span>加油站</button>
-    <button class="nearby-btn" data-q="藥局"><span class="emoji">💊</span>藥局/超市</button>
-    <button class="nearby-btn" data-q="停車場"><span class="emoji">🅿️</span>停車場</button>
-    <button class="nearby-btn" data-q="洗手間"><span class="emoji">🚻</span>公共洗手間</button>
+    <button class="nearby-btn" data-q="restaurants"><span class="emoji">🍽️</span>餐廳</button>
+    <button class="nearby-btn" data-q="coffee shop"><span class="emoji">☕</span>咖啡</button>
+    <button class="nearby-btn" data-q="ice cream dessert"><span class="emoji">🍦</span>甜點冰淇淋</button>
+    <button class="nearby-btn" data-q="tourist attractions"><span class="emoji">🎯</span>好玩景點</button>
+    <button class="nearby-btn" data-q="playground"><span class="emoji">🎪</span>兒童遊樂場</button>
+    <button class="nearby-btn" data-q="shopping mall"><span class="emoji">🛍️</span>購物中心</button>
+    <button class="nearby-btn" data-q="grocery store"><span class="emoji">🛒</span>超市</button>
+    <button class="nearby-btn" data-q="pharmacy"><span class="emoji">💊</span>藥局</button>
+    <button class="nearby-btn" data-q="hospital urgent care"><span class="emoji">🏥</span>醫院/急診</button>
+    <button class="nearby-btn" data-q="gas station"><span class="emoji">⛽</span>加油站</button>
+    <button class="nearby-btn" data-q="parking"><span class="emoji">🅿️</span>停車場</button>
+    <button class="nearby-btn" data-q="public restroom"><span class="emoji">🚻</span>公共洗手間</button>
+    <button class="nearby-btn" data-q="ATM bank"><span class="emoji">🏧</span>ATM/銀行</button>
+    <button class="nearby-btn" data-q="laundromat"><span class="emoji">🧺</span>投幣洗衣</button>
   </div>
   <p class="nearby-status" id="nearbyStatus"></p>
   <button class="nearby-cancel" id="nearbyCancel">取消</button>

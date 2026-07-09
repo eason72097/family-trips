@@ -167,10 +167,11 @@
   .legend-chip.home{cursor:default;background:var(--paper);color:var(--ink-soft);border-color:var(--line);}
 
   /* ---------- MAP ---------- */
-  .map-wrap{max-width:1080px;margin:22px auto 0;padding:0 16px;}
+  .map-wrap{max-width:1080px;margin:22px auto 0;padding:0 16px;position:relative;z-index:1;isolation:isolate;}
   .map-card{
     background:var(--paper);border:1px solid var(--line);border-radius:16px;
     box-shadow:var(--shadow);padding:14px;
+    position:relative;isolation:isolate;
   }
   .map-card-head{
     display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px;
@@ -185,8 +186,17 @@
   .map-btn:hover{border-color:var(--navy);color:var(--navy);}
   #leafletMap{
     width:100%;height:420px;border-radius:12px;background:#e9e3d2;
-    border:1px solid var(--line);
+    border:1px solid var(--line);position:relative;z-index:1;isolation:isolate;
   }
+  /* 保險：強制降低 Leaflet 內部元件的 z-index 上限，避免蓋過頁面固定元素 */
+  #leafletMap .leaflet-pane{z-index:1 !important;}
+  #leafletMap .leaflet-tile-pane{z-index:1 !important;}
+  #leafletMap .leaflet-overlay-pane{z-index:2 !important;}
+  #leafletMap .leaflet-marker-pane{z-index:3 !important;}
+  #leafletMap .leaflet-tooltip-pane{z-index:4 !important;}
+  #leafletMap .leaflet-popup-pane{z-index:5 !important;}
+  #leafletMap .leaflet-top,#leafletMap .leaflet-bottom{z-index:6 !important;}
+  #leafletMap .leaflet-control{z-index:6 !important;}
   .map-legend{
     display:flex;flex-wrap:wrap;gap:6px;margin-top:10px;font-size:11.5px;
     color:var(--ink-soft);

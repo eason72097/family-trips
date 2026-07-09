@@ -1147,6 +1147,7 @@ const BASE_CATS = [
   {id:"shopping",  emoji:"🛍️", label:"購物",     color:"#46627E"},
   {id:"coffee",    emoji:"☕", label:"咖啡店",   color:"#3E2723"},
   {id:"bookstore", emoji:"📚", label:"書店",     color:"#6B2737"},
+  {id:"hiking",    emoji:"🥾", label:"步道健行", color:"#556B2F"},
 ];
 let CATS = [...BASE_CATS];
 let customCats = {}; // uid → {id, emoji, label, color}
@@ -1416,6 +1417,29 @@ const DATA = [
   {cat:"bookstore", name:"Books of Wonder（紐約）", time:110, addr:"Books of Wonder, New York, NY", lat:40.7386956, lng:-73.9943253,
    tags:["紐約行程","童書專門店"],
    desc:"紐約老字號童書專門店，許多繪本都有作者親筆簽名版，店員對童書如數家珍，帶小孩來挑書是很特別的體驗。"},
+
+  // ---------------- 步道健行 ----------------
+  {cat:"hiking", name:"Core Creek Park（Lake Luxembourg）", time:30, addr:"Core Creek Park, Langhorne, PA", lat:40.195006, lng:-74.909577,
+   tags:["首選","親子首選","🟢輕鬆","平緩好走"], top:true,
+   desc:"環湖鋪面步道約5英里，蝴蝶園、遊樂場、划船碼頭一應俱全，是全家一起健走曬太陽的最佳首選，累了還能去旁邊 Neshaminy Mall 吃東西。"},
+  {cat:"hiking", name:"Tinicum Park", time:30, addr:"Tinicum Park, Erwinna, PA", lat:40.5077794, lng:-75.0690655,
+   tags:["🟢輕鬆","河岸林蔭","週末有市集"],
+   desc:"德拉瓦河畔的林蔭步道，平緩好走適合全家散步，週末常有藝術市集和馬球比賽，還有露營區可以順道走走。"},
+  {cat:"hiking", name:"Neshaminy State Park", time:28, addr:"Neshaminy State Park, Bensalem, PA", lat:40.0784638, lng:-74.9228603,
+   tags:["🟢輕鬆","河岸景觀","可看費城天際線"],
+   desc:"沿德拉瓦河與 Neshaminy Creek 的平緩步道，天氣好時能遠眺費城天際線，野餐區和烤肉架都很方便，適合輕鬆的黃昏散步。"},
+  {cat:"hiking", name:"Goat Hill Overlook", time:35, addr:"Goat Hill Overlook, Lambertville, NJ", lat:40.3543441, lng:-74.94015,
+   tags:["🟡中等","展望台","日落美景"],
+   desc:"跨過德拉瓦河到紐澤西這一側，步行約10–15分鐘就能到觀景台，眺望整個德拉瓦河谷，秋天楓紅時景色更美，適合傍晚看夕陽。"},
+  {cat:"hiking", name:"Hawk Mountain Sanctuary", time:70, addr:"Hawk Mountain Sanctuary, Kempton, PA", lat:40.6338029, lng:-75.9869281,
+   tags:["🟡中等","賞鷹聖地","需買門票"],
+   desc:"全球知名的猛禽遷徙觀測站，秋季可看到成千上萬隻老鷹過境，步道分級難易皆有，主要觀景步道地勢起伏但不算太硬，適合對生態有興趣的家庭。"},
+  {cat:"hiking", name:"Mount Tammany（Red Dot Trail）", time:90, addr:"Mt Tammany Red Dot Trailhead Parking, Columbia, NJ", lat:40.9718604, lng:-75.1230722,
+   tags:["首選","挑戰首選","🔴較硬","登頂視野絕美"], top:true,
+   desc:"德拉瓦水峽最經典的挑戰路線，來回約3.5英里、爬升逾1200英呎，山頂能俯瞰整個峽谷美景，建議穿抓地力好的健走鞋，也有家庭帶9–12歲孩子成功登頂的紀錄。"},
+  {cat:"hiking", name:"Mount Minsi Trail", time:90, addr:"Mt. Minsi Trailhead, Bangor, PA", lat:40.9798224, lng:-75.141707,
+   tags:["🔴較硬","較少人潮","阿帕拉契山徑"],
+   desc:"與 Mount Tammany 隔著德拉瓦河遙遙相望的賓州這一側步道，屬阿帕拉契山徑的一段，坡度陡、碎石路面較多，人潮比對岸少一些，適合想避開熱門路線的健行者。"},
 ];
 
 /* =========================================================
@@ -1447,7 +1471,7 @@ function extractLatLng(url){
 const COST_LABELS = ["免費","$","$$","$$$"];
 const CATEGORY_COST_DEFAULT = {
   outdoor:0, animal:2, knowledge:2, culture:1, sports:3, shooting:3,
-  town:0, food:1, shopping:1, coffee:1, bookstore:1,
+  town:0, food:1, shopping:1, coffee:1, bookstore:1, hiking:0,
 };
 const COST_OVERRIDE = {
   "Bucks County River Country（德拉瓦河漂浮）":1,
@@ -1472,6 +1496,7 @@ const COST_OVERRIDE = {
   "9/11 Memorial ＆ Museum（紐約）":2,
   "Liberty Science Center":2,
   "Statue of Liberty":2,
+  "Hawk Mountain Sanctuary":1,
 };
 function getCostTier(item){
   if((item.tags||[]).some(t=>t==="免費")) return 0;

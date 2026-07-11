@@ -584,10 +584,15 @@
     display:flex;align-items:center;justify-content:center;font-size:18px;
     transform:rotate(-10deg);box-shadow:var(--shadow);
   }
-  .card-top{display:flex;justify-content:flex-end;margin-bottom:6px;}
+  .card-top{display:flex;justify-content:flex-end;align-items:center;gap:6px;margin-bottom:6px;flex-wrap:wrap;}
   .time-pill{
     font-family:'Oswald',sans-serif;font-size:12px;font-weight:600;
     background:#E4E9EF;color:var(--navy);padding:3px 10px;
+    border-radius:999px;white-space:nowrap;
+  }
+  .dist-pill{
+    font-family:'Oswald',sans-serif;font-size:12px;font-weight:700;
+    background:#E5F0E7;color:#2F5233;padding:3px 10px;
     border-radius:999px;white-space:nowrap;
   }
   .card h3{
@@ -693,6 +698,7 @@
         <div class="chiprow" id="quickFilterChips">
           <button class="chip" id="topOnlyChip">⭐ 只看首選</button>
           <button class="chip" id="wantOnlyChip">❤️ 只看想去<span class="want-count-badge" id="wantCountBadge">0</span></button>
+          <button class="chip" id="nearMeChip">📍 離我最近</button>
           <button class="chip" id="foodOnlyChip">🍴 只看吃的</button>
           <button class="chip" id="customOnlyChip">🛠️ 只看自訂新增</button>
         </div>
@@ -1905,7 +1911,7 @@ function parkingHint(item){
   return null;
 }
 
-function cardHtml(item, uid){
+function cardHtml(item, uid, distKm){
   const cat = catMap[item.cat];
   const tags = (item.tags||[]).map(t=>`<span class="tag${item.top && t==='首選' ? ' top':''}">${t}</span>`).join("");
   const customBadge = item.isCustom ? '<span class="tag custom-badge">自訂</span>' : '';
@@ -1913,12 +1919,15 @@ function cardHtml(item, uid){
   const costBadge = `<span class="tag cost-tag cost-${costTier}">${COST_LABELS[costTier]}</span>`;
   const ph = parkingHint(item);
   const parkBadge = ph ? `<span class="tag ${ph.cls}">${ph.txt}</span>` : '';
+  const distPill = (distKm!=null)
+    ? `<span class="dist-pill">📍 離你 ${distKm<1 ? Math.round(distKm*1000)+' 公尺' : distKm.toFixed(1)+' 公里'}</span>`
+    : '';
   return `
   <div class="card" data-uid="${uid}" data-cat="${item.cat}" data-time="${item.time}" data-tier="${tierOf(item.time)}" data-search="${(item.name+" "+(item.desc||"")).toLowerCase()}">
     <div class="stamp" style="--cat-color:${cat.color}">${cat.emoji}</div>
     <button class="delete-btn" data-del="${uid}" title="刪除">✕</button>
     ${item.isCustom ? `<button class="edit-btn" data-edit="${uid}" title="編輯">✏️</button>` : ''}
-    <div class="card-top"><span class="time-pill">🚗 ${item.time} 分</span></div>
+    <div class="card-top"><span class="time-pill">🚗 ${item.time} 分</span>${distPill}</div>
     <h3><a href="${mapsUrl(item.addr)}" target="_blank" rel="noopener">${item.name}</a></h3>
     <div class="tagrow">${customBadge}${costBadge}${parkBadge}${tags}</div>
     <p>${item.desc||""}</p>
@@ -1934,11 +1943,25 @@ function buildSections(){
   let html = "";
   let jumpHtml = "";
   const isCustomCat = (id)=> !BASE_CATS.some(b=>b.id===id);
+  // nearMe 啟用時：計算每個地點離使用者的距離，並在分類內部由近到遠排序
+  const distOf = (it)=>{
+    if(!nearMeActive || userLat==null || it.lat==null || it.lng==null) return null;
+    return haversineKm(userLat, userLng, it.lat, it.lng);
+  };
   CATS.forEach(cat=>{
-    const items = DATA.filter(d=>d.cat===cat.id);
-    const customItems = Object.entries(customPlaces).filter(([uid,cp])=>cp&&cp.cat===cat.id);
-    // 自訂分類：即使沒有地點也要顯示（讓使用者能新增地點進去）
-    // 內建分類：沒有任何地點才略過
+    let items = DATA.filter(d=>d.cat===cat.id).map(d=>({it:d, uid:"us_"+DATA.indexOf(d)}));
+    let customItems = Object.entries(customPlaces).filter(([uid,cp])=>cp&&cp.cat===cat.id).map(([uid,cp])=>({it:{...cp,isCustom:true}, uid}));
+    if(nearMeActive && userLat!=null){
+      const byDist = (a,b)=>{
+        const da=distOf(a.it), db=distOf(b.it);
+        if(da==null&&db==null) return 0;
+        if(da==null) return 1;
+        if(db==null) return -1;
+        return da-db;
+      };
+      items = items.slice().sort(byDist);
+      customItems = customItems.slice().sort(byDist);
+    }
     if(items.length===0 && customItems.length===0 && !isCustomCat(cat.id)) return;
     const totalCount = items.length + customItems.length;
     jumpHtml += `<button class="jumpchip" data-cat="${cat.id}">${cat.emoji} ${cat.label}</button>`;
@@ -1956,8 +1979,8 @@ function buildSections(){
         ${isCustomCat(cat.id) ? '<span style="font-size:11px;color:var(--ink-soft);margin-left:4px;">自訂</span>' : ""}
       </div>
       <div class="grid">
-        ${items.map((it)=>cardHtml(it, "us_"+DATA.indexOf(it))).join("")}
-        ${customItems.map(([uid,cp])=>cardHtml({...cp,isCustom:true},uid)).join("")}
+        ${items.map(({it,uid})=>cardHtml(it, uid, distOf(it))).join("")}
+        ${customItems.map(({it,uid})=>cardHtml(it, uid, distOf(it))).join("")}
         ${emptyHint}
       </div>
     </div>`;
@@ -2146,6 +2169,8 @@ let activeTier = "all";
 let onlyCustom = false;
 let onlyFood = false;
 const FOOD_CATS_SET = new Set(["food","coffee"]);
+let nearMeActive = false;
+let userLat = null, userLng = null;
 
 function highlight(text, q){
   if(!q) return text;
@@ -2209,6 +2234,7 @@ function countActiveFilters(){
   if(wantOnly) n++;
   if(onlyCustom) n++;
   if(onlyFood) n++;
+  if(nearMeActive) n++;
   if(activeCats.size < CATS.length) n++;
   return n;
 }
@@ -2266,6 +2292,40 @@ document.getElementById("foodOnlyChip").addEventListener("click", (e)=>{
   onlyFood = !onlyFood;
   e.currentTarget.classList.toggle("active", onlyFood);
   applyFilters();
+});
+
+document.getElementById("nearMeChip").addEventListener("click", (e)=>{
+  const chip = e.currentTarget;
+  if(nearMeActive){
+    // 關閉：回到原本排序
+    nearMeActive = false;
+    userLat = userLng = null;
+    chip.classList.remove("active");
+    chip.textContent = "📍 離我最近";
+    buildSections(); applyFilters();
+    return;
+  }
+  if(!navigator.geolocation){
+    alert("此裝置不支援定位功能。");
+    return;
+  }
+  chip.textContent = "📍 定位中…";
+  navigator.geolocation.getCurrentPosition(
+    (pos)=>{
+      userLat = pos.coords.latitude;
+      userLng = pos.coords.longitude;
+      nearMeActive = true;
+      chip.classList.add("active");
+      chip.textContent = "📍 離我最近 ✓";
+      buildSections();
+      applyFilters();
+    },
+    (err)=>{
+      chip.textContent = "📍 離我最近";
+      alert("無法取得定位（"+(err.message||"權限被拒絕")+"）。請確認已允許此網站使用定位。");
+    },
+    { enableHighAccuracy:true, timeout:8000, maximumAge:60000 }
+  );
 });
 
 document.getElementById("contentWrap").addEventListener("click", (e)=>{

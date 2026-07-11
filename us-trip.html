@@ -674,6 +674,7 @@
         <div class="chiprow" id="quickFilterChips">
           <button class="chip" id="topOnlyChip">⭐ 只看首選</button>
           <button class="chip" id="wantOnlyChip">❤️ 只看想去<span class="want-count-badge" id="wantCountBadge">0</span></button>
+          <button class="chip" id="foodOnlyChip">🍴 只看吃的</button>
           <button class="chip" id="customOnlyChip">🛠️ 只看自訂新增</button>
         </div>
       </div>
@@ -1783,16 +1784,25 @@ function planDay(regionId, pace, vibeFilter){
   const all = placesByRegion(regionId);
   const foods = all.filter(p=>["food","coffee"].includes(p.cat));
   const supplies = all.filter(p=>SUPPLY_PLACES.has(p.name));
-  let pool = all.filter(p=>!["food","coffee"].includes(p.cat) && !SUPPLY_PLACES.has(p.name));
-  // 調性篩選
-  if(vibeFilter && vibeFilter.size>0){
-    pool = pool.filter(p=>vibeFilter.has(VIBE_OF_CAT[p.cat]));
+
+  // 純「吃吃喝喝」模式：使用者只選了 food 調性 → 把餐廳/咖啡當主角排
+  const foodOnlyMode = vibeFilter && vibeFilter.size===1 && vibeFilter.has("food");
+
+  let pool;
+  if(foodOnlyMode){
+    pool = foods.slice(); // 餐廳＋咖啡當成要排的點
+  } else {
+    pool = all.filter(p=>!["food","coffee"].includes(p.cat) && !SUPPLY_PLACES.has(p.name));
+    if(vibeFilter && vibeFilter.size>0){
+      pool = pool.filter(p=>vibeFilter.has(VIBE_OF_CAT[p.cat]));
+    }
   }
+
   const budget = pace==="relax" ? 6.5 : 9.0;
-  const maxPts = pace==="relax" ? 4 : 6;
+  const maxPts = foodOnlyMode ? (pace==="relax"?4:6) : (pace==="relax" ? 4 : 6);
   const minPts = pace==="relax" ? 3 : 4;
 
-  // 隨機加權排序：首選 +1.5，想去 +1.2，短停留略加分（避免單一長活動吃光預算）
+  // 隨機加權排序：首選 +1.5，想去 +1.2，短停留略加分
   const scored = pool.map(p=>{
     let s = Math.random();
     if(p.top) s += 1.5;
@@ -1804,15 +1814,20 @@ function planDay(regionId, pace, vibeFilter){
   const picked=[]; let spent=0;
   for(const p of scored){
     if(picked.length>=maxPts) break;
-    if(picked.filter(q=>q.cat===p.cat).length>=2) continue; // 同分類最多2
+    // 純吃模式放寬同分類限制（可以排多間餐廳），一般模式同分類最多2
+    if(!foodOnlyMode && picked.filter(q=>q.cat===p.cat).length>=2) continue;
     const move = picked.length ? 0.4 : 0;
-    // 已達最少點數後，才開始嚴格卡預算；未達最少點數時放寬讓行程不會太空
     const cap = picked.length < minPts ? budget + 2 : budget;
     if(spent + stayOf(p) + move > cap) continue;
     picked.push(p); spent += stayOf(p)+move;
   }
-  return {region, picked, foods:foods.slice(0,5), supplies, spent:Math.round(spent*10)/10,
-          poolSize:pool.length, allSize:all.filter(p=>!["food","coffee"].includes(p.cat)&&!SUPPLY_PLACES.has(p.name)).length};
+  // 純吃模式時，沿途推薦改推「沒被排進去的其他吃的」
+  const foodRecs = foodOnlyMode
+    ? foods.filter(f=>!picked.includes(f)).slice(0,5)
+    : foods.slice(0,5);
+  return {region, picked, foods:foodRecs, supplies, spent:Math.round(spent*10)/10, foodOnlyMode,
+          poolSize:pool.length,
+          allSize: foodOnlyMode ? foods.length : all.filter(p=>!["food","coffee"].includes(p.cat)&&!SUPPLY_PLACES.has(p.name)).length};
 }
 
 /* ====== 費用等級（粗略估計，分類預設 + 個別覆寫）====== */
@@ -2061,7 +2076,8 @@ function syncMapWithFilters(q){
     const wantOk = !wantOnly || wantSet.has(uid);
     const deletedOk = !deletedSet.has(uid);
     const customOk = !onlyCustom || uid.startsWith("custom_");
-    const show = catOk && tierOk && searchOk && topOk && wantOk && deletedOk && customOk;
+    const foodOk = !onlyFood || FOOD_CATS_SET.has(item.cat);
+    const show = catOk && tierOk && searchOk && topOk && wantOk && deletedOk && customOk && foodOk;
     if(show){
       if(!map.hasLayer(item._marker)) item._marker.addTo(map);
     } else {
@@ -2109,6 +2125,8 @@ function syncCustomMarkers(q){
 ========================================================= */
 let activeTier = "all";
 let onlyCustom = false;
+let onlyFood = false;
+const FOOD_CATS_SET = new Set(["food","coffee"]);
 
 function highlight(text, q){
   if(!q) return text;
@@ -2140,7 +2158,8 @@ function applyFilters(){
       const topOk = !onlyTop || item.top===true;
       const wantOk = !wantOnly || wantSet.has(uid);
       const customOk = !onlyCustom || uid.startsWith("custom_");
-      const show = catOk && tierOk && searchOk && topOk && wantOk && customOk;
+      const foodOk = !onlyFood || FOOD_CATS_SET.has(item.cat);
+      const show = catOk && tierOk && searchOk && topOk && wantOk && customOk && foodOk;
       card.style.display = show ? "" : "none";
 
       const h3a = card.querySelector("h3 a");
@@ -2170,6 +2189,7 @@ function countActiveFilters(){
   if(onlyTop) n++;
   if(wantOnly) n++;
   if(onlyCustom) n++;
+  if(onlyFood) n++;
   if(activeCats.size < CATS.length) n++;
   return n;
 }
@@ -2220,6 +2240,12 @@ document.getElementById("wantOnlyChip").addEventListener("click", (e)=>{
 document.getElementById("customOnlyChip").addEventListener("click", (e)=>{
   onlyCustom = !onlyCustom;
   e.currentTarget.classList.toggle("active", onlyCustom);
+  applyFilters();
+});
+
+document.getElementById("foodOnlyChip").addEventListener("click", (e)=>{
+  onlyFood = !onlyFood;
+  e.currentTarget.classList.toggle("active", onlyFood);
   applyFilters();
 });
 
@@ -2546,7 +2572,7 @@ function renderPlanResult(){
         這一區共 <b>${pts.length}</b> 個點：${names}。<br><br>
         這裡屬於「專程來玩」的地方，周邊沒有太多其他景點，<b>建議安排半天到一天專程走這一區</b>，不用硬湊行程，玩得盡興最重要。放輕鬆慢慢逛就好。
       </div>
-      ${renderFoodSection(placesByRegion(region.id).filter(p=>["food","coffee"].includes(p.cat)))}
+      ${renderFoodSection(placesByRegion(region.id).filter(p=>["food","coffee"].includes(p.cat)), false)}
       <div class="plan-actions">
         <button class="plan-act-btn plan-save" id="planSaveBtn">💾 儲存這個建議</button>
         <button class="plan-act-btn plan-back" id="planBackBtn">← 重新選</button>
@@ -2581,16 +2607,25 @@ function renderPlanResult(){
     </div>`;
   }).join("");
   const paceLabel = ctx.pace==="relax" ? "🐢 悠閒" : "🐇 緊湊";
-  const leftNote = (region.type==="A" && plan.allSize>plan.picked.length)
-    ? `<div class="plan-note">✨ 這一區還有 <b>${plan.allSize-plan.picked.length}</b> 個景點沒排進來，選擇很多，可以按「換一組」看不同組合，或安排 2-3 天慢慢玩。</div>`
-    : `<div class="plan-note">這一區的點比較集中，適合半天到一天走完。可以按「換一組」看不同組合。</div>`;
+  const fom = plan.foodOnlyMode;
+  const headTitle = fom ? `🍴 ${region.name}・吃吃喝喝` : `📅 ${region.name}`;
+  const subText = fom
+    ? `${paceLabel} · 這一區的餐廳/咖啡巡禮 · 時間僅供參考可自由挪動`
+    : `${paceLabel} · 建議行程約 ${plan.spent} 小時 · 時間僅供參考可自由挪動`;
+  const leftNote = fom
+    ? (plan.allSize>plan.picked.length
+        ? `<div class="plan-note">🍽️ 這一區還有 <b>${plan.allSize-plan.picked.length}</b> 間吃的沒排進來，可以按「換一組」試試不同組合。</div>`
+        : `<div class="plan-note">這一區的吃的都幫你排上了，按「換一組」可以換不同順序。</div>`)
+    : (region.type==="A" && plan.allSize>plan.picked.length)
+      ? `<div class="plan-note">✨ 這一區還有 <b>${plan.allSize-plan.picked.length}</b> 個景點沒排進來，選擇很多，可以按「換一組」看不同組合，或安排 2-3 天慢慢玩。</div>`
+      : `<div class="plan-note">這一區的點比較集中，適合半天到一天走完。可以按「換一組」看不同組合。</div>`;
 
   resultEl.innerHTML = `
-    <div class="plan-result-head"><h3>📅 ${region.name}</h3></div>
-    <div class="plan-result-sub">${paceLabel} · 建議行程約 ${plan.spent} 小時 · 時間僅供參考可自由挪動</div>
+    <div class="plan-result-head"><h3>${headTitle}</h3></div>
+    <div class="plan-result-sub">${subText}</div>
     <div class="timeline">${rows}</div>
     ${leftNote}
-    ${renderFoodSection(plan.foods)}
+    ${renderFoodSection(plan.foods, fom)}
     <div class="plan-actions">
       <button class="plan-act-btn plan-regen" id="planRegenBtn">🔄 換一組</button>
       <button class="plan-act-btn plan-save" id="planSaveBtn">💾 儲存行程</button>
@@ -2599,13 +2634,14 @@ function renderPlanResult(){
   wirePlanResultButtons();
 }
 
-function renderFoodSection(foods){
+function renderFoodSection(foods, foodOnlyMode){
   if(!foods || foods.length===0) return "";
   const items = foods.map(f=>{
     const cost = COST_LABELS[getCostTier(f)];
     return `<div class="plan-food-item"><a href="${mapsUrl(f.addr)}" target="_blank" rel="noopener">${f.name}</a><span class="cost">${cost}</span></div>`;
   }).join("");
-  return `<div class="plan-food-sec"><h4>🍴 沿途美食／咖啡推薦（視情況挑一餐）</h4>${items}</div>`;
+  const title = foodOnlyMode ? "🍴 這一區其他吃的選擇" : "🍴 沿途美食／咖啡推薦（視情況挑一餐）";
+  return `<div class="plan-food-sec"><h4>${title}</h4>${items}</div>`;
 }
 
 function wirePlanResultButtons(){

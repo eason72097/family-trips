@@ -221,6 +221,15 @@
     display:inline-block;width:8px;height:8px;border-radius:50%;
   }
   .legend-chip.home{cursor:default;background:var(--paper);color:var(--ink-soft);border-color:var(--line);}
+  .legend-ctrl{
+    font-family:'Noto Sans TC',sans-serif;font-size:12px;font-weight:700;
+    border:1px solid var(--navy);background:var(--navy);color:#fff;
+    padding:8px 14px;border-radius:999px;cursor:pointer;min-height:38px;
+    display:inline-flex;align-items:center;
+    -webkit-tap-highlight-color:rgba(31,58,95,.15);touch-action:manipulation;
+  }
+  .legend-ctrl:active{opacity:.7;}
+  #legendClearAll{background:#fff;color:var(--ink-soft);border-color:var(--line);}
 
   /* ---------- MAP ---------- */
   .map-wrap{max-width:1080px;margin:22px auto 0;padding:0 16px;position:relative;z-index:1;isolation:isolate;}
@@ -1405,7 +1414,7 @@ function rebuildMapLegend(){
   if(!legend) return;
   const isCustomCat = (id)=> !BASE_CATS.some(b=>b.id===id);
   const hasData = (id)=> DATA.some(d=>d.cat===id) || Object.values(customPlaces).some(cp=>cp&&cp.cat===id);
-  let html = `<span class="legend-chip home">❤️ 二姊家</span>`;
+  let html = `<button class="legend-ctrl" id="legendSelectAll">全選</button><button class="legend-ctrl" id="legendClearAll">清除</button><span class="legend-chip home">❤️ 二姊家</span>`;
   CATS.forEach(c=>{
     // 有資料的分類 + 所有自訂分類都顯示
     if(hasData(c.id) || isCustomCat(c.id)){
@@ -2604,6 +2613,8 @@ document.getElementById("jumpRow").addEventListener("click", (e)=>{
 });
 
 document.getElementById("mapLegend").addEventListener("click", (e)=>{
+  if(e.target.closest("#legendSelectAll")){ selectAllCats(); return; }
+  if(e.target.closest("#legendClearAll")){ clearAllCats(); return; }
   const btn = e.target.closest(".legend-chip[data-cat]");
   if(btn) toggleCategory(btn.dataset.cat, {scroll:true});
 });

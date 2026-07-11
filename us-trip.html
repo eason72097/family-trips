@@ -346,39 +346,122 @@
   .perm-del-btn{font-family:'Oswald',sans-serif;font-size:11.5px;border:1px solid var(--line);background:#fff;color:var(--rust);padding:3px 11px;border-radius:999px;cursor:pointer;}
   .perm-del-btn:hover{border-color:var(--rust);}
 
-  /* --- FAB --- */
-  .add-fab{
-    position:fixed;right:18px;bottom:70px;width:46px;height:46px;border-radius:50%;
-    background:var(--forest);color:#fff;border:none;font-size:24px;cursor:pointer;
-    box-shadow:0 4px 14px rgba(63,107,74,.45);z-index:60;
-    display:flex;align-items:center;justify-content:center;transition:transform .15s ease;
+  /* --- FAB 展開式選單 --- */
+  .fab-stack{
+    position:fixed;right:18px;bottom:70px;z-index:60;
+    display:flex;flex-direction:column-reverse;align-items:flex-end;gap:12px;
   }
-  .add-fab:hover{transform:scale(1.08);}
+  .fab-main{
+    width:52px;height:52px;border-radius:50%;
+    background:var(--navy);color:#fff;border:none;font-size:26px;cursor:pointer;
+    box-shadow:0 4px 16px rgba(31,58,95,.5);
+    display:flex;align-items:center;justify-content:center;
+    transition:transform .25s ease;
+  }
+  .fab-main.open{transform:rotate(135deg);}
+  .fab-item{
+    display:flex;align-items:center;gap:10px;
+    opacity:0;transform:translateY(12px) scale(.8);pointer-events:none;
+    transition:opacity .2s ease, transform .2s ease;
+  }
+  .fab-stack.open .fab-item{opacity:1;transform:translateY(0) scale(1);pointer-events:auto;}
+  .fab-item .fab-label{
+    background:var(--ink);color:#fff;font-size:12.5px;font-weight:600;
+    padding:5px 11px;border-radius:8px;white-space:nowrap;
+    font-family:'Noto Sans TC',sans-serif;box-shadow:0 2px 8px rgba(0,0,0,.2);
+  }
+  .fab-item .fab-btn{
+    width:44px;height:44px;border-radius:50%;border:none;cursor:pointer;
+    font-size:20px;color:#fff;display:flex;align-items:center;justify-content:center;
+    box-shadow:0 4px 12px rgba(0,0,0,.25);flex-shrink:0;transition:transform .15s ease;
+  }
+  .fab-item .fab-btn:hover{transform:scale(1.1);}
+  .fab-btn.fab-plan{background:#7B4EA3;}
+  .fab-btn.fab-add{background:var(--forest);}
+  .fab-btn.fab-cat{background:var(--navy);}
+  .fab-btn.fab-nearby{background:var(--rust);}
+  .fab-btn.fab-prep{background:var(--ochre);}
 
-  .cat-fab{
-    position:fixed;right:18px;bottom:124px;width:42px;height:42px;border-radius:50%;
-    background:var(--navy);color:#fff;border:none;font-size:18px;cursor:pointer;
-    box-shadow:0 4px 14px rgba(31,58,95,.4);z-index:60;
-    display:flex;align-items:center;justify-content:center;transition:transform .15s ease;
-    font-family:'Oswald',sans-serif;letter-spacing:0;
+  /* --- 排行程面板 --- */
+  .plan-overlay{position:fixed;inset:0;background:rgba(43,36,32,.4);z-index:200;display:none;}
+  .plan-overlay.show{display:block;}
+  .plan-panel{
+    position:fixed;bottom:0;left:0;right:0;max-height:90vh;overflow-y:auto;
+    background:var(--paper);border-top:2px solid var(--line);border-radius:20px 20px 0 0;
+    padding:20px 20px 36px;z-index:201;
+    transform:translateY(100%);transition:transform .3s ease;
   }
-  .cat-fab:hover{transform:scale(1.08);}
-
-  .nearby-fab{
-    position:fixed;right:18px;bottom:178px;width:46px;height:46px;border-radius:50%;
-    background:var(--rust);color:#fff;border:none;font-size:20px;cursor:pointer;
-    box-shadow:0 4px 14px rgba(179,58,46,.45);z-index:60;
-    display:flex;align-items:center;justify-content:center;transition:transform .15s ease;
+  .plan-panel.show{transform:translateY(0);}
+  .plan-panel h3{margin:0 0 4px;font-size:19px;font-weight:900;}
+  .plan-panel .sub{font-size:12px;color:var(--ink-soft);margin:0 0 16px;display:block;}
+  .plan-block{margin-bottom:16px;}
+  .plan-block-label{font-family:'Oswald',sans-serif;font-size:12px;letter-spacing:.04em;color:var(--ink-soft);margin-bottom:7px;font-weight:600;}
+  .pace-row{display:flex;gap:8px;}
+  .pace-btn{
+    flex:1;padding:10px;border:1px solid var(--line);background:#fff;border-radius:10px;cursor:pointer;
+    font-family:'Noto Sans TC',sans-serif;font-size:13px;font-weight:700;color:var(--ink-soft);
   }
-  .nearby-fab:hover{transform:scale(1.08);}
-
-  .prep-fab{
-    position:fixed;right:18px;bottom:232px;width:46px;height:46px;border-radius:50%;
-    background:var(--ochre);color:#fff;border:none;font-size:20px;cursor:pointer;
-    box-shadow:0 4px 14px rgba(201,138,44,.45);z-index:60;
-    display:flex;align-items:center;justify-content:center;transition:transform .15s ease;
+  .pace-btn.active{background:#7B4EA3;border-color:#7B4EA3;color:#fff;}
+  .vibe-row{display:flex;flex-wrap:wrap;gap:7px;}
+  .vibe-btn{
+    padding:7px 13px;border:1px solid var(--line);background:#fff;border-radius:999px;cursor:pointer;
+    font-family:'Noto Sans TC',sans-serif;font-size:12.5px;font-weight:600;color:var(--ink-soft);
   }
-  .prep-fab:hover{transform:scale(1.08);}
+  .vibe-btn.active{background:var(--forest);border-color:var(--forest);color:#fff;}
+  .plan-search-wrap{position:relative;}
+  .plan-search-wrap input{
+    width:100%;padding:9px 12px;border:1px solid var(--line);border-radius:10px;
+    font-family:'Noto Sans TC',sans-serif;font-size:13.5px;color:var(--ink);background:#fff;outline:none;box-sizing:border-box;
+  }
+  .plan-search-wrap input:focus{border-color:#7B4EA3;}
+  .plan-search-results{margin-top:6px;}
+  .plan-sr-item{
+    padding:8px 12px;border:1px solid var(--line);border-radius:9px;background:#fff;margin-bottom:5px;cursor:pointer;font-size:13px;
+  }
+  .plan-sr-item:hover{border-color:#7B4EA3;background:#F8F4FB;}
+  .plan-sr-item .r{font-size:11px;color:var(--ink-soft);margin-left:6px;}
+  .region-grid{display:grid;grid-template-columns:1fr;gap:8px;}
+  .region-btn{
+    display:flex;align-items:center;gap:10px;padding:12px 14px;border:1px solid var(--line);
+    background:#fff;border-radius:12px;cursor:pointer;text-align:left;width:100%;
+    font-family:'Noto Sans TC',sans-serif;transition:all .15s ease;
+  }
+  .region-btn:hover{border-color:#7B4EA3;background:#F8F4FB;}
+  .region-btn .rb-main{flex:1;}
+  .region-btn .rb-name{font-size:14px;font-weight:700;color:var(--ink);}
+  .region-btn .rb-vibe{font-size:11.5px;color:var(--ink-soft);margin-top:2px;}
+  .region-btn .rb-count{font-family:'Oswald',sans-serif;font-size:12px;color:#7B4EA3;font-weight:600;white-space:nowrap;}
+  .region-btn.type-C .rb-count{color:var(--ochre);}
+  .plan-close{
+    width:100%;margin-top:8px;background:#fff;color:var(--ink-soft);border:1px solid var(--line);
+    border-radius:9px;padding:10px;cursor:pointer;font-family:'Oswald',sans-serif;font-size:13px;
+  }
+  .plan-result-head{display:flex;align-items:center;gap:10px;margin-bottom:6px;}
+  .plan-result-head h3{margin:0;font-size:18px;font-weight:900;}
+  .plan-result-sub{font-size:12px;color:var(--ink-soft);margin-bottom:16px;}
+  .timeline{position:relative;padding-left:6px;}
+  .tl-item{display:flex;gap:12px;padding-bottom:14px;position:relative;}
+  .tl-time{font-family:'Oswald',sans-serif;font-size:13px;color:#7B4EA3;font-weight:600;min-width:44px;padding-top:1px;}
+  .tl-dot{width:11px;height:11px;border-radius:50%;background:#7B4EA3;flex-shrink:0;margin-top:4px;}
+  .tl-body{flex:1;}
+  .tl-name{font-size:14px;font-weight:700;color:var(--ink);}
+  .tl-name a{border-bottom:1px dashed var(--rust);}
+  .tl-meta{font-size:11.5px;color:var(--ink-soft);margin-top:2px;}
+  .plan-note{background:#F3EEF8;border:1px solid #DDD0EC;border-radius:11px;padding:12px 14px;font-size:12.5px;line-height:1.7;color:var(--ink);margin:14px 0;}
+  .plan-food-sec{margin-top:16px;}
+  .plan-food-sec h4{font-size:14px;font-weight:900;margin:0 0 8px;}
+  .plan-food-item{display:flex;align-items:center;gap:8px;padding:8px 11px;background:#fff;border:1px solid var(--line);border-radius:9px;margin-bottom:5px;font-size:13px;}
+  .plan-food-item a{border-bottom:1px dashed var(--rust);flex:1;}
+  .plan-food-item .cost{font-family:'Oswald',sans-serif;font-size:11px;color:var(--ink-soft);}
+  .plan-actions{display:flex;gap:8px;margin-top:18px;flex-wrap:wrap;}
+  .plan-act-btn{padding:10px 16px;border-radius:9px;border:none;cursor:pointer;font-family:'Oswald',sans-serif;font-size:13px;font-weight:600;}
+  .plan-regen{background:#7B4EA3;color:#fff;}
+  .plan-save{background:var(--forest);color:#fff;}
+  .plan-back{background:#fff;color:var(--ink-soft);border:1px solid var(--line);}
+  .saved-trip-item{display:flex;align-items:center;gap:8px;padding:10px 12px;background:#fff;border:1px solid var(--line);border-radius:10px;margin-bottom:6px;}
+  .saved-trip-item .st-name{flex:1;font-size:13.5px;font-weight:700;}
+  .saved-trip-item .st-open{font-size:11px;color:#7B4EA3;cursor:pointer;font-family:'Oswald',sans-serif;}
+  .saved-trip-item .st-del{font-size:11px;color:var(--rust);cursor:pointer;font-family:'Oswald',sans-serif;}
 
   .prep-overlay{position:fixed;inset:0;background:rgba(43,36,32,.4);z-index:200;display:none;}
   .prep-overlay.show{display:block;}
@@ -740,7 +823,75 @@
   <button class="nearby-cancel" id="nearbyCancel">取消</button>
 </div>
 
-<button class="nearby-fab" id="nearbyFab" title="找附近的地方">📍</button>
+<div class="fab-stack" id="fabStack">
+  <button class="fab-main" id="fabMain" title="更多功能">＋</button>
+  <div class="fab-item">
+    <span class="fab-label">幫我排一天</span>
+    <button class="fab-btn fab-plan" id="planFab">📅</button>
+  </div>
+  <div class="fab-item">
+    <span class="fab-label">新增地點</span>
+    <button class="fab-btn fab-add" id="addFab">📝</button>
+  </div>
+  <div class="fab-item">
+    <span class="fab-label">管理分類</span>
+    <button class="fab-btn fab-cat" id="catFab">🗂️</button>
+  </div>
+  <div class="fab-item">
+    <span class="fab-label">找附近</span>
+    <button class="fab-btn fab-nearby" id="nearbyFab">📍</button>
+  </div>
+  <div class="fab-item">
+    <span class="fab-label">行前準備</span>
+    <button class="fab-btn fab-prep" id="prepFab">🎒</button>
+  </div>
+</div>
+
+<button class="top-btn" id="topBtn">↑</button>
+
+<!-- ========== 排行程面板 ========== -->
+<div class="plan-overlay" id="planOverlay"></div>
+<div class="plan-panel" id="planPanel">
+  <div id="planSetup">
+    <h3>📅 幫我排一天</h3>
+    <span class="sub">選好節奏與想要的感覺，再挑一個地點或區域，我幫你排出建議行程。</span>
+
+    <div class="plan-block">
+      <div class="plan-block-label">今天的節奏</div>
+      <div class="pace-row">
+        <button class="pace-btn active" data-pace="relax">🐢 悠閒（3-4個點）</button>
+        <button class="pace-btn" data-pace="packed">🐇 緊湊（5-6個點）</button>
+      </div>
+    </div>
+
+    <div class="plan-block">
+      <div class="plan-block-label">想要什麼感覺？（可複選，不選＝全部）</div>
+      <div class="vibe-row" id="vibeRow"></div>
+    </div>
+
+    <div class="plan-block">
+      <div class="plan-block-label">🔍 以某個地點為中心</div>
+      <div class="plan-search-wrap">
+        <input type="text" id="planSearch" placeholder="搜尋地點名稱…">
+        <div class="plan-search-results" id="planSearchResults"></div>
+      </div>
+    </div>
+
+    <div class="plan-block">
+      <div class="plan-block-label">或直接選一個區域</div>
+      <div class="region-grid" id="regionGrid"></div>
+    </div>
+
+    <div id="savedTripsWrap" style="display:none">
+      <div class="plan-block-label" style="margin-top:6px">💾 已儲存的行程</div>
+      <div id="savedTripsList"></div>
+    </div>
+
+    <button class="plan-close" id="planClose">關閉</button>
+  </div>
+
+  <div id="planResult" style="display:none"></div>
+</div>
 
 <!-- ========== 行前準備面板 ========== -->
 <div class="prep-overlay" id="prepOverlay"></div>
@@ -789,14 +940,6 @@
   <button class="prep-close" id="prepClose">知道了，關閉</button>
 </div>
 
-<button class="prep-fab" id="prepFab" title="行前準備提醒">🎒</button>
-
-<button class="cat-fab" id="catFab" title="管理分類">🗂️</button>
-
-<button class="add-fab" id="addFab" title="新增地點">＋</button>
-
-<button class="top-btn" id="topBtn">↑</button>
-
 <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.js"></script>
 <script type="module">
 /* =========================================================
@@ -819,6 +962,7 @@ const US_DOC          = doc(db, "usTrip", "wants");
 const DELETED_DOC     = doc(db, "usTrip", "deleted");
 const CUSTOM_DOC      = doc(db, "usTrip", "custom");
 const CUSTOM_CATS_DOC = doc(db, "usTrip", "customCats");
+const TRIPS_DOC = doc(db, "usTrip", "savedTrips");
 
 let wantSet = new Set();
 let wantOnly = false;
@@ -1125,6 +1269,15 @@ function initFirebase(){
       Object.entries(d).forEach(([uid,val])=>{ if(val && typeof val==="object") customCats[uid]=val; });
     } else { customCats = {}; }
     rebuildCats();
+  });
+
+  onSnapshot(TRIPS_DOC,(snap)=>{
+    if(snap.exists()){
+      const d = snap.data();
+      savedTrips = {};
+      Object.entries(d).forEach(([tid,val])=>{ if(val && typeof val==="object") savedTrips[tid]=val; });
+    } else { savedTrips = {}; }
+    renderSavedTrips();
   });
 }
 
@@ -1483,6 +1636,138 @@ function extractLatLng(url){
   const m = url.match(/@(-?\d+\.?\d+),(-?\d+\.?\d+)/);
   if(m) return {lat:parseFloat(m[1]),lng:parseFloat(m[2])};
   return null;
+}
+
+/* ==========================================================
+   行程規劃引擎 — 資料層
+========================================================== */
+// 停留時間（小時）：分類預設 + 個別覆寫
+const STAY_DEFAULT = {knowledge:2.5, animal:3, sports:3.5, outdoor:1.5, hiking:1.5,
+  food:1, coffee:0.75, town:1.5, shopping:1.5, shooting:1.5, bookstore:0.75, culture:1.25};
+const STAY_OVERRIDE = {
+  "Six Flags Wild Safari（野生動物開車探險）":4,
+  "Citizens Bank Park（費城人 MLB）":3.5, "Yankee Stadium（紐約洋基）":3.5, "Citi Field（紐約大都會）":3.5,
+  "Mount Tammany（Red Dot Trail）":4, "Mount Minsi Trail":4, "Hawk Mountain Sanctuary":3,
+  "Philadelphia Zoo":3.5, "Adventure Aquarium":2.5, "The Franklin Institute（科學博物館）":3,
+  "Please Touch Museum":2.5, "Reading Terminal Market":1.5, "Peddler's Village（Lahaska）":2,
+  "King of Prussia Mall":2.5, "Philadelphia Premium Outlets":2.5, "Bucks County River Country（德拉瓦河漂浮）":3.5,
+  "Hershey's Chocolate World":2, "自由女神像與艾利斯島（紐約）":3.5, "Central Park（紐約）":2,
+};
+function stayOf(item){ return STAY_OVERRIDE[item.name] ?? STAY_DEFAULT[item.cat] ?? 1.5; }
+
+// 純補給型地點（超市/超商/保健品）— 不排進景點行程，只當補貨參考
+const SUPPLY_PLACES = new Set([
+  "Wegmans Warrington","Wawa（在地超商）","Trader Joe's North Wales","GNC（保健食品）",
+]);
+
+// 分類 → 調性
+const VIBE_OF_CAT = {
+  knowledge:"culture", culture:"culture", bookstore:"culture",
+  outdoor:"outdoor", hiking:"outdoor", animal:"outdoor",
+  food:"food", coffee:"food",
+  shopping:"shopping", town:"shopping",
+  sports:"fun", shooting:"fun",
+};
+const VIBES = [
+  {id:"culture", emoji:"🏛️", label:"文化懷舊"},
+  {id:"outdoor", emoji:"🌳", label:"戶外放鬆"},
+  {id:"food",    emoji:"🍴", label:"吃吃喝喝"},
+  {id:"shopping",emoji:"🛍️", label:"逛街購物"},
+  {id:"fun",     emoji:"🎢", label:"活力體驗"},
+];
+const VIBE_LABEL = Object.fromEntries(VIBES.map(v=>[v.id, v.emoji+v.label]));
+
+// 區域定義（中心座標 + 類型 A豐富/B主題/C專程）
+const REGIONS = [
+  {id:"home",     name:"二姊家周邊",   lat:40.256, lng:-75.172, type:"A"},
+  {id:"newhope",  name:"New Hope河岸", lat:40.364, lng:-74.951, type:"A"},
+  {id:"buckSE",   name:"Bucks東南步道",lat:40.13,  lng:-74.91,  type:"B"},
+  {id:"buckN",    name:"Bucks北",      lat:40.50,  lng:-75.15,  type:"B"},
+  {id:"phillyC",  name:"費城市中心",   lat:39.951, lng:-75.159, type:"A"},
+  {id:"phillyNW", name:"費城西北",     lat:40.09,  lng:-75.36,  type:"B"},
+  {id:"lancaster",name:"Lancaster阿米許",lat:40.038,lng:-76.14, type:"C"},
+  {id:"hawk",     name:"Hawk Mountain",lat:40.634, lng:-75.987, type:"C"},
+  {id:"watergap", name:"德拉瓦水峽",   lat:40.975, lng:-75.13,  type:"C"},
+  {id:"hershey",  name:"Hershey西區",  lat:40.27,  lng:-76.74,  type:"C"},
+  {id:"nyc",      name:"紐約市區",     lat:40.75,  lng:-73.99,  type:"A"},
+  {id:"nyout",    name:"紐約外圍",     lat:40.4,   lng:-74.3,   type:"C"},
+];
+
+function haversineKm(lat1,lng1,lat2,lng2){
+  const R=6371, p1=lat1*Math.PI/180, p2=lat2*Math.PI/180;
+  const dp=(lat2-lat1)*Math.PI/180, dl=(lng2-lng1)*Math.PI/180;
+  const a=Math.sin(dp/2)**2+Math.cos(p1)*Math.cos(p2)*Math.sin(dl/2)**2;
+  return R*2*Math.asin(Math.sqrt(a));
+}
+
+// 把地點（含自訂）歸到最近的區域
+function regionOf(item){
+  let best=null, bd=Infinity;
+  REGIONS.forEach(r=>{
+    const d=haversineKm(item.lat,item.lng,r.lat,r.lng);
+    if(d<bd){ bd=d; best=r; }
+  });
+  return best;
+}
+
+// 所有可規劃的地點（DATA + 有座標的自訂地點，排除已刪除）
+function allPlacesForPlanning(){
+  const list = DATA.filter(d=>d.lat!=null && d.lng!=null).map((d,i)=>({...d, _uid:"us_"+DATA.indexOf(d)}));
+  Object.entries(customPlaces).forEach(([uid,cp])=>{
+    if(cp && cp.lat!=null && cp.lng!=null) list.push({...cp, _uid:uid});
+  });
+  return list.filter(p=>!deletedSet.has(p._uid));
+}
+
+// 取得某區域的所有地點（歸區）
+function placesByRegion(regionId){
+  return allPlacesForPlanning().filter(p=>regionOf(p).id===regionId);
+}
+
+// 計算某區域的主調性（前2名）
+function regionVibes(regionId){
+  const items = placesByRegion(regionId).filter(p=>!SUPPLY_PLACES.has(p.name));
+  const count = {};
+  items.forEach(p=>{ const v=VIBE_OF_CAT[p.cat]; if(v) count[v]=(count[v]||0)+1; });
+  return Object.entries(count).sort((a,b)=>b[1]-a[1]).slice(0,2).map(x=>x[0]);
+}
+
+/* ====== 排一天演算法 ====== */
+function planDay(regionId, pace, vibeFilter){
+  const region = REGIONS.find(r=>r.id===regionId);
+  const all = placesByRegion(regionId);
+  const foods = all.filter(p=>["food","coffee"].includes(p.cat));
+  const supplies = all.filter(p=>SUPPLY_PLACES.has(p.name));
+  let pool = all.filter(p=>!["food","coffee"].includes(p.cat) && !SUPPLY_PLACES.has(p.name));
+  // 調性篩選
+  if(vibeFilter && vibeFilter.size>0){
+    pool = pool.filter(p=>vibeFilter.has(VIBE_OF_CAT[p.cat]));
+  }
+  const budget = pace==="relax" ? 6.5 : 9.0;
+  const maxPts = pace==="relax" ? 4 : 6;
+  const minPts = pace==="relax" ? 3 : 4;
+
+  // 隨機加權排序：首選 +1.5，想去 +1.2，短停留略加分（避免單一長活動吃光預算）
+  const scored = pool.map(p=>{
+    let s = Math.random();
+    if(p.top) s += 1.5;
+    if(wantSet.has(p._uid)) s += 1.2;
+    if(stayOf(p) <= 1.5) s += 0.3;
+    return {p, s};
+  }).sort((a,b)=>b.s-a.s).map(x=>x.p);
+
+  const picked=[]; let spent=0;
+  for(const p of scored){
+    if(picked.length>=maxPts) break;
+    if(picked.filter(q=>q.cat===p.cat).length>=2) continue; // 同分類最多2
+    const move = picked.length ? 0.4 : 0;
+    // 已達最少點數後，才開始嚴格卡預算；未達最少點數時放寬讓行程不會太空
+    const cap = picked.length < minPts ? budget + 2 : budget;
+    if(spent + stayOf(p) + move > cap) continue;
+    picked.push(p); spent += stayOf(p)+move;
+  }
+  return {region, picked, foods:foods.slice(0,5), supplies, spent:Math.round(spent*10)/10,
+          poolSize:pool.length, allSize:all.filter(p=>!["food","coffee"].includes(p.cat)&&!SUPPLY_PLACES.has(p.name)).length};
 }
 
 /* ====== 費用等級（粗略估計，分類預設 + 個別覆寫）====== */
@@ -1922,6 +2207,21 @@ document.getElementById("addFab").addEventListener("click",()=>openAddPanel(CATS
 document.getElementById("addOverlay").addEventListener("click",closeAddPanel);
 document.getElementById("apCancel").addEventListener("click",closeAddPanel);
 
+/* --- FAB 展開式選單 --- */
+const fabStack = document.getElementById("fabStack");
+const fabMain = document.getElementById("fabMain");
+let fabOpen = false;
+function setFab(open){
+  fabOpen = open;
+  fabStack.classList.toggle("open", open);
+  fabMain.classList.toggle("open", open);
+}
+fabMain.addEventListener("click", ()=> setFab(!fabOpen));
+// 點任一功能鈕後自動收起選單
+["planFab","addFab","catFab","nearbyFab","prepFab"].forEach(id=>{
+  document.getElementById(id).addEventListener("click", ()=> setFab(false));
+});
+
 document.getElementById("apSave").addEventListener("click",async()=>{
   const name = document.getElementById("apName").value.trim();
   const time = parseInt(document.getElementById("apTime").value)||30;
@@ -2071,6 +2371,253 @@ document.getElementById("nearbyOverlay").addEventListener("click", closeNearbyPa
 document.getElementById("nearbyCancel").addEventListener("click", closeNearbyPanel);
 document.querySelectorAll(".nearby-btn").forEach(btn=>{
   btn.addEventListener("click", ()=> openNearbySearch(btn.dataset.q));
+});
+
+/* =========================================================
+   排行程面板
+========================================================= */
+let savedTrips = {};
+let planPace = "relax";
+let planVibes = new Set();
+let lastPlanContext = null; // {mode:'region'|'place', regionId, pace, vibes} 供「換一組」
+
+function openPlanPanel(){
+  document.getElementById("planSetup").style.display = "";
+  document.getElementById("planResult").style.display = "none";
+  buildVibeRow();
+  buildRegionGrid();
+  renderSavedTrips();
+  document.getElementById("planSearch").value = "";
+  document.getElementById("planSearchResults").innerHTML = "";
+  document.getElementById("planOverlay").classList.add("show");
+  document.getElementById("planPanel").classList.add("show");
+}
+function closePlanPanel(){
+  document.getElementById("planOverlay").classList.remove("show");
+  document.getElementById("planPanel").classList.remove("show");
+}
+
+function buildVibeRow(){
+  const row = document.getElementById("vibeRow");
+  row.innerHTML = VIBES.map(v=>`<button class="vibe-btn${planVibes.has(v.id)?" active":""}" data-vibe="${v.id}">${v.emoji} ${v.label}</button>`).join("");
+  row.querySelectorAll(".vibe-btn").forEach(b=>{
+    b.addEventListener("click",()=>{
+      const id=b.dataset.vibe;
+      if(planVibes.has(id)) planVibes.delete(id); else planVibes.add(id);
+      b.classList.toggle("active");
+      buildRegionGrid(); // 重新篩選區域列表
+    });
+  });
+}
+
+function buildRegionGrid(){
+  const grid = document.getElementById("regionGrid");
+  const regionsWithData = REGIONS.filter(r=>placesByRegion(r.id).length>0);
+  // 若選了調性，只顯示含該調性的區域
+  const filtered = planVibes.size===0 ? regionsWithData :
+    regionsWithData.filter(r=>{
+      const rv = regionVibes(r.id);
+      return [...planVibes].some(v=>rv.includes(v));
+    });
+  if(filtered.length===0){
+    grid.innerHTML = `<div style="text-align:center;color:var(--ink-soft);font-size:12.5px;padding:14px;">沒有符合這個感覺的區域，換個調性試試 🙂</div>`;
+    return;
+  }
+  grid.innerHTML = filtered.map(r=>{
+    const cnt = placesByRegion(r.id).filter(p=>!SUPPLY_PLACES.has(p.name)&&!["food","coffee"].includes(p.cat)).length;
+    const vibe = regionVibes(r.id).map(v=>VIBE_LABEL[v]).join("・")||"綜合";
+    return `<button class="region-btn type-${r.type}" data-region="${r.id}">
+      <span class="rb-main"><span class="rb-name">${r.name}</span><span class="rb-vibe">${vibe}</span></span>
+      <span class="rb-count">${cnt}個點</span>
+    </button>`;
+  }).join("");
+  grid.querySelectorAll(".region-btn").forEach(b=>{
+    b.addEventListener("click",()=> generatePlan({mode:"region", regionId:b.dataset.region}));
+  });
+}
+
+// 搜尋地點作為錨點
+document.getElementById("planSearch").addEventListener("input",(e)=>{
+  const q = e.target.value.trim().toLowerCase();
+  const box = document.getElementById("planSearchResults");
+  if(!q){ box.innerHTML=""; return; }
+  const matches = allPlacesForPlanning()
+    .filter(p=>!SUPPLY_PLACES.has(p.name) && p.name.toLowerCase().includes(q))
+    .slice(0,6);
+  box.innerHTML = matches.map(p=>{
+    const r = regionOf(p);
+    return `<div class="plan-sr-item" data-uid="${p._uid}">${p.name}<span class="r">${r.name}</span></div>`;
+  }).join("");
+  box.querySelectorAll(".plan-sr-item").forEach(it=>{
+    it.addEventListener("click",()=>{
+      const p = allPlacesForPlanning().find(x=>x._uid===it.dataset.uid);
+      if(p) generatePlan({mode:"place", regionId:regionOf(p).id, anchor:p});
+    });
+  });
+});
+
+function generatePlan(ctx){
+  planPace = document.querySelector(".pace-btn.active").dataset.pace;
+  lastPlanContext = {...ctx, pace:planPace, vibes:new Set(planVibes)};
+  renderPlanResult();
+}
+
+function renderPlanResult(){
+  const ctx = lastPlanContext;
+  const region = REGIONS.find(r=>r.id===ctx.regionId);
+  const resultEl = document.getElementById("planResult");
+  document.getElementById("planSetup").style.display = "none";
+  resultEl.style.display = "";
+
+  // 類型 C（專程區）：不硬排，給建議
+  if(region.type==="C"){
+    const pts = placesByRegion(region.id).filter(p=>!SUPPLY_PLACES.has(p.name));
+    const names = pts.map(p=>p.name).join("、");
+    resultEl.innerHTML = `
+      <div class="plan-result-head"><h3>💡 ${region.name}</h3></div>
+      <div class="plan-result-sub">專程前往型的區域</div>
+      <div class="plan-note">
+        這一區共 <b>${pts.length}</b> 個點：${names}。<br><br>
+        這裡屬於「專程來玩」的地方，周邊沒有太多其他景點，<b>建議安排半天到一天專程走這一區</b>，不用硬湊行程，玩得盡興最重要。放輕鬆慢慢逛就好。
+      </div>
+      ${renderFoodSection(placesByRegion(region.id).filter(p=>["food","coffee"].includes(p.cat)))}
+      <div class="plan-actions">
+        <button class="plan-act-btn plan-save" id="planSaveBtn">💾 儲存這個建議</button>
+        <button class="plan-act-btn plan-back" id="planBackBtn">← 重新選</button>
+      </div>`;
+    wirePlanResultButtons();
+    return;
+  }
+
+  // 類型 A/B：排時間軸
+  const plan = planDay(region.id, ctx.pace, ctx.vibes);
+  if(plan.picked.length===0){
+    resultEl.innerHTML = `
+      <div class="plan-result-head"><h3>${region.name}</h3></div>
+      <div class="plan-note">這個區域在你選的調性下沒有可排的景點，換個調性或區域試試 🙂</div>
+      <div class="plan-actions"><button class="plan-act-btn plan-back" id="planBackBtn">← 重新選</button></div>`;
+    wirePlanResultButtons();
+    return;
+  }
+  let t = 10.0;
+  const rows = plan.picked.map((p,i)=>{
+    const hh=Math.floor(t), mm=Math.round((t-hh)*60);
+    const timeStr = `${String(hh).padStart(2,"0")}:${String(mm).padStart(2,"0")}`;
+    t += stayOf(p)+0.4;
+    const cost = COST_LABELS[getCostTier(p)];
+    return `<div class="tl-item">
+      <span class="tl-time">${timeStr}</span>
+      <span class="tl-dot"></span>
+      <span class="tl-body">
+        <span class="tl-name"><a href="${mapsUrl(p.addr)}" target="_blank" rel="noopener">${p.name}</a></span>
+        <span class="tl-meta">停留約 ${stayOf(p)} 小時 · ${cost}${p.top?" · ⭐首選":""}</span>
+      </span>
+    </div>`;
+  }).join("");
+  const paceLabel = ctx.pace==="relax" ? "🐢 悠閒" : "🐇 緊湊";
+  const leftNote = (region.type==="A" && plan.allSize>plan.picked.length)
+    ? `<div class="plan-note">✨ 這一區還有 <b>${plan.allSize-plan.picked.length}</b> 個景點沒排進來，選擇很多，可以按「換一組」看不同組合，或安排 2-3 天慢慢玩。</div>`
+    : `<div class="plan-note">這一區的點比較集中，適合半天到一天走完。可以按「換一組」看不同組合。</div>`;
+
+  resultEl.innerHTML = `
+    <div class="plan-result-head"><h3>📅 ${region.name}</h3></div>
+    <div class="plan-result-sub">${paceLabel} · 建議行程約 ${plan.spent} 小時 · 時間僅供參考可自由挪動</div>
+    <div class="timeline">${rows}</div>
+    ${leftNote}
+    ${renderFoodSection(plan.foods)}
+    <div class="plan-actions">
+      <button class="plan-act-btn plan-regen" id="planRegenBtn">🔄 換一組</button>
+      <button class="plan-act-btn plan-save" id="planSaveBtn">💾 儲存行程</button>
+      <button class="plan-act-btn plan-back" id="planBackBtn">← 重新選</button>
+    </div>`;
+  wirePlanResultButtons();
+}
+
+function renderFoodSection(foods){
+  if(!foods || foods.length===0) return "";
+  const items = foods.map(f=>{
+    const cost = COST_LABELS[getCostTier(f)];
+    return `<div class="plan-food-item"><a href="${mapsUrl(f.addr)}" target="_blank" rel="noopener">${f.name}</a><span class="cost">${cost}</span></div>`;
+  }).join("");
+  return `<div class="plan-food-sec"><h4>🍴 沿途美食／咖啡推薦（視情況挑一餐）</h4>${items}</div>`;
+}
+
+function wirePlanResultButtons(){
+  const regen = document.getElementById("planRegenBtn");
+  if(regen) regen.addEventListener("click", renderPlanResult);
+  const save = document.getElementById("planSaveBtn");
+  if(save) save.addEventListener("click", saveCurrentTrip);
+  const back = document.getElementById("planBackBtn");
+  if(back) back.addEventListener("click", ()=>{
+    document.getElementById("planResult").style.display="none";
+    document.getElementById("planSetup").style.display="";
+  });
+}
+
+async function saveCurrentTrip(){
+  const region = REGIONS.find(r=>r.id===lastPlanContext.regionId);
+  const defaultName = region.name + "・" + (lastPlanContext.pace==="relax"?"悠閒":"緊湊");
+  const name = prompt("幫這個行程取個名字：", defaultName);
+  if(!name) return;
+  const tid = "trip_" + Date.now();
+  const html = document.getElementById("planResult").innerHTML;
+  const trip = { name, html, savedAt: Date.now() };
+  savedTrips[tid] = trip;
+  renderSavedTrips();
+  try{ await setDoc(TRIPS_DOC, {[tid]:trip}, {merge:true}); alert("✅ 已儲存！可在排行程面板下方「已儲存的行程」找到。"); }
+  catch(e){ console.error(e); delete savedTrips[tid]; renderSavedTrips(); alert("儲存失敗，請稍後再試。"); }
+}
+
+async function deleteTrip(tid){
+  if(!confirm("確定刪除這個已儲存的行程？")) return;
+  delete savedTrips[tid];
+  renderSavedTrips();
+  try{ await setDoc(TRIPS_DOC, {[tid]:false}, {merge:true}); }
+  catch(e){ console.error(e); }
+}
+
+function renderSavedTrips(){
+  const wrap = document.getElementById("savedTripsWrap");
+  const list = document.getElementById("savedTripsList");
+  if(!wrap||!list) return;
+  const entries = Object.entries(savedTrips).filter(([,t])=>t && typeof t==="object" && t.name);
+  if(entries.length===0){ wrap.style.display="none"; return; }
+  wrap.style.display="";
+  entries.sort((a,b)=>(b[1].savedAt||0)-(a[1].savedAt||0));
+  list.innerHTML = entries.map(([tid,t])=>`
+    <div class="saved-trip-item">
+      <span class="st-name">${t.name}</span>
+      <span class="st-open" data-open="${tid}">開啟</span>
+      <span class="st-del" data-del="${tid}">刪除</span>
+    </div>`).join("");
+  list.querySelectorAll("[data-open]").forEach(b=>b.addEventListener("click",()=>openSavedTrip(b.dataset.open)));
+  list.querySelectorAll("[data-del]").forEach(b=>b.addEventListener("click",()=>deleteTrip(b.dataset.del)));
+}
+
+function openSavedTrip(tid){
+  const t = savedTrips[tid];
+  if(!t) return;
+  document.getElementById("planSetup").style.display="none";
+  const resultEl = document.getElementById("planResult");
+  resultEl.style.display="";
+  // 移除原本的動作按鈕，換成「返回」
+  resultEl.innerHTML = t.html.replace(/<div class="plan-actions">[\s\S]*?<\/div>\s*$/,"") +
+    `<div class="plan-actions"><button class="plan-act-btn plan-back" id="planBackBtn">← 返回</button></div>`;
+  const back = document.getElementById("planBackBtn");
+  if(back) back.addEventListener("click",()=>{
+    resultEl.style.display="none";
+    document.getElementById("planSetup").style.display="";
+  });
+}
+
+document.getElementById("planFab").addEventListener("click", openPlanPanel);
+document.getElementById("planOverlay").addEventListener("click", closePlanPanel);
+document.getElementById("planClose").addEventListener("click", closePlanPanel);
+document.querySelectorAll(".pace-btn").forEach(b=>{
+  b.addEventListener("click",()=>{
+    document.querySelectorAll(".pace-btn").forEach(x=>x.classList.remove("active"));
+    b.classList.add("active");
+  });
 });
 
 /* --- 行前準備面板（純資訊型）--- */

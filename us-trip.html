@@ -100,6 +100,32 @@
   }
   .search-clear.show{display:block;}
 
+  /* --- 情境快選列 --- */
+  .scenario-bar{
+    max-width:640px;margin:0 auto 8px;display:flex;align-items:center;gap:8px;
+  }
+  .scenario-label{
+    font-family:'Oswald',sans-serif;font-size:11.5px;color:var(--ink-soft);
+    font-weight:600;white-space:nowrap;flex-shrink:0;letter-spacing:.03em;
+  }
+  .scenario-chips{
+    display:flex;gap:7px;overflow-x:auto;padding-bottom:3px;
+    -ms-overflow-style:none;scrollbar-width:none;
+  }
+  .scenario-chips::-webkit-scrollbar{display:none;}
+  .scenario-chip{
+    flex-shrink:0;font-family:'Noto Sans TC',sans-serif;font-size:13px;font-weight:600;
+    border:1px solid var(--line);background:var(--paper);color:var(--ink);
+    padding:9px 14px;border-radius:999px;cursor:pointer;white-space:nowrap;min-height:40px;
+    display:inline-flex;align-items:center;transition:all .15s ease;
+    -webkit-tap-highlight-color:rgba(31,58,95,.15);touch-action:manipulation;
+  }
+  .scenario-chip:active{transform:scale(.96);}
+  .scenario-chip.active{background:var(--rust);border-color:var(--rust);color:#fff;}
+  .scenario-chip.weather.active{background:#3E6B8C;border-color:#3E6B8C;}
+  .scenario-reset{color:var(--ink-soft);font-weight:500;}
+  .scenario-reset.active{background:var(--paper);border-color:var(--line);color:var(--ink-soft);}
+
   .filter-toggle{
     width:100%;display:flex;align-items:center;gap:8px;
     background:var(--paper);border:1px solid var(--line);border-radius:10px;
@@ -674,6 +700,17 @@
       <span class="icon">🔍</span>
       <input id="searchInput" type="text" placeholder="搜尋地點名稱、關鍵字…">
       <button class="search-clear" id="searchClear">✕</button>
+    </div>
+
+    <div class="scenario-bar" id="scenarioBar">
+      <span class="scenario-label">快速情境</span>
+      <div class="scenario-chips">
+        <button class="scenario-chip weather" data-scenario="rain">☔ 下雨天</button>
+        <button class="scenario-chip weather" data-scenario="hot">☀️ 大熱天</button>
+        <button class="scenario-chip" data-scenario="near">🚗 附近晃晃</button>
+        <button class="scenario-chip" data-scenario="family">👶 帶長輩小孩</button>
+        <button class="scenario-chip scenario-reset" id="scenarioReset">↺ 清除</button>
+      </div>
     </div>
 
     <button class="filter-toggle" id="filterToggle">
@@ -2119,7 +2156,8 @@ function syncMapWithFilters(q){
     const deletedOk = !deletedSet.has(uid);
     const customOk = !onlyCustom || uid.startsWith("custom_");
     const foodOk = !onlyFood || FOOD_CATS_SET.has(item.cat);
-    const show = catOk && tierOk && searchOk && topOk && wantOk && deletedOk && customOk && foodOk;
+    const scenarioOk = !scenariosActive() || matchesScenarios(item);
+    const show = catOk && tierOk && searchOk && topOk && wantOk && deletedOk && customOk && foodOk && scenarioOk;
     if(show){
       if(!map.hasLayer(item._marker)) item._marker.addTo(map);
     } else {
@@ -2171,6 +2209,9 @@ let onlyFood = false;
 const FOOD_CATS_SET = new Set(["food","coffee"]);
 let nearMeActive = false;
 let userLat = null, userLng = null;
+// 情境快選狀態（提前宣告，避免初始 applyFilters 時 TDZ 錯誤）
+let activeWeather = null;      // "rain" | "hot" | null
+let activeConditions = new Set(); // "near" | "family"
 
 function highlight(text, q){
   if(!q) return text;
@@ -2203,7 +2244,8 @@ function applyFilters(){
       const wantOk = !wantOnly || wantSet.has(uid);
       const customOk = !onlyCustom || uid.startsWith("custom_");
       const foodOk = !onlyFood || FOOD_CATS_SET.has(item.cat);
-      const show = catOk && tierOk && searchOk && topOk && wantOk && customOk && foodOk;
+      const scenarioOk = !scenariosActive() || matchesScenarios(item);
+      const show = catOk && tierOk && searchOk && topOk && wantOk && customOk && foodOk && scenarioOk;
       card.style.display = show ? "" : "none";
 
       const h3a = card.querySelector("h3 a");
@@ -2235,6 +2277,8 @@ function countActiveFilters(){
   if(onlyCustom) n++;
   if(onlyFood) n++;
   if(nearMeActive) n++;
+  if(activeWeather) n++;
+  if(activeConditions.size>0) n++;
   if(activeCats.size < CATS.length) n++;
   return n;
 }
@@ -2269,6 +2313,84 @@ document.getElementById("distanceChips").querySelectorAll(".chip[data-tier]").fo
     applyFilters();
   });
 });
+
+/* =========================================================
+   情境快選（天氣互斥 + 條件可疊加）
+========================================================= */
+// 情境定義：哪些分類算「室內」「有水消暑」，以及關鍵字判斷
+const INDOOR_CATS = new Set(["knowledge","shopping","bookstore","coffee"]);
+const WATER_KEYWORDS = ["水族","漂浮","漂流","獨木舟","泛舟","游泳","水上","河","湖","戲水"];
+const FAMILY_KEYWORDS = ["親子","輕鬆","無障礙","棧道","平緩","好走","遊樂","兒童","小孩"];
+const FAMILY_CATS = new Set(["animal","knowledge"]);
+
+// 判斷單一地點是否符合目前啟用的情境組合
+function matchesScenarios(item){
+  const text = (item.name+" "+(item.desc||"")+" "+((item.tags||[]).join(" "))).toLowerCase();
+  const hasKw = (arr)=> arr.some(k=>text.includes(k.toLowerCase()));
+
+  // 天氣（互斥）
+  if(activeWeather==="rain"){
+    // 室內：室內分類 或 射擊(室內靶場關鍵字)
+    const indoor = INDOOR_CATS.has(item.cat) ||
+      (item.cat==="shooting" && /室內|indoor/i.test(text));
+    if(!indoor) return false;
+  } else if(activeWeather==="hot"){
+    // 消暑：室內 或 有水
+    const cool = INDOOR_CATS.has(item.cat) || hasKw(WATER_KEYWORDS) ||
+      item.cat==="animal"; // 水族館/動物園室內區也算
+    if(!cool) return false;
+  }
+
+  // 條件（可疊加）
+  if(activeConditions.has("near")){
+    if(tierOf(item.time)!=="near") return false; // 20分內
+  }
+  if(activeConditions.has("family")){
+    const familyOk = FAMILY_CATS.has(item.cat) || hasKw(FAMILY_KEYWORDS);
+    if(!familyOk) return false;
+  }
+  return true;
+}
+
+function scenariosActive(){
+  return activeWeather!==null || activeConditions.size>0;
+}
+
+function renderScenarioChips(){
+  document.querySelectorAll(".scenario-chip[data-scenario]").forEach(chip=>{
+    const s = chip.dataset.scenario;
+    let on = false;
+    if(s==="rain"||s==="hot") on = activeWeather===s;
+    else on = activeConditions.has(s);
+    chip.classList.toggle("active", on);
+  });
+}
+
+function applyScenario(scenario){
+  if(scenario==="rain"||scenario==="hot"){
+    // 天氣互斥：再點一次取消，點另一個則切換
+    activeWeather = (activeWeather===scenario) ? null : scenario;
+  } else {
+    // 條件可疊加
+    if(activeConditions.has(scenario)) activeConditions.delete(scenario);
+    else activeConditions.add(scenario);
+  }
+  renderScenarioChips();
+  applyFilters();
+}
+
+function resetScenarios(){
+  activeWeather = null;
+  activeConditions.clear();
+  renderScenarioChips();
+  applyFilters();
+}
+
+document.querySelectorAll(".scenario-chip[data-scenario]").forEach(chip=>{
+  chip.addEventListener("click", ()=> applyScenario(chip.dataset.scenario));
+});
+document.getElementById("scenarioReset").addEventListener("click", resetScenarios);
+
 
 document.getElementById("topOnlyChip").addEventListener("click", (e)=>{
   onlyTop = !onlyTop;

@@ -588,6 +588,9 @@
   .cost-tag.cost-1{background:#F0E9D8;color:#6B5426;}
   .cost-tag.cost-2{background:#F3DFC7;color:#7A4A0F;}
   .cost-tag.cost-3{background:#F0D4CE;color:#8A2E1E;}
+  .tag.park-hard{background:#F3DCD4;color:#8A3B1E;}
+  .tag.park-transit{background:#D6E4F0;color:#1F4E79;}
+  .tag.park-busy{background:#F5EAD0;color:#7A5A1E;}
   .card p{font-size:13.3px;line-height:1.7;color:var(--ink-soft);margin:0;}
   mark{background:#FCE39A;color:inherit;border-radius:2px;padding:0 1px;}
 
@@ -934,6 +937,18 @@
       <li>卡片上的 <span style="background:#E1EEE3;padding:1px 6px;border-radius:5px;">免費</span> <span style="background:#F0E9D8;padding:1px 6px;border-radius:5px;">$</span> <span style="background:#F3DFC7;padding:1px 6px;border-radius:5px;">$$</span> <span style="background:#F0D4CE;padding:1px 6px;border-radius:5px;">$$$</span> 標籤是粗略消費等級，僅供參考，實際費用請以官網為準</li>
       <li>ATM 提款機提領現金通常會被雙重收手續費（銀行+機器），盡量少次多領</li>
       <li>停車費在大城市（費城、紐約）可能不便宜，出發前可以先查好停車場位置</li>
+    </ul>
+  </div>
+
+  <div class="prep-section">
+    <div class="prep-section-head"><span class="emoji">🅿️</span><h4>停車須知</h4></div>
+    <ul class="prep-list">
+      <li><b>郊區超好停、多半免費</b>：公園、步道、購物中心、郊區餐廳幾乎都有大型免費停車場，比台灣輕鬆很多，這部分完全不用擔心</li>
+      <li><b>小鎮老街假日較滿</b>：Doylestown、New Hope、Lambertville 這種觀光小鎮，平日好停，假日人多建議早點到，或停稍遠一點走過去</li>
+      <li><b>費城市中心要留意</b>：路邊停車格有時段限制、清掃日規定，違規罰款重。建議直接停室內停車場（Parking Garage），用 Google 地圖或 SpotHero、ParkWhiz App 先查價格找位子</li>
+      <li><b>紐約強烈建議別開車進去</b>：曼哈頓停車一天可能 $40–60 美金，車位極難找。建議把車停在外圍（如紐澤西）轉搭火車／地鐵進市區，省錢又省心</li>
+      <li><b>紅線＝消防栓／禁停</b>：美國路邊紅線、消防栓前一律不能停，會被開單甚至拖吊，千萬別抱僥倖心態</li>
+      <li><b>臨場找車位</b>：右下角選單「📍找附近 → 🅿️停車場」可一鍵用 GPS 搜尋你附近的停車場</li>
     </ul>
   </div>
 
@@ -1837,12 +1852,33 @@ function getCostTier(item){
   return CATEGORY_COST_DEFAULT[item.cat] ?? 1;
 }
 
+function parkingHint(item){
+  // 依區域自動判斷停車難易（只標需注意的，好停的不標）
+  if(item.lat==null || item.lng==null) return null;
+  const r = regionOf(item);
+  // 費城市中心 → 停車較難
+  if(r.id==="phillyC"){
+    // 但郊區型的球場/大商場除外（有自己的大停車場）
+    if(/Citizens Bank|Bowlero|Neshaminy State/.test(item.name)) return null;
+    return {cls:"park-hard", txt:"🅿️停車較難"};
+  }
+  // 紐約市區 → 建議搭大眾運輸
+  if(r.id==="nyc"){ return {cls:"park-transit", txt:"🚇建議搭大眾運輸"}; }
+  // 觀光小鎮老街 → 假日較滿（只針對 town 分類 + New Hope/Doylestown 那幾個）
+  const townish = item.cat==="town" ||
+    /Doylestown|New Hope|Lambertville|Peddler's|Farley's|Vanilla Café|Mercer Museum|Heirloom|Domani/.test(item.name);
+  if(townish && (r.id==="home"||r.id==="newhope")){ return {cls:"park-busy", txt:"🅿️假日較滿"}; }
+  return null;
+}
+
 function cardHtml(item, uid){
   const cat = catMap[item.cat];
   const tags = (item.tags||[]).map(t=>`<span class="tag${item.top && t==='首選' ? ' top':''}">${t}</span>`).join("");
   const customBadge = item.isCustom ? '<span class="tag custom-badge">自訂</span>' : '';
   const costTier = getCostTier(item);
   const costBadge = `<span class="tag cost-tag cost-${costTier}">${COST_LABELS[costTier]}</span>`;
+  const ph = parkingHint(item);
+  const parkBadge = ph ? `<span class="tag ${ph.cls}">${ph.txt}</span>` : '';
   return `
   <div class="card" data-uid="${uid}" data-cat="${item.cat}" data-time="${item.time}" data-tier="${tierOf(item.time)}" data-search="${(item.name+" "+(item.desc||"")).toLowerCase()}">
     <div class="stamp" style="--cat-color:${cat.color}">${cat.emoji}</div>
@@ -1850,7 +1886,7 @@ function cardHtml(item, uid){
     ${item.isCustom ? `<button class="edit-btn" data-edit="${uid}" title="編輯">✏️</button>` : ''}
     <div class="card-top"><span class="time-pill">🚗 ${item.time} 分</span></div>
     <h3><a href="${mapsUrl(item.addr)}" target="_blank" rel="noopener">${item.name}</a></h3>
-    <div class="tagrow">${customBadge}${costBadge}${tags}</div>
+    <div class="tagrow">${customBadge}${costBadge}${parkBadge}${tags}</div>
     <p>${item.desc||""}</p>
     <div class="card-footer">
       <button class="want-btn" data-uid="${uid}">🤍 想去</button>

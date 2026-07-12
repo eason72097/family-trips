@@ -506,7 +506,14 @@
   .plan-note{background:#F3EEF8;border:1px solid #DDD0EC;border-radius:11px;padding:12px 14px;font-size:12.5px;line-height:1.7;color:var(--ink);margin:14px 0;}
   .plan-food-sec{margin-top:16px;}
   .plan-food-sec h4{font-size:14px;font-weight:900;margin:0 0 8px;}
-  .plan-food-item{display:flex;align-items:center;gap:8px;padding:8px 11px;background:#fff;border:1px solid var(--line);border-radius:9px;margin-bottom:5px;font-size:13px;}
+  .pf-group{margin-bottom:12px;}
+  .pf-group-head{
+    font-family:'Noto Sans TC',sans-serif;font-size:12.5px;font-weight:800;color:var(--ink);
+    margin:0 0 6px;padding-left:2px;
+  }
+  .plan-food-item{display:flex;align-items:flex-start;gap:8px;padding:9px 11px;background:#fff;border:1px solid var(--line);border-radius:9px;margin-bottom:5px;font-size:13px;}
+  .plan-food-item .pf-main{flex:1;min-width:0;}
+  .plan-food-item .pf-blurb{font-size:11.5px;color:var(--ink-soft);line-height:1.5;margin-top:2px;}
   .plan-food-item a{border-bottom:1px dashed var(--rust);flex:1;}
   .plan-food-item .cost{font-family:'Oswald',sans-serif;font-size:11px;color:var(--ink-soft);}
   .plan-actions{display:flex;gap:8px;margin-top:18px;flex-wrap:wrap;}
@@ -1567,22 +1574,22 @@ const DATA = [
 
   // ---------------- 在地美食 ----------------
   {cat:"food", name:"Reading Terminal Market", time:45, addr:"Reading Terminal Market, Philadelphia, PA", lat:39.9531593, lng:-75.1590984,
-   tags:["首選","小吃一次吃齊"], top:true,
+   tags:["首選","🍽️在地必吃","小吃一次吃齊"], top:true,
    desc:"百年室內市集，起司牛肉堡、阿米許烘焙、Bassetts 冰淇淋（美國最古老冰淇淋品牌）一次吃齊。"},
   {cat:"food", name:"Pat's King of Steaks ＆ Geno's Steaks", time:50, addr:"1237 E Passyunk Ave, Philadelphia, PA", lat:39.9331995, lng:-75.1592409,
-   tags:["起司牛肉堡始祖對決"],
+   tags:["🍽️在地必吃","起司牛肉堡始祖對決"],
    desc:"兩家對街相望的起司牛肉堡創始名店，深夜也營業，適合排進費城市區行程的宵夜或午餐。"},
   {cat:"food", name:"Tony and Nick's Steaks（原Tony Luke's創始店）", time:50, addr:"Tony and Nick's Steaks, Philadelphia, PA", lat:39.914085, lng:-75.1487668,
-   tags:["本地人推薦"],
+   tags:["🍽️在地必吃","本地人推薦"],
    desc:"1992年創立的起司牛肉堡創始名店原址，現址因家族分家改名經營，豬肉三明治（Pork Sandwich）也是必點招牌。"},
   {cat:"food", name:"John's Roast Pork", time:50, addr:"John's Roast Pork, Philadelphia, PA", lat:39.9210754, lng:-75.1450699,
-   tags:["隱藏版美食"],
+   tags:["🍽️在地必吃","隱藏版美食"],
    desc:"James Beard 獎得主的豬肉三明治，外觀低調但在地饕客必訪，建議避開正午排隊人潮。"},
   {cat:"food", name:"Federal Donuts", time:45, addr:"Federal Donuts, Philadelphia, PA", lat:39.9512423, lng:-75.1726225,
-   tags:["炸雞＋甜甜圈"],
+   tags:["🍦甜點","炸雞＋甜甜圈"],
    desc:"炸雞配甜甜圈的奇妙組合，費城在地人氣早餐／點心選擇，多個分店方便順路。"},
   {cat:"food", name:"Hershey's Chocolate World", time:90, addr:"Hershey's Chocolate World, Hershey, PA", lat:40.288359, lng:-76.6602457,
-   tags:["免費","可順遊Hersheypark"],
+   tags:["免費","🍦甜點","可順遊Hersheypark"],
    desc:"免費巧克力工廠觀光列車，適合安排在去 Hersheypark 玩樂園的同一天順遊。"},
   {cat:"food", name:"Heirloom Doylestown", time:25, addr:"Heirloom Doylestown, 54 E State St, Doylestown, PA", lat:40.3104438, lng:-75.1288613,
    tags:["🍽️坐下吃","農場直送","早午餐"],
@@ -1949,10 +1956,18 @@ function planDay(regionId, pace, vibeFilter){
     if(spent + stayOf(p) + move > cap) continue;
     picked.push(p); spent += stayOf(p)+move;
   }
-  // 純吃模式時，沿途推薦改推「沒被排進去的其他吃的」
-  const foodRecs = foodOnlyMode
-    ? foods.filter(f=>!picked.includes(f)).slice(0,5)
-    : foods.slice(0,5);
+  // 沿途美食推薦：跨「用餐情境」均衡取樣，每組最多3間，總數最多8間
+  const foodPool = foodOnlyMode ? foods.filter(f=>!picked.includes(f)) : foods.slice();
+  const buckets = {};
+  foodPool.forEach(f=>{ const g=diningGroupOf(f); (buckets[g]=buckets[g]||[]).push(f); });
+  const foodRecs = [];
+  // 輪流從各組取，讓每種情境都有代表
+  for(let round=0; round<3 && foodRecs.length<8; round++){
+    Object.values(buckets).forEach(list=>{
+      if(foodRecs.length>=8) return;
+      if(list[round]) foodRecs.push(list[round]);
+    });
+  }
   return {region, picked, foods:foodRecs, supplies, spent:Math.round(spent*10)/10, foodOnlyMode,
           poolSize:pool.length,
           allSize: foodOnlyMode ? foods.length : all.filter(p=>!["food","coffee"].includes(p.cat)&&!SUPPLY_PLACES.has(p.name)).length};
@@ -2909,14 +2924,61 @@ function renderPlanResult(){
   wirePlanResultButtons();
 }
 
+/* 用餐情境分組定義（依標籤判斷，抓不到就歸「其他」） */
+const DINING_GROUPS = [
+  {id:"quick",  emoji:"🍔", label:"想簡單吃",     match:(t)=>t.includes("🍔輕鬆吃")},
+  {id:"sit",    emoji:"🍽️", label:"想坐下好好吃", match:(t)=>t.includes("🍽️坐下吃")},
+  {id:"local",  emoji:"⭐", label:"在地必吃",     match:(t)=>t.includes("🍽️在地必吃")},
+  {id:"asian",  emoji:"🍜", label:"想吃亞洲料理", match:(t)=>t.includes("🍜亞洲料理")},
+  {id:"sweet",  emoji:"🍦", label:"甜點・咖啡",   match:(t,c)=>t.includes("🍦甜點")||c==="coffee"},
+];
+function diningGroupOf(item){
+  const tagStr = (item.tags||[]).join(" ");
+  const g = DINING_GROUPS.find(g=>g.match(tagStr, item.cat));
+  return g ? g.id : "other";
+}
+// 從介紹文字抓一句話重點（取第一個句號前，過長則截斷）
+function shortBlurb(item){
+  const d = (item.desc||"").trim();
+  if(!d) return "";
+  let s = d.split(/[，。]/)[0];
+  // 若第一段太短，接第二段
+  const parts = d.split(/[。]/);
+  if(s.length < 10 && parts[0]) s = parts[0];
+  if(s.length > 26) s = s.slice(0,26) + "…";
+  return s;
+}
+
 function renderFoodSection(foods, foodOnlyMode){
   if(!foods || foods.length===0) return "";
-  const items = foods.map(f=>{
+  // 依用餐情境分組
+  const grouped = {};
+  foods.forEach(f=>{
+    const g = diningGroupOf(f);
+    (grouped[g] = grouped[g] || []).push(f);
+  });
+  let body = "";
+  const renderItem = (f)=>{
     const cost = COST_LABELS[getCostTier(f)];
-    return `<div class="plan-food-item"><a href="${mapsUrl(f.addr)}" target="_blank" rel="noopener">${f.name}</a><span class="cost">${cost}</span></div>`;
-  }).join("");
-  const title = foodOnlyMode ? "🍴 這一區其他吃的選擇" : "🍴 沿途美食／咖啡推薦（視情況挑一餐）";
-  return `<div class="plan-food-sec"><h4>${title}</h4>${items}</div>`;
+    const blurb = shortBlurb(f);
+    return `<div class="plan-food-item">
+      <div class="pf-main">
+        <a href="${mapsUrl(f.addr)}" target="_blank" rel="noopener">${f.name}</a>
+        ${blurb ? `<div class="pf-blurb">${blurb}</div>` : ""}
+      </div>
+      <span class="cost">${cost}</span>
+    </div>`;
+  };
+  DINING_GROUPS.forEach(g=>{
+    const list = grouped[g.id];
+    if(!list || list.length===0) return;
+    body += `<div class="pf-group"><div class="pf-group-head">${g.emoji} ${g.label}</div>${list.map(renderItem).join("")}</div>`;
+  });
+  if(grouped.other && grouped.other.length){
+    body += `<div class="pf-group"><div class="pf-group-head">🍴 其他選擇</div>${grouped.other.map(renderItem).join("")}</div>`;
+  }
+  const title = foodOnlyMode ? "🍴 這一區其他吃的選擇" : "🍴 沿途美食推薦（視情況挑一餐）";
+  return `<div class="plan-food-sec"><h4>${title}</h4>${body}</div>`;
 }
 
 function wirePlanResultButtons(){

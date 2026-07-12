@@ -1997,12 +1997,12 @@ function planDay(regionId, pace, vibeFilter){
   const maxPts = foodOnlyMode ? (pace==="relax"?4:6) : (pace==="relax" ? 4 : 6);
   const minPts = pace==="relax" ? 3 : 4;
 
-  // 隨機加權排序：首選 +1.5，想去 +1.2，短停留略加分
+  // 隨機加權排序：隨機幅度加大(0~3)，首選/想去只是「提高機率」而非「必中」
   const scored = pool.map(p=>{
-    let s = Math.random();
-    if(p.top) s += 1.5;
-    if(wantSet.has(p._uid)) s += 1.2;
-    if(stayOf(p) <= 1.5) s += 0.3;
+    let s = Math.random() * 3;          // 主導因素：隨機
+    if(p.top) s += 0.9;                  // 首選：明顯加分但翻得動
+    if(wantSet.has(p._uid)) s += 0.7;    // 想去：加分
+    if(stayOf(p) <= 1.5) s += 0.2;       // 短停留：微幅加分
     return {p, s};
   }).sort((a,b)=>b.s-a.s).map(x=>x.p);
 
@@ -2019,8 +2019,10 @@ function planDay(regionId, pace, vibeFilter){
   // 沿途推薦：餐廳與咖啡分別取樣，各自跨組均衡（餐廳最多8、咖啡最多6）
   const recPool = foodOnlyMode ? foods.filter(f=>!picked.includes(f)) : foods.slice();
   const sampleBalanced = (list, groupFn, max)=>{
+    // 先洗牌，讓每次「換一組」推薦的店家也會不同
+    const shuffled = list.slice().sort(()=>Math.random()-0.5);
     const buckets = {};
-    list.forEach(f=>{ const g=groupFn(f); (buckets[g]=buckets[g]||[]).push(f); });
+    shuffled.forEach(f=>{ const g=groupFn(f); (buckets[g]=buckets[g]||[]).push(f); });
     const out = [];
     for(let round=0; round<4 && out.length<max; round++){
       Object.values(buckets).forEach(b=>{

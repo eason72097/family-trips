@@ -517,7 +517,7 @@
   .plan-food-item .pf-blurb{font-size:11.5px;color:var(--ink-soft);line-height:1.5;margin-top:2px;}
   .plan-food-item a{border-bottom:1px dashed var(--rust);flex:1;}
   .plan-food-item .cost{font-family:'Oswald',sans-serif;font-size:11px;color:var(--ink-soft);}
-  .plan-actions{display:flex;gap:8px;margin-top:18px;flex-wrap:wrap;}
+  .plan-actions{display:flex;gap:8px;margin:18px 0;flex-wrap:wrap;padding-bottom:16px;border-bottom:1px dashed var(--line);}
   .plan-act-btn{padding:10px 16px;border-radius:9px;border:none;cursor:pointer;font-family:'Oswald',sans-serif;font-size:13px;font-weight:600;}
   .plan-regen{background:#7B4EA3;color:#fff;}
   .plan-save{background:var(--forest);color:#fff;}
@@ -2929,11 +2929,11 @@ function renderPlanResult(){
         這一區共 <b>${pts.length}</b> 個點：${names}。<br><br>
         這裡屬於「專程來玩」的地方，周邊沒有太多其他景點，<b>建議安排半天到一天專程走這一區</b>，不用硬湊行程，玩得盡興最重要。放輕鬆慢慢逛就好。
       </div>
-      ${renderFoodSection(placesByRegion(region.id).filter(p=>["food","coffee"].includes(p.cat)), false)}
       <div class="plan-actions">
         <button class="plan-act-btn plan-save" id="planSaveBtn">💾 儲存這個建議</button>
         <button class="plan-act-btn plan-back" id="planBackBtn">← 重新選</button>
-      </div>`;
+      </div>
+      ${renderFoodSection(placesByRegion(region.id).filter(p=>["food","coffee"].includes(p.cat)), false)}`;
     wirePlanResultButtons();
     return;
   }
@@ -2982,12 +2982,12 @@ function renderPlanResult(){
     <div class="plan-result-sub">${subText}</div>
     <div class="timeline">${rows}</div>
     ${leftNote}
-    ${renderFoodSection(plan.foods, fom)}
     <div class="plan-actions">
       <button class="plan-act-btn plan-regen" id="planRegenBtn">🔄 換一組</button>
       <button class="plan-act-btn plan-save" id="planSaveBtn">💾 儲存行程</button>
       <button class="plan-act-btn plan-back" id="planBackBtn">← 重新選</button>
-    </div>`;
+    </div>
+    ${renderFoodSection(plan.foods, fom)}`;
   wirePlanResultButtons();
 }
 
@@ -3129,9 +3129,13 @@ function openSavedTrip(tid){
   document.getElementById("planSetup").style.display="none";
   const resultEl = document.getElementById("planResult");
   resultEl.style.display="";
-  // 移除原本的動作按鈕，換成「返回」
-  resultEl.innerHTML = t.html.replace(/<div class="plan-actions">[\s\S]*?<\/div>\s*$/,"") +
-    `<div class="plan-actions"><button class="plan-act-btn plan-back" id="planBackBtn">← 返回</button></div>`;
+  // 用 DOM 操作可靠移除原本的動作按鈕列（不論它在哪個位置），換成「返回」
+  resultEl.innerHTML = t.html;
+  resultEl.querySelectorAll(".plan-actions").forEach(el=>el.remove());
+  const backWrap = document.createElement("div");
+  backWrap.className = "plan-actions";
+  backWrap.innerHTML = `<button class="plan-act-btn plan-back" id="planBackBtn">← 返回</button>`;
+  resultEl.appendChild(backWrap);
   const back = document.getElementById("planBackBtn");
   if(back) back.addEventListener("click",()=>{
     resultEl.style.display="none";

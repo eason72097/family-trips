@@ -505,6 +505,7 @@
   .tl-meta{font-size:11.5px;color:var(--ink-soft);margin-top:2px;}
   .plan-note{background:#F3EEF8;border:1px solid #DDD0EC;border-radius:11px;padding:12px 14px;font-size:12.5px;line-height:1.7;color:var(--ink);margin:14px 0;}
   .plan-food-sec{margin-top:16px;}
+  .plan-food-sec + .plan-food-sec{margin-top:20px;padding-top:16px;border-top:1px dashed var(--line);}
   .plan-food-sec h4{font-size:14px;font-weight:900;margin:0 0 8px;}
   .pf-group{margin-bottom:12px;}
   .pf-group-head{
@@ -1766,6 +1767,31 @@ const DATA = [
    tags:["紐約行程","在地人最愛","迷迭香蜂蜜比司吉"],
    desc:"紐約在地人心中的社區咖啡館（4.7星），咖啡師記得熟客的名字、氣氛親切，迷迭香蜂蜜比司吉被譽為「這輩子吃過最好吃的比司吉」，適合想避開觀光人潮、感受真實紐約生活的時候。"},
 
+  // ---- 日常型美式咖啡（順手買一杯）----
+  {cat:"coffee", name:"Dunkin'（Warrington）", time:6, addr:"Dunkin', 334 Easton Rd, Warrington, PA", lat:40.2220637, lng:-75.1404076,
+   tags:["☕順手買","美東國民咖啡","清晨4:30就開"],
+   desc:"美東人早上人手一杯的國民咖啡（美國人說「Dunkin' 跑一趟」就像我們說「買杯超商咖啡」），清晨4點半就開、有得來速，冰咖啡和甜甜圈是招牌，離二姊家超近，出門前順路買很方便。"},
+  {cat:"coffee", name:"Starbucks（Warrington）", time:6, addr:"Starbucks, 270 Easton Rd, Warrington, PA", lat:40.22015, lng:-75.14051,
+   tags:["☕順手買","有得來速","停車場大"],
+   desc:"離二姊家最近的星巴克，清晨5點開到晚上8點，有得來速和大停車場，店內座位多、乾淨舒適，需要坐下來用網路或等人時很方便。"},
+  {cat:"coffee", name:"Dunkin'（New Hope）", time:25, addr:"Dunkin', 1 N Main St, New Hope, PA", lat:40.3644825, lng:-74.9516579,
+   tags:["☕順手買","New Hope主街上","5:30就開"],
+   desc:"就在 New Hope 主街入口，逛小鎮前先來一杯，清晨5點半開門，是遊客和在地人的補給站。"},
+  {cat:"coffee", name:"Dunkin'（King of Prussia）", time:30, addr:"Dunkin', 132 W Dekalb Pike, King of Prussia, PA", lat:40.0947215, lng:-75.3641774,
+   tags:["☕順手買","得來速超快","4:30就開"],
+   desc:"King of Prussia 購物區附近的 Dunkin'，得來速出餐速度快（在地人公認），逛街前後補充咖啡因很方便。"},
+
+  // ---- 美式早餐咖啡館（坐下來吃）----
+  {cat:"coffee", name:"Bagel Barrel（Doylestown）", time:14, addr:"Bagel Barrel, 60 W State St, Doylestown, PA", lat:40.3091991, lng:-75.1318715,
+   tags:["美式早餐","現烤貝果","買12送3"],
+   desc:"Doylestown 在地人激推的貝果店（4.5星），貝果外脆內Q現場烤，培根蛋起司貝果是經典美式早餐，買一打送三個，還有用啤酒麥芽做的特色貝果，早上6點就開。"},
+  {cat:"coffee", name:"The Cafe of Langhorne", time:26, addr:"The Cafe of Langhorne, 188 N Pine St, Langhorne, PA", lat:40.1781705, lng:-74.9185564,
+   tags:["美式早餐","6點就開","份量大"],
+   desc:"Langhorne 的在地美式早餐咖啡館，鬆餅、法式吐司、歐姆蛋都是招牌，份量實在、價格親民，早上6點開門，停車方便，是很道地的美國社區早餐店。"},
+  {cat:"coffee", name:"Flourish Cafe（Newtown）", time:20, addr:"Flourish Cafe, 2817 S Eagle Rd, Newtown, PA", lat:40.2349021, lng:-74.9403543,
+   tags:["裝潢超美","甜點厲害","營業到晚上"],
+   desc:"Newtown 的網美咖啡餐廳，滿滿綠植和紙藝裝飾、餐具都很講究，焦糖布丁被大讚，從早上7點半開到晚上9點，早午餐或晚餐甜點都適合，很好拍照。"},
+
   // ---------------- 書店 ----------------
   {cat:"bookstore", name:"Doylestown Bookshop", time:15, addr:"Doylestown Bookshop, Doylestown, PA", lat:40.3096072, lng:-75.1304124,
    tags:["首選","近","禮品文具豐富"], top:true,
@@ -1990,18 +2016,23 @@ function planDay(regionId, pace, vibeFilter){
     if(spent + stayOf(p) + move > cap) continue;
     picked.push(p); spent += stayOf(p)+move;
   }
-  // 沿途美食推薦：跨「用餐情境」均衡取樣，每組最多3間，總數最多8間
-  const foodPool = foodOnlyMode ? foods.filter(f=>!picked.includes(f)) : foods.slice();
-  const buckets = {};
-  foodPool.forEach(f=>{ const g=diningGroupOf(f); (buckets[g]=buckets[g]||[]).push(f); });
-  const foodRecs = [];
-  // 輪流從各組取，讓每種情境都有代表
-  for(let round=0; round<3 && foodRecs.length<8; round++){
-    Object.values(buckets).forEach(list=>{
-      if(foodRecs.length>=8) return;
-      if(list[round]) foodRecs.push(list[round]);
-    });
-  }
+  // 沿途推薦：餐廳與咖啡分別取樣，各自跨組均衡（餐廳最多8、咖啡最多6）
+  const recPool = foodOnlyMode ? foods.filter(f=>!picked.includes(f)) : foods.slice();
+  const sampleBalanced = (list, groupFn, max)=>{
+    const buckets = {};
+    list.forEach(f=>{ const g=groupFn(f); (buckets[g]=buckets[g]||[]).push(f); });
+    const out = [];
+    for(let round=0; round<4 && out.length<max; round++){
+      Object.values(buckets).forEach(b=>{
+        if(out.length>=max) return;
+        if(b[round]) out.push(b[round]);
+      });
+    }
+    return out;
+  };
+  const restaurantRecs = sampleBalanced(recPool.filter(f=>!isCoffeeSide(f)), diningGroupOf, 8);
+  const coffeeRecs     = sampleBalanced(recPool.filter(f=> isCoffeeSide(f)), coffeeGroupOf, 6);
+  const foodRecs = [...restaurantRecs, ...coffeeRecs];
   return {region, picked, foods:foodRecs, supplies, spent:Math.round(spent*10)/10, foodOnlyMode,
           poolSize:pool.length,
           allSize: foodOnlyMode ? foods.length : all.filter(p=>!["food","coffee"].includes(p.cat)&&!SUPPLY_PLACES.has(p.name)).length};
@@ -2958,61 +2989,84 @@ function renderPlanResult(){
   wirePlanResultButtons();
 }
 
-/* 用餐情境分組定義（依標籤判斷，抓不到就歸「其他」） */
+/* ===== 餐廳分組（用餐情境）===== */
 const DINING_GROUPS = [
   {id:"quick",  emoji:"🍔", label:"想簡單吃",     match:(t)=>t.includes("🍔輕鬆吃")},
   {id:"sit",    emoji:"🍽️", label:"想坐下好好吃", match:(t)=>t.includes("🍽️坐下吃")},
   {id:"local",  emoji:"⭐", label:"在地必吃",     match:(t)=>t.includes("🍽️在地必吃")},
   {id:"asian",  emoji:"🍜", label:"想吃亞洲料理", match:(t)=>t.includes("🍜亞洲料理")},
-  {id:"sweet",  emoji:"🍦", label:"甜點・咖啡",   match:(t,c)=>t.includes("🍦甜點")||c==="coffee"},
 ];
+/* ===== 咖啡分組 ===== */
+const COFFEE_GROUPS = [
+  {id:"grab",   emoji:"☕", label:"順手買一杯",   match:(t)=>t.includes("☕順手買")},
+  {id:"sweet",  emoji:"🍦", label:"甜點・冰品",   match:(t)=>t.includes("🍦甜點")},
+  {id:"sitcof", emoji:"🛋️", label:"坐下來慢慢喝", match:()=>true}, // 其餘咖啡都歸這組
+];
+
+// 判斷一個地點屬於「餐廳」還是「咖啡甜點」
+function isCoffeeSide(item){
+  const t = (item.tags||[]).join(" ");
+  return item.cat==="coffee" || t.includes("🍦甜點");
+}
 function diningGroupOf(item){
-  const tagStr = (item.tags||[]).join(" ");
-  const g = DINING_GROUPS.find(g=>g.match(tagStr, item.cat));
+  const t = (item.tags||[]).join(" ");
+  const g = DINING_GROUPS.find(g=>g.match(t));
   return g ? g.id : "other";
 }
-// 從介紹文字抓一句話重點（取第一個句號前，過長則截斷）
+function coffeeGroupOf(item){
+  const t = (item.tags||[]).join(" ");
+  const g = COFFEE_GROUPS.find(g=>g.match(t));
+  return g ? g.id : "sitcof";
+}
+// 從介紹抓一句話重點
 function shortBlurb(item){
   const d = (item.desc||"").trim();
   if(!d) return "";
   let s = d.split(/[，。]/)[0];
-  // 若第一段太短，接第二段
   const parts = d.split(/[。]/);
   if(s.length < 10 && parts[0]) s = parts[0];
   if(s.length > 26) s = s.slice(0,26) + "…";
   return s;
 }
 
-function renderFoodSection(foods, foodOnlyMode){
-  if(!foods || foods.length===0) return "";
-  // 依用餐情境分組
+function renderRecItem(f){
+  const cost = COST_LABELS[getCostTier(f)];
+  const blurb = shortBlurb(f);
+  return `<div class="plan-food-item">
+    <div class="pf-main">
+      <a href="${mapsUrl(f.addr)}" target="_blank" rel="noopener">${f.name}</a>
+      ${blurb ? `<div class="pf-blurb">${blurb}</div>` : ""}
+    </div>
+    <span class="cost">${cost}</span>
+  </div>`;
+}
+
+function renderGroupedBlock(items, groups, groupFn, title){
+  if(!items || items.length===0) return "";
   const grouped = {};
-  foods.forEach(f=>{
-    const g = diningGroupOf(f);
-    (grouped[g] = grouped[g] || []).push(f);
-  });
+  items.forEach(f=>{ const g=groupFn(f); (grouped[g]=grouped[g]||[]).push(f); });
   let body = "";
-  const renderItem = (f)=>{
-    const cost = COST_LABELS[getCostTier(f)];
-    const blurb = shortBlurb(f);
-    return `<div class="plan-food-item">
-      <div class="pf-main">
-        <a href="${mapsUrl(f.addr)}" target="_blank" rel="noopener">${f.name}</a>
-        ${blurb ? `<div class="pf-blurb">${blurb}</div>` : ""}
-      </div>
-      <span class="cost">${cost}</span>
-    </div>`;
-  };
-  DINING_GROUPS.forEach(g=>{
+  groups.forEach(g=>{
     const list = grouped[g.id];
     if(!list || list.length===0) return;
-    body += `<div class="pf-group"><div class="pf-group-head">${g.emoji} ${g.label}</div>${list.map(renderItem).join("")}</div>`;
+    body += `<div class="pf-group"><div class="pf-group-head">${g.emoji} ${g.label}</div>${list.map(renderRecItem).join("")}</div>`;
   });
   if(grouped.other && grouped.other.length){
-    body += `<div class="pf-group"><div class="pf-group-head">🍴 其他選擇</div>${grouped.other.map(renderItem).join("")}</div>`;
+    body += `<div class="pf-group"><div class="pf-group-head">🍴 其他選擇</div>${grouped.other.map(renderRecItem).join("")}</div>`;
   }
-  const title = foodOnlyMode ? "🍴 這一區其他吃的選擇" : "🍴 沿途美食推薦（視情況挑一餐）";
+  if(!body) return "";
   return `<div class="plan-food-sec"><h4>${title}</h4>${body}</div>`;
+}
+
+// 產出「餐廳」＋「咖啡甜點」兩大區塊
+function renderFoodSection(recs, foodOnlyMode){
+  if(!recs || recs.length===0) return "";
+  const restaurants = recs.filter(f=>!isCoffeeSide(f));
+  const coffees     = recs.filter(f=> isCoffeeSide(f));
+  const foodTitle   = foodOnlyMode ? "🍴 這一區其他餐廳" : "🍴 沿途餐廳推薦（視情況挑一餐）";
+  const coffeeTitle = foodOnlyMode ? "☕ 這一區其他咖啡・甜點" : "☕ 沿途咖啡・甜點";
+  return renderGroupedBlock(restaurants, DINING_GROUPS, diningGroupOf, foodTitle)
+       + renderGroupedBlock(coffees, COFFEE_GROUPS, coffeeGroupOf, coffeeTitle);
 }
 
 function wirePlanResultButtons(){

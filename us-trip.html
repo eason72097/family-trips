@@ -612,6 +612,75 @@
   .color-swatch.selected{border-color:var(--ink);transform:scale(1.18);}
   .cat-form .ap-row{margin-top:12px;}
 
+  /* --- 現場對話面板 --- */
+  .talk-overlay{position:fixed;inset:0;background:rgba(43,36,32,.4);z-index:200;display:none;}
+  .talk-overlay.show{display:block;}
+  .talk-panel{
+    position:fixed;bottom:0;left:0;right:0;max-height:88vh;overflow-y:auto;
+    background:var(--paper);border-top:2px solid var(--line);border-radius:20px 20px 0 0;
+    padding:20px 16px 36px;z-index:201;
+    transform:translateY(100%);transition:transform .3s ease;
+  }
+  .talk-panel.show{transform:translateY(0);}
+  .talk-panel h3{margin:0 0 4px;font-size:19px;font-weight:900;}
+  .talk-panel .sub{font-size:12px;color:var(--ink-soft);margin:0 0 14px;display:block;}
+  .talk-search-wrap{position:relative;margin-bottom:12px;}
+  .talk-search-ico{position:absolute;left:11px;top:50%;transform:translateY(-50%);font-size:14px;opacity:.5;pointer-events:none;}
+  .talk-search{
+    width:100%;border:1px solid var(--line);border-radius:10px;
+    padding:11px 12px 11px 34px;font-size:15px;font-family:'Noto Sans TC',sans-serif;
+    background:#fff;color:var(--ink);
+  }
+  .talk-search:focus{outline:2px solid var(--teal);border-color:var(--teal);}
+  .talk-legend{display:flex;gap:14px;flex-wrap:wrap;font-size:11.5px;color:var(--ink-soft);margin:0 2px 12px;}
+  .talk-legend b{color:var(--ink);}
+  .talk-dot{display:inline-block;width:9px;height:9px;border-radius:50%;margin-right:5px;vertical-align:middle;}
+  .talk-dot.l{background:var(--ochre);}
+  .talk-dot.s{background:var(--teal);}
+  .talk-sec{border:1px solid var(--line);border-radius:12px;margin-bottom:10px;overflow:hidden;background:#fff;}
+  .talk-sec-head{display:flex;align-items:center;gap:9px;padding:12px 13px;cursor:pointer;user-select:none;}
+  .talk-sec-head .emoji{font-size:19px;flex-shrink:0;}
+  .talk-sec-head .t{flex:1;font-size:15px;font-weight:900;color:var(--ink);}
+  .talk-sec-head .chev{font-size:12px;color:var(--ink-soft);transition:transform .2s ease;}
+  .talk-sec.open .talk-sec-head .chev{transform:rotate(180deg);}
+  .talk-sec.danger .talk-sec-head .t::after{content:' ⚠';color:var(--rust);}
+  .talk-sec-body{display:none;padding:0 13px 11px;}
+  .talk-sec.open .talk-sec-body{display:block;}
+  .talk-block{margin-top:8px;}
+  .talk-block-label{
+    display:inline-flex;align-items:center;gap:7px;
+    font-family:'Oswald',sans-serif;font-size:11.5px;letter-spacing:.1em;font-weight:600;
+    text-transform:uppercase;margin:4px 0 6px;
+  }
+  .talk-badge{width:20px;height:20px;border-radius:5px;display:inline-flex;align-items:center;justify-content:center;font-family:'Noto Sans TC',sans-serif;font-size:12px;font-weight:900;color:#fff;}
+  .talk-block.listen .talk-block-label{color:var(--ochre);}
+  .talk-block.listen .talk-badge{background:var(--ochre);}
+  .talk-block.speak .talk-block-label{color:var(--teal);}
+  .talk-block.speak .talk-badge{background:var(--teal);}
+  .talk-phrase{padding:8px 0 8px 10px;border-left:3px solid var(--line);border-radius:0 6px 6px 0;margin-bottom:5px;padding-right:8px;}
+  .talk-block.listen .talk-phrase{border-left-color:#ECD9AE;background:#FBF3E1;}
+  .talk-block.speak .talk-phrase{border-left-color:#BAD7D8;background:#E5F0F0;}
+  .tp-en{font-size:14.5px;font-weight:700;color:var(--ink);line-height:1.35;}
+  .tp-zh{font-size:12px;color:var(--ink-soft);margin-top:2px;line-height:1.5;}
+  .tp-zh b{color:var(--ink);font-weight:700;}
+  .talk-tip{margin-top:8px;padding:10px 11px;border-radius:9px;background:var(--cream);border:1px solid var(--line);font-size:12px;line-height:1.6;color:var(--ink-soft);}
+  .talk-tip b{color:var(--ink);}
+  .talk-tip .warn{color:var(--rust);font-weight:800;}
+  .talk-info{border:1px solid var(--line);border-radius:12px;padding:13px;margin-bottom:10px;background:#fff;}
+  .talk-info h4{margin:0 0 8px;font-size:14.5px;font-weight:900;}
+  .talk-inforow{display:flex;justify-content:space-between;gap:12px;padding:6px 0;border-top:1px dashed var(--line);font-size:12.5px;}
+  .talk-inforow:first-of-type{border-top:none;}
+  .talk-inforow .k{color:var(--ink-soft);}
+  .talk-inforow .v{font-weight:700;color:var(--ink);text-align:right;}
+  .talk-info p{font-size:12px;color:var(--ink-soft);margin:8px 0 0;line-height:1.6;}
+  .talk-noresult{display:none;text-align:center;color:var(--ink-soft);font-size:13.5px;padding:30px 0;}
+  .talk-hidden{display:none !important;}
+  .talk-close{
+    width:100%;margin-top:8px;background:var(--navy);color:#fff;border:none;
+    border-radius:9px;padding:11px;cursor:pointer;font-family:'Oswald',sans-serif;font-size:13.5px;font-weight:700;
+  }
+  .fab-btn.fab-talk{background:var(--teal);}
+
   .sync-bar{
     text-align:center;font-size:11.5px;color:var(--ink-soft);
     padding:6px;background:var(--paper);border-bottom:1px solid var(--line);
@@ -930,6 +999,10 @@
     <span class="fab-label">行前準備</span>
     <button class="fab-btn fab-prep" id="prepFab">🎒</button>
   </div>
+  <div class="fab-item">
+    <span class="fab-label">現場對話</span>
+    <button class="fab-btn fab-talk" id="talkFab">🗣️</button>
+  </div>
 </div>
 
 <button class="top-btn" id="topBtn">↑</button>
@@ -1035,6 +1108,331 @@
   </div>
 
   <button class="prep-close" id="prepClose">知道了，關閉</button>
+</div>
+
+<div class="talk-overlay" id="talkOverlay"></div>
+<div class="talk-panel" id="talkPanel">
+  <h3>🗣️ 現場對話速查</h3>
+  <span class="sub">聽不懂當地人講話時翻這裡。<span style="color:var(--ochre);font-weight:700;">聽</span>＝對方會說的、<span style="color:var(--teal);font-weight:700;">說</span>＝你可以講或給對方看螢幕的。點標題展開。</span>
+
+  <div class="talk-search-wrap">
+    <span class="talk-search-ico">🔍</span>
+    <input class="talk-search" id="talkSearch" type="search" placeholder="搜尋情境或句子(如:買單、加油、first time)" autocomplete="off">
+  </div>
+
+  <div class="talk-legend">
+    <span><span class="talk-dot l"></span><b>對方可能會說</b>(注意聽)</span>
+    <span><span class="talk-dot s"></span><b>你可以說</b></span>
+  </div>
+
+  <div class="talk-sec danger" data-title="救命 萬用句 聽不懂 sos help">
+    <div class="talk-sec-head"><span class="emoji">🆘</span><span class="t">救命萬用句</span><span class="chev">▼</span></div>
+    <div class="talk-sec-body">
+      <div class="talk-block speak">
+        <div class="talk-block-label"><span class="talk-badge">說</span>卡住就丟這幾句</div>
+        <div class="talk-phrase"><div class="tp-en">Sorry, could you say that again more slowly?</div><div class="tp-zh">可以慢一點再說一次嗎?</div></div>
+        <div class="talk-phrase"><div class="tp-en">Sorry, I didn't catch that.</div><div class="tp-zh">抱歉,我沒聽清楚。</div></div>
+        <div class="talk-phrase"><div class="tp-en">My English isn't very good. Can you write it down?</div><div class="tp-zh">我英文不太好,可以寫下來嗎?</div></div>
+        <div class="talk-phrase"><div class="tp-en">What do you mean?</div><div class="tp-zh">你的意思是?</div></div>
+        <div class="talk-phrase"><div class="tp-en">Could you show me?</div><div class="tp-zh">可以指給我看/示範嗎?</div></div>
+        <div class="talk-phrase"><div class="tp-en">I'm a tourist from Taiwan.</div><div class="tp-zh">我是從台灣來的觀光客。(對方通常會自動放慢)</div></div>
+        <div class="talk-phrase"><div class="tp-en">One sec, let me check my phone.</div><div class="tp-zh">等一下,我看一下手機。(要查翻譯時)</div></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="talk-sec" data-title="機場 入境 海關 immigration airport jfk">
+    <div class="talk-sec-head"><span class="emoji">✈️</span><span class="t">入境・JFK 機場</span><span class="chev">▼</span></div>
+    <div class="talk-sec-body">
+      <div class="talk-block listen">
+        <div class="talk-block-label"><span class="talk-badge">聽</span>Officer 會問</div>
+        <div class="talk-phrase"><div class="tp-en">What's the purpose of your visit?</div><div class="tp-zh">來的目的?→ 答 <b>Visiting family</b>(探親)/ <b>Tourism</b></div></div>
+        <div class="talk-phrase"><div class="tp-en">How long are you staying?</div><div class="tp-zh">待多久?→ 答 <b>Two weeks</b></div></div>
+        <div class="talk-phrase"><div class="tp-en">Where are you staying?</div><div class="tp-zh">住哪?→ <b>With my relatives in Warrington, Pennsylvania</b></div></div>
+        <div class="talk-phrase"><div class="tp-en">Do you have a return ticket?</div><div class="tp-zh">有回程機票嗎?→ 答 <b>Yes, July 31st</b></div></div>
+        <div class="talk-phrase"><div class="tp-en">Anything to declare?</div><div class="tp-zh">有東西要申報嗎?→ 沒有就 <b>No</b></div></div>
+      </div>
+      <div class="talk-block speak">
+        <div class="talk-block-label"><span class="talk-badge">說</span>你可以說</div>
+        <div class="talk-phrase"><div class="tp-en">I'm visiting my family for two weeks.</div><div class="tp-zh">我來探親兩週。(萬用回答)</div></div>
+        <div class="talk-phrase"><div class="tp-en">Where is the baggage claim / the exit?</div><div class="tp-zh">行李提領 / 出口在哪?</div></div>
+      </div>
+      <div class="talk-tip">💡 只要背 <b>目的 / 待多久 / 住哪</b> 三題。跟親戚一起排就說 <b>I'm with my family</b>,他們可以幫忙補充。</div>
+    </div>
+  </div>
+
+  <div class="talk-sec" data-title="餐廳 坐下吃 restaurant 點餐 買單">
+    <div class="talk-sec-head"><span class="emoji">🍽️</span><span class="t">餐廳(坐下吃)</span><span class="chev">▼</span></div>
+    <div class="talk-sec-body">
+      <div class="talk-block listen">
+        <div class="talk-block-label"><span class="talk-badge">聽</span>店員會問</div>
+        <div class="talk-phrase"><div class="tp-en">How many? / Table for how many?</div><div class="tp-zh">幾位?→ 比手指或答 <b>Four</b></div></div>
+        <div class="talk-phrase"><div class="tp-en">Are you ready to order?</div><div class="tp-zh">可以點餐了嗎?→ 還沒好 <b>A few more minutes, please</b></div></div>
+        <div class="talk-phrase"><div class="tp-en">How would you like it? (牛排/蛋)</div><div class="tp-zh">幾分熟?→ <b>Medium</b>(五分)/ <b>Well-done</b>(全熟)</div></div>
+        <div class="talk-phrase"><div class="tp-en">Is everything okay here?</div><div class="tp-zh">用餐還好嗎?→ <b>Yes, thank you</b></div></div>
+        <div class="talk-phrase"><div class="tp-en">Can I get you anything else?</div><div class="tp-zh">還需要別的嗎?→ <b>No, thanks</b></div></div>
+      </div>
+      <div class="talk-block speak">
+        <div class="talk-block-label"><span class="talk-badge">說</span>你可以說</div>
+        <div class="talk-phrase"><div class="tp-en">Table for four, please.</div><div class="tp-zh">四位。</div></div>
+        <div class="talk-phrase"><div class="tp-en">What do you recommend?</div><div class="tp-zh">你推薦什麼?</div></div>
+        <div class="talk-phrase"><div class="tp-en">Can I get some water, no ice?</div><div class="tp-zh">給我水,不要冰。(水通常免費,要主動要)</div></div>
+        <div class="talk-phrase"><div class="tp-en">Check, please. / Can I pay by card?</div><div class="tp-zh">買單。/ 可以刷卡嗎?</div></div>
+      </div>
+      <div class="talk-tip">💡 坐下吃要給<b>小費 15–20%</b>,寫在簽單上。若帳單已含 <b>gratuity</b> 就不用再加。</div>
+    </div>
+  </div>
+
+  <div class="talk-sec" data-title="速食 得來速 fast food drive thru 外帶">
+    <div class="talk-sec-head"><span class="emoji">🍔</span><span class="t">速食・得來速</span><span class="chev">▼</span></div>
+    <div class="talk-sec-body">
+      <div class="talk-block listen">
+        <div class="talk-block-label"><span class="talk-badge">聽</span>店員會問</div>
+        <div class="talk-phrase"><div class="tp-en">For here or to go?</div><div class="tp-zh">內用還外帶?→ <b>To go</b> / <b>For here</b></div></div>
+        <div class="talk-phrase"><div class="tp-en">What can I get you?</div><div class="tp-zh">要點什麼?</div></div>
+        <div class="talk-phrase"><div class="tp-en">What size? (Small / medium / large)</div><div class="tp-zh">什麼尺寸?</div></div>
+        <div class="talk-phrase"><div class="tp-en">Anything else? / Is that everything?</div><div class="tp-zh">還要別的? / 就這些嗎?</div></div>
+        <div class="talk-phrase"><div class="tp-en">Pull up to the window.</div><div class="tp-zh">(得來速)開到取餐窗口。</div></div>
+      </div>
+      <div class="talk-block speak">
+        <div class="talk-block-label"><span class="talk-badge">說</span>你可以說</div>
+        <div class="talk-phrase"><div class="tp-en">Can I get a number two, please?</div><div class="tp-zh">我要二號餐。(講看板號碼最快)</div></div>
+        <div class="talk-phrase"><div class="tp-en">A combo / meal, please.</div><div class="tp-zh">要套餐(含薯條飲料)。</div></div>
+        <div class="talk-phrase"><div class="tp-en">No onions, please.</div><div class="tp-zh">不要洋蔥。(No + 食材)</div></div>
+      </div>
+      <div class="talk-tip">💡 得來速先對<b>點餐機</b>講(收音差,講慢講大聲),再開到窗口付款取餐。櫃檯不用小費。</div>
+    </div>
+  </div>
+
+  <div class="talk-sec" data-title="咖啡 星巴克 dunkin starbucks coffee latte">
+    <div class="talk-sec-head"><span class="emoji">☕</span><span class="t">咖啡廳</span><span class="chev">▼</span></div>
+    <div class="talk-sec-body">
+      <div class="talk-block listen">
+        <div class="talk-block-label"><span class="talk-badge">聽</span>店員會問</div>
+        <div class="talk-phrase"><div class="tp-en">What can I get started for you?</div><div class="tp-zh">要點什麼?</div></div>
+        <div class="talk-phrase"><div class="tp-en">Hot or iced?</div><div class="tp-zh">熱的還是冰的?</div></div>
+        <div class="talk-phrase"><div class="tp-en">Can I get a name for the order?</div><div class="tp-zh">名字?(寫杯子上)→ 給簡單好拼的英文名</div></div>
+        <div class="talk-phrase"><div class="tp-en">Room for cream?</div><div class="tp-zh">要留空間加奶嗎?→ 不用 <b>No, fill it up</b></div></div>
+      </div>
+      <div class="talk-block speak">
+        <div class="talk-block-label"><span class="talk-badge">說</span>你可以說</div>
+        <div class="talk-phrase"><div class="tp-en">A medium iced latte, please.</div><div class="tp-zh">中杯冰拿鐵。</div></div>
+        <div class="talk-phrase"><div class="tp-en">Less sweet / less sugar, please.</div><div class="tp-zh">少甜 / 少糖。</div></div>
+        <div class="talk-phrase"><div class="tp-en">Can I get oat milk instead?</div><div class="tp-zh">可以換燕麥奶嗎?</div></div>
+      </div>
+      <div class="talk-tip">💡 尺寸:<b>星巴克</b> tall / grande / venti;<b>Dunkin'</b> small / medium / large。報名字給好拼的英文名省得重講。</div>
+    </div>
+  </div>
+
+  <div class="talk-sec" data-title="超市 自助結帳 supermarket self checkout 走道">
+    <div class="talk-sec-head"><span class="emoji">🛒</span><span class="t">超市・自助結帳</span><span class="chev">▼</span></div>
+    <div class="talk-sec-body">
+      <div class="talk-block listen">
+        <div class="talk-block-label"><span class="talk-badge">聽</span>會聽到</div>
+        <div class="talk-phrase"><div class="tp-en">Please scan your first item.</div><div class="tp-zh">(機器語音)請掃描第一件商品。</div></div>
+        <div class="talk-phrase"><div class="tp-en">Place item in the bagging area.</div><div class="tp-zh">把商品放到裝袋區。</div></div>
+        <div class="talk-phrase"><div class="tp-en">Unexpected item in the bagging area.</div><div class="tp-zh">裝袋區有非預期物品。(常見卡關,等店員來解除)</div></div>
+        <div class="talk-phrase"><div class="tp-en">Do you have a store card / rewards?</div><div class="tp-zh">有會員卡嗎?→ <b>No, thanks</b></div></div>
+      </div>
+      <div class="talk-block speak">
+        <div class="talk-block-label"><span class="talk-badge">說</span>你可以說</div>
+        <div class="talk-phrase"><div class="tp-en">Excuse me, where can I find the milk?</div><div class="tp-zh">請問牛奶在哪?(把 milk 換成要找的東西)</div></div>
+        <div class="talk-phrase"><div class="tp-en">Which aisle is it in?</div><div class="tp-zh">在哪一排走道?</div></div>
+        <div class="talk-phrase"><div class="tp-en">This won't scan. Can you help me?</div><div class="tp-zh">這個掃不出來,可以幫我嗎?</div></div>
+      </div>
+      <div class="talk-tip">💡 自助結帳機常卡住,舉手等 <b>associate</b>(店員)過來很正常。找東西問走道編號最快(如 <b>Aisle 7</b>)。</div>
+    </div>
+  </div>
+
+  <div class="talk-sec" data-title="購物 商店 結帳 shopping checkout 尺寸 刷卡">
+    <div class="talk-sec-head"><span class="emoji">🛍️</span><span class="t">商店購物・結帳</span><span class="chev">▼</span></div>
+    <div class="talk-sec-body">
+      <div class="talk-block listen">
+        <div class="talk-block-label"><span class="talk-badge">聽</span>店員會問</div>
+        <div class="talk-phrase"><div class="tp-en">Are you finding everything okay?</div><div class="tp-zh">找得到嗎/需要幫忙嗎?→ <b>Just looking, thanks</b></div></div>
+        <div class="talk-phrase"><div class="tp-en">Debit or credit?</div><div class="tp-zh">金融卡還信用卡?→ 答 <b>Credit</b></div></div>
+        <div class="talk-phrase"><div class="tp-en">Do you need a bag?</div><div class="tp-zh">要袋子嗎?(有些州袋子收費)</div></div>
+        <div class="talk-phrase"><div class="tp-en">Would you like the receipt?</div><div class="tp-zh">要收據嗎?→ 保險理賠可能用到,建議 <b>Yes</b></div></div>
+      </div>
+      <div class="talk-block speak">
+        <div class="talk-block-label"><span class="talk-badge">說</span>你可以說</div>
+        <div class="talk-phrase"><div class="tp-en">Do you have this in a bigger / smaller size?</div><div class="tp-zh">有大一號 / 小一號嗎?</div></div>
+        <div class="talk-phrase"><div class="tp-en">How much is this?</div><div class="tp-zh">這多少錢?</div></div>
+        <div class="talk-phrase"><div class="tp-en">I'm just looking, thanks.</div><div class="tp-zh">我只是看看,謝謝。</div></div>
+      </div>
+      <div class="talk-tip">💡 刷卡機會問 debit/credit、要不要 <b>cash back</b>(順便領現金,答 No)。跟著螢幕按或說 <b>Credit, no cash back</b>。標價<b>不含稅</b>。</div>
+    </div>
+  </div>
+
+  <div class="talk-sec" data-title="租車 rental car 保險 國際駕照 還車">
+    <div class="talk-sec-head"><span class="emoji">🚗</span><span class="t">租車</span><span class="chev">▼</span></div>
+    <div class="talk-sec-body">
+      <div class="talk-block listen">
+        <div class="talk-block-label"><span class="talk-badge">聽</span>櫃檯會問</div>
+        <div class="talk-phrase"><div class="tp-en">Your driver's license and passport, please.</div><div class="tp-zh">駕照跟護照。(國際駕照 + 台灣駕照正本一起給)</div></div>
+        <div class="talk-phrase"><div class="tp-en">Do you want to add insurance?</div><div class="tp-zh">要加保險嗎?→ 想清楚再答,會積極推銷</div></div>
+        <div class="talk-phrase"><div class="tp-en">Do you want to prepay for gas?</div><div class="tp-zh">要預付油錢嗎?→ 通常 <b>No, I'll fill it up</b></div></div>
+        <div class="talk-phrase"><div class="tp-en">Are you the only driver?</div><div class="tp-zh">只有你一個駕駛嗎?→ 多人要登記才能開</div></div>
+      </div>
+      <div class="talk-block speak">
+        <div class="talk-block-label"><span class="talk-badge">說</span>你可以說</div>
+        <div class="talk-phrase"><div class="tp-en">I have a reservation under ___ .</div><div class="tp-zh">我有預訂,名字是 ___ 。</div></div>
+        <div class="talk-phrase"><div class="tp-en">I have an International Driving Permit.</div><div class="tp-zh">我有國際駕照。</div></div>
+        <div class="talk-phrase"><div class="tp-en">Does it have E-ZPass for tolls?</div><div class="tp-zh">車上有 E-ZPass 過路費裝置嗎?</div></div>
+      </div>
+      <div class="talk-tip">💡 一定要租在<b>信用卡持卡人本人</b>名下。<b>賓州(PA)手機免持法規</b>已上路,開車別拿手機。</div>
+    </div>
+  </div>
+
+  <div class="talk-sec" data-title="加油 gas station 紐澤西 zip code pump">
+    <div class="talk-sec-head"><span class="emoji">⛽</span><span class="t">加油站</span><span class="chev">▼</span></div>
+    <div class="talk-sec-body">
+      <div class="talk-block listen">
+        <div class="talk-block-label"><span class="talk-badge">聽</span>會遇到</div>
+        <div class="talk-phrase"><div class="tp-en">Please insert card. / See cashier.</div><div class="tp-zh">(油泵螢幕)插卡 / 請找店員。</div></div>
+        <div class="talk-phrase"><div class="tp-en">Enter your ZIP code.</div><div class="tp-zh">輸入郵遞區號。→ 外國卡常過不了,進店裡付</div></div>
+        <div class="talk-phrase"><div class="tp-en">Fill it up? Regular?</div><div class="tp-zh">(紐澤西服務員問)加滿?92無鉛?→ <b>Yes, fill it up, regular</b></div></div>
+      </div>
+      <div class="talk-block speak">
+        <div class="talk-block-label"><span class="talk-badge">說</span>你可以說</div>
+        <div class="talk-phrase"><div class="tp-en">Twenty dollars on pump five, please.</div><div class="tp-zh">五號油泵加 20 美元。(先進店付,講金額+油泵號)</div></div>
+        <div class="talk-phrase"><div class="tp-en">Can I pay inside? My card won't work.</div><div class="tp-zh">可以進去付嗎?我的卡刷不過。</div></div>
+      </div>
+      <div class="talk-tip">💡 美國加油多半<b>先付款再加</b>。外國卡在油泵常卡 ZIP code,直接進店說 <b>Pump 5, I'll pay inside</b>。<span class="warn">⚠ 紐澤西州不能自助加油</span>,坐車上讓服務員加。</div>
+    </div>
+  </div>
+
+  <div class="talk-sec danger" data-title="射擊場 shooting range 教練 安全 cease fire first time">
+    <div class="talk-sec-head"><span class="emoji">🎯</span><span class="t">射擊場</span><span class="chev">▼</span></div>
+    <div class="talk-sec-body">
+      <div class="talk-block listen">
+        <div class="talk-block-label"><span class="talk-badge">聽</span>教練會說</div>
+        <div class="talk-phrase"><div class="tp-en">Have you shot before?</div><div class="tp-zh">打過槍嗎?→ 誠實答 <b>No, first time</b>,教練會更仔細帶</div></div>
+        <div class="talk-phrase"><div class="tp-en">You'll need to sign a waiver.</div><div class="tp-zh">要先簽免責同意書。</div></div>
+        <div class="talk-phrase"><div class="tp-en">Always keep it pointed downrange.</div><div class="tp-zh">槍口永遠朝向靶場方向。</div></div>
+        <div class="talk-phrase"><div class="tp-en">Finger off the trigger until you're ready.</div><div class="tp-zh">沒準備好射擊前,手指離開扳機。</div></div>
+        <div class="talk-phrase"><div class="tp-en">Eyes and ears on at all times.</div><div class="tp-zh">全程戴護目鏡跟耳罩。</div></div>
+        <div class="talk-phrase"><div class="tp-en">Cease fire!</div><div class="tp-zh">停火!→ <b>立刻停手、放下槍、手離開扳機</b></div></div>
+      </div>
+      <div class="talk-block speak">
+        <div class="talk-block-label"><span class="talk-badge">說</span>你可以說</div>
+        <div class="talk-phrase"><div class="tp-en">It's my first time. Can you show me?</div><div class="tp-zh">我第一次,可以教/示範給我看嗎?</div></div>
+        <div class="talk-phrase"><div class="tp-en">I'd like to rent a handgun for a beginner.</div><div class="tp-zh">想租一把適合新手的手槍。</div></div>
+        <div class="talk-phrase"><div class="tp-en">Can you check my grip and stance?</div><div class="tp-zh">可以幫我看握姿跟站姿嗎?</div></div>
+        <div class="talk-phrase"><div class="tp-en">Sorry, can you show me that again?</div><div class="tp-zh">抱歉,可以再示範一次嗎?(聽不懂就這句)</div></div>
+      </div>
+      <div class="talk-tip"><span class="warn">⚠ 安全講解務必聽懂</span>,聽不清就請教練<b>示範</b>,絕不點頭裝懂。持<b>護照</b>可租借射擊,但<b>不能購買槍枝</b>。聽到 <b>Cease fire</b> 立刻停手放槍。</div>
+    </div>
+  </div>
+
+  <div class="talk-sec" data-title="球場 mlb baseball stadium 安檢 透明包 座位 球衣">
+    <div class="talk-sec-head"><span class="emoji">⚾</span><span class="t">MLB 球場</span><span class="chev">▼</span></div>
+    <div class="talk-sec-body">
+      <div class="talk-block listen">
+        <div class="talk-block-label"><span class="talk-badge">聽</span>安檢/入場會說</div>
+        <div class="talk-phrase"><div class="tp-en">Open your bag, please. / Empty your pockets.</div><div class="tp-zh">請打開包包。/ 掏空口袋。</div></div>
+        <div class="talk-phrase"><div class="tp-en">Have your ticket ready.</div><div class="tp-zh">票準備好。→ 手機電子票先打開</div></div>
+        <div class="talk-phrase"><div class="tp-en">Clear bags only. / No bags allowed.</div><div class="tp-zh">只能透明包 / 不能帶包。(多數球場限制)</div></div>
+      </div>
+      <div class="talk-block speak">
+        <div class="talk-block-label"><span class="talk-badge">說</span>你可以說</div>
+        <div class="talk-phrase"><div class="tp-en">Where is section ___ ?</div><div class="tp-zh">___ 區在哪?(找不到位子問 usher 工作人員)</div></div>
+        <div class="talk-phrase"><div class="tp-en">Is this seat taken?</div><div class="tp-zh">這位子有人嗎?</div></div>
+        <div class="talk-phrase"><div class="tp-en">Two hot dogs, please.</div><div class="tp-zh">兩份熱狗。</div></div>
+        <div class="talk-phrase"><div class="tp-en">Do you have this jersey in medium?</div><div class="tp-zh">這件球衣有 M 號嗎?</div></div>
+      </div>
+      <div class="talk-tip">💡 多數球場採<b>透明包政策</b>,盡量兩手空空。電子票先<b>加到手機錢包 app 或截圖</b>,離線也能刷。想看的台灣球員先確認當天有沒有上場。</div>
+    </div>
+  </div>
+
+  <div class="talk-sec" data-title="景點 門票 hersheypark 泛舟 topgolf 預約 兒童票">
+    <div class="talk-sec-head"><span class="emoji">🎢</span><span class="t">景點・門票</span><span class="chev">▼</span></div>
+    <div class="talk-sec-body">
+      <div class="talk-block listen">
+        <div class="talk-block-label"><span class="talk-badge">聽</span>入場會問</div>
+        <div class="talk-phrase"><div class="tp-en">Do you have a reservation?</div><div class="tp-zh">有預約嗎?→ 出示 QR code</div></div>
+        <div class="talk-phrase"><div class="tp-en">How many in your party?</div><div class="tp-zh">你們幾位?</div></div>
+        <div class="talk-phrase"><div class="tp-en">Any kids? How old?</div><div class="tp-zh">有小孩嗎?幾歲?(關係到兒童票/身高)</div></div>
+      </div>
+      <div class="talk-block speak">
+        <div class="talk-block-label"><span class="talk-badge">說</span>你可以說</div>
+        <div class="talk-phrase"><div class="tp-en">Two adults and one child, please.</div><div class="tp-zh">兩大一小。</div></div>
+        <div class="talk-phrase"><div class="tp-en">We have a booking under ___ .</div><div class="tp-zh">有訂位,名字 ___ 。</div></div>
+        <div class="talk-phrase"><div class="tp-en">What time do you close?</div><div class="tp-zh">你們幾點關?</div></div>
+      </div>
+      <div class="talk-tip">💡 Hersheypark、河上泛舟(tubing)假日熱門,<b>先線上訂</b>,到場出示 QR code。兒童票常看<b>身高或年齡</b>,帶小孩先量好。</div>
+    </div>
+  </div>
+
+  <div class="talk-sec" data-title="問路 directions 直走 左轉 地圖">
+    <div class="talk-sec-head"><span class="emoji">🧭</span><span class="t">問路</span><span class="chev">▼</span></div>
+    <div class="talk-sec-body">
+      <div class="talk-block listen">
+        <div class="talk-block-label"><span class="talk-badge">聽</span>對方會說</div>
+        <div class="talk-phrase"><div class="tp-en">Go straight / turn left / turn right.</div><div class="tp-zh">直走 / 左轉 / 右轉。</div></div>
+        <div class="talk-phrase"><div class="tp-en">It's two blocks down.</div><div class="tp-zh">過兩個路口就到。</div></div>
+        <div class="talk-phrase"><div class="tp-en">Next to / across from ___ .</div><div class="tp-zh">在 ___ 旁邊 / 對面。</div></div>
+        <div class="talk-phrase"><div class="tp-en">You can't miss it.</div><div class="tp-zh">很好找,一定看得到。</div></div>
+      </div>
+      <div class="talk-block speak">
+        <div class="talk-block-label"><span class="talk-badge">說</span>你可以說</div>
+        <div class="talk-phrase"><div class="tp-en">Excuse me, how do I get to ___ ?</div><div class="tp-zh">請問怎麼去 ___ ?</div></div>
+        <div class="talk-phrase"><div class="tp-en">Is it far? Can I walk there?</div><div class="tp-zh">遠嗎?走得到嗎?</div></div>
+        <div class="talk-phrase"><div class="tp-en">Can you show me on the map?</div><div class="tp-zh">可以在(我手機)地圖上指給我看嗎?(最保險)</div></div>
+      </div>
+      <div class="talk-tip">💡 聽方向容易糊掉,直接開 Google Maps 遞過去說 <b>Can you show me on the map?</b>,或請對方 <b>Can you point?</b></div>
+    </div>
+  </div>
+
+  <div class="talk-sec" data-title="叫車 uber lyft 停車 司機 車牌">
+    <div class="talk-sec-head"><span class="emoji">🚕</span><span class="t">叫車・停車</span><span class="chev">▼</span></div>
+    <div class="talk-sec-body">
+      <div class="talk-block listen">
+        <div class="talk-block-label"><span class="talk-badge">聽</span>司機會說</div>
+        <div class="talk-phrase"><div class="tp-en">Are you ___ ? (你的名字)</div><div class="tp-zh">你是 ___ 嗎?→ 對名字後答 <b>Yes</b></div></div>
+        <div class="talk-phrase"><div class="tp-en">I'm outside. / I'm here.</div><div class="tp-zh">(來電/訊息)我到了。</div></div>
+      </div>
+      <div class="talk-block speak">
+        <div class="talk-block-label"><span class="talk-badge">說</span>你可以說</div>
+        <div class="talk-phrase"><div class="tp-en">Are you my Uber?</div><div class="tp-zh">你是我叫的 Uber 嗎?(上車前先確認)</div></div>
+        <div class="talk-phrase"><div class="tp-en">I'm by the main entrance.</div><div class="tp-zh">我在正門口。</div></div>
+      </div>
+      <div class="talk-tip">💡 上車前<b>核對車牌 + 司機名字</b>再上。停車場繳費機看螢幕操作,找 <b>Pay here</b>。</div>
+    </div>
+  </div>
+
+  <div class="talk-sec" data-title="不舒服 藥局 求助 pharmacy 醫院 911 感冒">
+    <div class="talk-sec-head"><span class="emoji">🏥</span><span class="t">不舒服・藥局・求助</span><span class="chev">▼</span></div>
+    <div class="talk-sec-body">
+      <div class="talk-block listen">
+        <div class="talk-block-label"><span class="talk-badge">聽</span>對方會問</div>
+        <div class="talk-phrase"><div class="tp-en">What are your symptoms?</div><div class="tp-zh">什麼症狀?</div></div>
+        <div class="talk-phrase"><div class="tp-en">Are you allergic to anything?</div><div class="tp-zh">對什麼過敏嗎?</div></div>
+        <div class="talk-phrase"><div class="tp-en">Do you have insurance?</div><div class="tp-zh">有保險嗎?(留收據給旅遊險理賠)</div></div>
+      </div>
+      <div class="talk-block speak">
+        <div class="talk-block-label"><span class="talk-badge">說</span>你可以說</div>
+        <div class="talk-phrase"><div class="tp-en">I don't feel well.</div><div class="tp-zh">我不太舒服。</div></div>
+        <div class="talk-phrase"><div class="tp-en">I have a headache / fever / stomachache.</div><div class="tp-zh">我頭痛 / 發燒 / 肚子痛。</div></div>
+        <div class="talk-phrase"><div class="tp-en">Do you have anything for a cold?</div><div class="tp-zh">有感冒藥嗎?(藥局)</div></div>
+        <div class="talk-phrase"><div class="tp-en">Where's the nearest pharmacy / hospital?</div><div class="tp-zh">最近的藥局 / 醫院在哪?</div></div>
+      </div>
+      <div class="talk-tip">💡 藥局 <b>CVS / Walgreens</b> 可買成藥:感冒 <b>cold medicine</b>、止痛退燒 <b>Tylenol</b>。<span class="warn">緊急打 911</span>。醫療費貴,務必留收據。</div>
+    </div>
+  </div>
+
+  <div class="talk-info" data-title="小費 tip 稅 錢 消費">
+    <h4>💵 小費 &amp; 錢 速查</h4>
+    <div class="talk-inforow"><span class="k">坐下吃餐廳</span><span class="v">15–20%</span></div>
+    <div class="talk-inforow"><span class="k">速食 / 咖啡櫃檯</span><span class="v">免給</span></div>
+    <div class="talk-inforow"><span class="k">計程車 / Uber</span><span class="v">10–15%</span></div>
+    <div class="talk-inforow"><span class="k">飯店行李員 / 房務</span><span class="v">$1–2 / 件・晚</span></div>
+    <p>標價<b>不含稅</b>,結帳會比看板多一點(賓州約 6%)。刷卡機常跳小費選項,速食外帶按 <b>No tip</b> 即可。</p>
+  </div>
+
+  <div class="talk-noresult">找不到相符的句子,換個關鍵字試試 🔍</div>
+
+  <button class="talk-close" id="talkClose">知道了，關閉</button>
 </div>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.js"></script>
@@ -3165,6 +3563,61 @@ function closePrepPanel(){
 document.getElementById("prepFab").addEventListener("click", openPrepPanel);
 document.getElementById("prepOverlay").addEventListener("click", closePrepPanel);
 document.getElementById("prepClose").addEventListener("click", closePrepPanel);
+
+/* =========================================================
+   現場對話面板
+   ========================================================= */
+function openTalkPanel(){
+  document.getElementById("talkOverlay").classList.add("show");
+  document.getElementById("talkPanel").classList.add("show");
+}
+function closeTalkPanel(){
+  document.getElementById("talkOverlay").classList.remove("show");
+  document.getElementById("talkPanel").classList.remove("show");
+}
+document.getElementById("talkFab").addEventListener("click", openTalkPanel);
+document.getElementById("talkOverlay").addEventListener("click", closeTalkPanel);
+document.getElementById("talkClose").addEventListener("click", closeTalkPanel);
+(function(){
+  const panel = document.getElementById("talkPanel");
+  const secs = Array.prototype.slice.call(panel.querySelectorAll(".talk-sec"));
+  const info = panel.querySelector(".talk-info");
+  const legend = panel.querySelector(".talk-legend");
+  const noresult = panel.querySelector(".talk-noresult");
+  const search = document.getElementById("talkSearch");
+  // 手風琴:點標題展開/收合
+  secs.forEach(function(sec){
+    sec.querySelector(".talk-sec-head").addEventListener("click", function(){
+      sec.classList.toggle("open");
+    });
+  });
+  function norm(s){ return (s||"").toLowerCase(); }
+  function filter(){
+    const term = norm(search.value).trim();
+    let any = false;
+    secs.forEach(function(sec){
+      const titleHit = term && norm(sec.getAttribute("data-title")||"").indexOf(term) !== -1;
+      const phrases = sec.querySelectorAll(".talk-phrase");
+      let shown = 0;
+      phrases.forEach(function(p){
+        const hit = !term || titleHit || norm(p.textContent).indexOf(term) !== -1;
+        p.classList.toggle("talk-hidden", !hit);
+        if(hit) shown++;
+      });
+      const secHit = shown > 0;
+      sec.classList.toggle("talk-hidden", !secHit);
+      // 搜尋時自動展開命中的情境;清空搜尋時全部收合
+      sec.classList.toggle("open", term ? secHit : false);
+      if(secHit) any = true;
+    });
+    const infoHit = !term || norm(info.textContent).indexOf(term) !== -1;
+    info.classList.toggle("talk-hidden", !infoHit);
+    if(infoHit) any = true;
+    legend.classList.toggle("talk-hidden", !!term);
+    noresult.style.display = (term && !any) ? "block" : "none";
+  }
+  search.addEventListener("input", filter);
+})();
 
 /* =========================================================
    分類管理面板

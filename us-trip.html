@@ -1945,8 +1945,20 @@ const DATA = [
    tags:["推車友善"],
    desc:"沿運河的平緩步道，推車、輪椅都能輕鬆走，適合飯後散步或單車漫遊，沿途有歷史古蹟可順遊。"},
   {cat:"outdoor", name:"Bucks County River Country（德拉瓦河漂浮）", time:30, addr:"Bucks County River Country, Point Pleasant, PA", lat:40.423861, lng:-75.063893,
-   tags:["週末限定","需預約"],
-   desc:"夏天經典體驗：泳圈漂流德拉瓦河，順流而下約 2–4 小時，僅週末開放且需提前線上預約。"},
+   tags:["週末限定","需預約","戲水消暑"],
+   desc:"夏天經典體驗：泳圈漂流德拉瓦河，順流而下約 2–4 小時，僅週末開放且需提前線上預約，大熱天玩水消暑的首選。"},
+  {cat:"outdoor", name:"Sesame Place（芝麻街水上樂園）", time:28, addr:"Sesame Place, 100 Sesame Rd, Langhorne, PA", lat:40.186117, lng:-74.8729972,
+   tags:["首選","大熱天首選","戲水消暑","芝麻街主題","親子必去"], top:true,
+   desc:"芝麻街主題的水陸雙享樂園，離二姊家只要28分鐘，夏天水上樂園開放——滑水道、造浪池、噴水城堡通通有，還能跟 Elmo、Big Bird 合照，是大熱天帶小孩消暑玩樂的第一選擇。建議先線上買票、帶泳衣毛巾。"},
+  {cat:"outdoor", name:"Montgomery Township 噴水公園（免費）", time:15, addr:"Montgomery Township Splash Pad, 1030 Horsham Rd, Montgomeryville, PA", lat:40.2331275, lng:-75.2221091,
+   tags:["免費","大熱天首選","戲水消暑","噴水","有遮蔭"],
+   desc:"離二姊家超近的免費噴水公園（4.7星），地面噴泉＋兒童遊樂設施，滑梯和座位區都有遮蔭不會太曬，很適合帶小小孩來消暑，玩累了旁邊就有野餐桌，不用花錢的消暑好去處。記得帶換洗衣物。"},
+  {cat:"outdoor", name:"Camelbeach 水上樂園（波可諾）", time:95, addr:"Camelbeach Outdoor Waterpark, 301 Resort Dr, Tannersville, PA", lat:41.0515842, lng:-75.3552532,
+   tags:["大熱天首選","戲水消暑","滑水道","賓州最大戶外水樂園"],
+   desc:"賓州最大的戶外水上樂園，位於波可諾山區，37種滑水道與設施、造浪池、衝浪模擬器應有盡有，可安排跟德拉瓦水峽或 Hershey 同方向的一日消暑行程（車程較遠約1.5小時，建議玩一整天）。"},
+  {cat:"outdoor", name:"Great Wolf Lodge 室內水樂園（波可諾）", time:95, addr:"Great Wolf Lodge, 1 Great Wolf Dr, Scotrun, PA", lat:41.0598488, lng:-75.3220749,
+   tags:["大熱天首選","室內水樂園","涼快","恆溫不曬"],
+   desc:"波可諾山區的室內恆溫水上樂園，完全不用曬太陽也不怕下雨，滑水道、造浪池、四層水上樹屋都在室內，還有24小時電玩區，適合不想曬太陽又想玩水的家庭（需住宿或購買日票，車程約1.5小時）。"},
   {cat:"outdoor", name:"Central Park（紐約）", time:105, addr:"Central Park, New York, NY", lat:40.7825547, lng:-73.9655834,
    tags:["紐約行程"],
    desc:"紐約市中心大型都市公園，可散步、划船、騎協力車，適合安排在紐約一日遊裡的悠閒時段。"},
@@ -2977,7 +2989,8 @@ document.getElementById("distanceChips").querySelectorAll(".chip[data-tier]").fo
 ========================================================= */
 // 情境定義：哪些分類算「室內」「有水消暑」，以及關鍵字判斷
 const INDOOR_CATS = new Set(["knowledge","shopping","bookstore","coffee"]);
-const WATER_KEYWORDS = ["水族","漂浮","漂流","獨木舟","泛舟","游泳","水上","河","湖","戲水"];
+// 真正能「玩水消暑」的關鍵字（不含「河/湖」等只是岸邊、還是會曬的）
+const WATER_KEYWORDS = ["水族","漂浮","漂流","獨木舟","泛舟","游泳","戲水","噴水","水上樂園","water park","splash","滑水道","涼快","消暑","冷氣"];
 const FAMILY_KEYWORDS = ["親子","輕鬆","無障礙","棧道","平緩","好走","遊樂","兒童","小孩"];
 const FAMILY_CATS = new Set(["animal","knowledge"]);
 

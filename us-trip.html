@@ -1984,6 +1984,27 @@ const DATA = [
   {cat:"knowledge", name:"Intrepid Sea-Air-Space Museum", time:105, addr:"Intrepid Museum, Pier 86, New York, NY", lat:40.7648801, lng:-74.0008306,
    tags:["紐約行程","退役航艦"],
    desc:"停泊在紐約哈德遜河畔的退役航空母艦改建博物館，可登艦參觀戰機與太空梭，喜歡軍事題材的家庭別錯過。"},
+  {cat:"knowledge", name:"大都會藝術博物館 The Met（紐約）", time:110, addr:"The Metropolitan Museum of Art, 1000 5th Ave, New York, NY", lat:40.7794366, lng:-73.963244,
+   tags:["首選","紐約行程","☔雨天首選","世界級博物館"], top:true,
+   desc:"全球最偉大的博物館之一（4.8星、近10萬則評價），從古埃及神廟、印象派名畫到中世紀盔甲應有盡有，一整天都逛不完，下雨天躲進來待一整個下午最舒服。建議先線上買票、鎖定想看的展區。週三公休。"},
+  {cat:"knowledge", name:"美國自然史博物館（紐約）", time:110, addr:"American Museum of Natural History, Central Park West, New York, NY", lat:40.7813241, lng:-73.9739882,
+   tags:["紐約行程","☔雨天首選","恐龍化石","親子必去"],
+   desc:"電影《博物館驚魂夜》的取景地，招牌是天花板懸掛的巨大藍鯨和整層的恐龍化石廳，還有天文館，小孩會看得目不轉睛，是紐約最適合親子的雨天去處之一。"},
+  {cat:"knowledge", name:"MoMA 現代藝術博物館（紐約）", time:100, addr:"The Museum of Modern Art, 11 W 53rd St, New York, NY", lat:40.7614327, lng:-73.9776216,
+   tags:["紐約行程","☔雨天適合","梵谷星夜"],
+   desc:"現代藝術殿堂，梵谷《星夜》、莫內睡蓮、安迪沃荷都在這裡，就在中城、離洛克斐勒中心很近，逛累了館內餐廳和商店也很好逛，雨天室內行程首選之一。"},
+  {cat:"culture", name:"帝國大廈觀景台（紐約）", time:105, addr:"Empire State Building, 20 W 34th St, New York, NY", lat:40.7484405, lng:-73.9856644,
+   tags:["紐約行程","地標","室內展覽＋觀景"],
+   desc:"紐約最經典的地標，建築本身內有互動展覽介紹它的歷史與流行文化，展覽區都在室內，就算下雨也能參觀（觀景台視雨勢而定），營業到深夜、夜景也很美。"},
+  {cat:"culture", name:"中央車站 Grand Central（紐約）", time:100, addr:"Grand Central Terminal, 89 E 42nd St, New York, NY", lat:40.7533582, lng:-73.9768041,
+   tags:["紐約行程","☔完全室內","免費參觀","星空穹頂"],
+   desc:"百年火車總站，天花板的星空穹頂和全球最大的 Tiffany 玻璃鐘超震撼，完全免費、完全室內，地下用餐區有很多平價美食，下雨天躲雨兼參觀建築之美的最佳去處。"},
+  {cat:"food", name:"Chelsea Market（雀兒喜市集）", time:105, addr:"Chelsea Market, 75 9th Ave, New York, NY", lat:40.7424396, lng:-74.0061439,
+   tags:["🍽️在地必吃","紐約行程","☔完全室內","室內美食市集"],
+   desc:"舊餅乾工廠改建的室內美食市集，龍蝦捲、墨西哥塔可、日式拉麵、甜點通通有，還有特色小店可逛，Google 母公司持有並整修過，環境乾淨舒適，下雨天吃吃逛逛一次滿足。"},
+  {cat:"knowledge", name:"冰淇淋博物館 Museum of Ice Cream（紐約）", time:90, addr:"Museum of Ice Cream, 558 Broadway, New York, NY", lat:40.7236214, lng:-73.9975636,
+   tags:["紐約行程","☔完全室內","超好拍","冰淇淋吃到飽"],
+   desc:"粉紅色系的網美互動博物館，有巨大溜滑梯、彩色糖粒泳池，還能無限吃冰淇淋，大人小孩都拍得很開心，完全室內、雨天玩樂拍照兩相宜。建議先線上訂票選平日。"},
 
   // ---------------- 文化懷舊 ----------------
   {cat:"culture", name:"Mercer Museum ＆ Fonthill Castle", time:15, addr:"Mercer Museum, Doylestown, PA", lat:40.3077039, lng:-75.1272125,
@@ -2967,14 +2988,16 @@ function matchesScenarios(item){
 
   // 天氣（互斥）
   if(activeWeather==="rain"){
-    // 室內：室內分類 或 射擊(室內靶場關鍵字)
-    const indoor = INDOOR_CATS.has(item.cat) ||
+    // 室內：室內分類、標了雨天/室內標籤、或室內靶場
+    const hasIndoorTag = /☔|室內|indoor/i.test(text);
+    const indoor = INDOOR_CATS.has(item.cat) || hasIndoorTag ||
       (item.cat==="shooting" && /室內|indoor/i.test(text));
     if(!indoor) return false;
   } else if(activeWeather==="hot"){
-    // 消暑：室內 或 有水
+    // 消暑：室內、有水、動物館、或標了雨天/室內標籤
+    const hasIndoorTag = /☔|室內|indoor/i.test(text);
     const cool = INDOOR_CATS.has(item.cat) || hasKw(WATER_KEYWORDS) ||
-      item.cat==="animal"; // 水族館/動物園室內區也算
+      item.cat==="animal" || hasIndoorTag;
     if(!cool) return false;
   }
 

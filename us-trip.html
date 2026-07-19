@@ -733,6 +733,7 @@
   .tag.park-hard{background:#F3DCD4;color:#8A3B1E;}
   .tag.park-transit{background:#D6E4F0;color:#1F4E79;}
   .tag.park-busy{background:#F5EAD0;color:#7A5A1E;}
+  .tag.near-station{background:#D5EDEC;color:#0A5A59;font-weight:700;}
   .card p{font-size:13.3px;line-height:1.7;color:var(--ink-soft);margin:0;}
   mark{background:#FCE39A;color:inherit;border-radius:2px;padding:0 1px;}
 
@@ -2670,6 +2671,25 @@ function getCostTier(item){
   return CATEGORY_COST_DEFAULT[item.cat] ?? 1;
 }
 
+// 判斷景點是否在車站步行範圍內（回傳最近的站與步行分鐘）
+let _stationCache = null;
+function nearStationHint(item){
+  if(item.lat==null || item.lng==null) return null;
+  if(["rail","subway"].includes(item.cat)) return null; // 車站本身不標
+  if(!_stationCache){
+    _stationCache = DATA.filter(d=>["rail","subway"].includes(d.cat) && d.lat!=null);
+  }
+  let best=null, bd=Infinity;
+  _stationCache.forEach(s=>{
+    const d = haversineKm(item.lat, item.lng, s.lat, s.lng);
+    if(d<bd){ bd=d; best=s; }
+  });
+  if(!best || bd>1.2) return null;            // 超過1.2公里就不算走得到
+  const mins = Math.max(2, Math.round(bd*1000/75)); // 步行約75公尺/分
+  const icon = best.cat==="subway" ? "🚇" : "🚆";
+  return {cls:"near-station", txt:`🚶${icon}走路${mins}分`, station:best.name};
+}
+
 function parkingHint(item){
   // 依區域自動判斷停車難易（只標需注意的，好停的不標）
   if(item.lat==null || item.lng==null) return null;
@@ -2697,6 +2717,8 @@ function cardHtml(item, uid, distKm){
   const costBadge = `<span class="tag cost-tag cost-${costTier}">${COST_LABELS[costTier]}</span>`;
   const ph = parkingHint(item);
   const parkBadge = ph ? `<span class="tag ${ph.cls}">${ph.txt}</span>` : '';
+  const ns = nearStationHint(item);
+  const stationBadge = ns ? `<span class="tag ${ns.cls}" title="${ns.station}">${ns.txt}</span>` : '';
   const distPill = (distKm!=null)
     ? `<span class="dist-pill">📍 離你 ${distKm<1 ? Math.round(distKm*1000)+' 公尺' : distKm.toFixed(1)+' 公里'}</span>`
     : '';
@@ -2707,7 +2729,7 @@ function cardHtml(item, uid, distKm){
     ${item.isCustom ? `<button class="edit-btn" data-edit="${uid}" title="編輯">✏️</button>` : ''}
     <div class="card-top"><span class="time-pill">🚗 ${item.time} 分</span>${distPill}</div>
     <h3><a href="${mapsUrl(item.addr)}" target="_blank" rel="noopener">${item.name}</a></h3>
-    <div class="tagrow">${customBadge}${costBadge}${parkBadge}${tags}</div>
+    <div class="tagrow">${customBadge}${costBadge}${stationBadge}${parkBadge}${tags}</div>
     <p>${item.desc||""}</p>
     <div class="card-footer">
       <button class="want-btn" data-uid="${uid}">🤍 想去</button>

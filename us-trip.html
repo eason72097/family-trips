@@ -245,10 +245,14 @@
   .map-card-head h2{font-size:16px;margin:0;font-weight:900;}
   .map-btns{display:flex;gap:6px;}
   .map-btn{
-    font-family:'Oswald',sans-serif;font-size:11.5px;border:1px solid var(--line);
-    background:#fff;color:var(--ink-soft);padding:5px 10px;border-radius:8px;cursor:pointer;
+    font-family:'Oswald',sans-serif;font-size:12px;border:1px solid var(--line);
+    background:#fff;color:var(--ink-soft);padding:9px 12px;border-radius:8px;cursor:pointer;
+    min-height:38px;display:inline-flex;align-items:center;
+    -webkit-tap-highlight-color:rgba(31,58,95,.15);touch-action:manipulation;
   }
   .map-btn:hover{border-color:var(--navy);color:var(--navy);}
+  .map-btn:active{opacity:.7;}
+  .map-btn.active{background:#0E7C7B;border-color:#0E7C7B;color:#fff;}
   #leafletMap{
     width:100%;height:420px;border-radius:12px;background:#e9e3d2;
     border:1px solid var(--line);position:relative;z-index:1;isolation:isolate;
@@ -845,6 +849,7 @@
       <div class="map-btns">
         <button class="map-btn" id="mapFitAll">縮放到目前顯示範圍</button>
         <button class="map-btn" id="mapFitHome">回到二姊家周邊</button>
+        <button class="map-btn" id="railToggleBtn">🚆 顯示鐵路路線</button>
       </div>
     </div>
     <div id="leafletMap"></div>
@@ -1104,6 +1109,23 @@
       <li><b>紐約強烈建議別開車進去</b>：曼哈頓停車一天可能 $40–60 美金，車位極難找。建議把車停在外圍（如紐澤西）轉搭火車／地鐵進市區，省錢又省心</li>
       <li><b>紅線＝消防栓／禁停</b>：美國路邊紅線、消防栓前一律不能停，會被開單甚至拖吊，千萬別抱僥倖心態</li>
       <li><b>臨場找車位</b>：右下角選單「📍找附近 → 🅿️停車場」可一鍵用 GPS 搜尋你附近的停車場</li>
+    </ul>
+  </div>
+
+  <div class="prep-section">
+    <div class="prep-section-head"><span class="emoji">🚆</span><h4>搭火車去紐約・費城</h4></div>
+    <ul class="prep-list">
+      <li><b>去紐約（強烈建議搭火車，別開車進市區）</b><br>
+        開車 40 分鐘到 <b>Trenton Transit Center</b>（3,450 個停車位）或 <b>Hamilton 站</b>（較新較乾淨），停好車轉搭 <b>NJ Transit 東北走廊線</b>直達紐約 Penn Station。車程 60–80 分鐘，單程約 $20.35（2026年7月）。比起曼哈頓停車一天 $40–60、還要塞車找位，火車省錢又省心。</li>
+      <li><b>去費城（最方便）</b><br>
+        <b>Doylestown 站</b>（15分）或 <b>Warminster 站</b>（12分），停車只要 <b>$2 一天</b>。搭 SEPTA 到費城市中心 Jefferson Station，出站就是 Reading Terminal Market，步行可到獨立廳。記得用 <b>SEPTA Park App</b> 付停車費，沒付會被開單。</li>
+      <li><b>紐約市內移動靠地鐵</b><br>
+        Penn Station 出來就能轉地鐵。常用：<b>Times Sq–42 St</b>（時代廣場、最大轉乘站）、<b>86 St</b>（走10分到大都會博物館）、<b>81 St</b>（出站直通自然史博物館）、<b>14 St–8 Av</b>（Chelsea Market）、<b>Canal St</b>（中國城）、<b>Fulton St</b>（9/11紀念館）。</li>
+      <li><b>買票方式</b><br>
+        NJ Transit 用官方 App 買最方便（可直接掃碼上車）；SEPTA 可在站內機器 Tap &amp; Go 刷信用卡；紐約地鐵直接用感應信用卡或手機 OMNY 嗶進站，不用另外買卡。</li>
+      <li><b>看路線圖</b><br>
+        下方地圖點「🚆 顯示鐵路路線」，就能看到三條主要路線經過哪些站、怎麼接。</li>
+      <li><b>小提醒</b>：Trenton 站環境較雜（有街友出沒），若在意可選 Hamilton 站；Hamilton 站候車室晚上約 7:30 後關閉，冬天要留意。</li>
     </ul>
   </div>
 
@@ -1887,6 +1909,8 @@ const BASE_CATS = [
   {id:"coffee",    emoji:"☕", label:"咖啡店",   color:"#3E2723"},
   {id:"bookstore", emoji:"📚", label:"書店",     color:"#6B2737"},
   {id:"hiking",    emoji:"🥾", label:"步道健行", color:"#556B2F"},
+  {id:"rail",      emoji:"🚆", label:"火車站",   color:"#0E7C7B"},
+  {id:"subway",    emoji:"🚇", label:"地鐵站",   color:"#5C4B99"},
 ];
 let CATS = [...BASE_CATS];
 let customCats = {}; // uid → {id, emoji, label, color}
@@ -2334,6 +2358,52 @@ const DATA = [
    tags:["紐約行程","童書專門店"],
    desc:"紐約老字號童書專門店，許多繪本都有作者親筆簽名版，店員對童書如數家珍，帶小孩來挑書是很特別的體驗。"},
 
+  // ---------------- 火車站 ----------------
+  {cat:"rail", name:"Doylestown 車站（SEPTA・去費城）", time:15, addr:"Doylestown SEPTA Station, 130 S Clinton St, Doylestown, PA", lat:40.3062612, lng:-75.1308016,
+   tags:["首選","去費城","停車$2/天","157車位"], top:true,
+   desc:"離二姊家最近、最好用的火車站，是 SEPTA「Lansdale/Doylestown 線」的終點站。停車只要 $2 一天（157 個車位，但不可過夜），搭到費城市中心約 70–80 分鐘，屬第 4 收費區。逛完 Doylestown 小鎮順道搭車進城很方便，不用煩惱費城停車。"},
+  {cat:"rail", name:"Warminster 車站（SEPTA・去費城）", time:12, addr:"Warminster SEPTA Station, 100 Station Dr, Warminster, PA", lat:40.1950946, lng:-75.0889312,
+   tags:["去費城","停車$2/天","車位多"], top:true,
+   desc:"SEPTA「Warminster 線」的終點站，離二姊家只要 12 分鐘，停車場很大、$2 一天（記得用 SEPTA Park App 付費，沒付會被開單）。多數班次直達費城市中心後續駛往機場，要去費城機場也很方便。"},
+  {cat:"rail", name:"Jenkintown-Wyncote 站（轉乘點）", time:32, addr:"Jenkintown-Wyncote Station, 2 Greenwood Ave, Jenkintown, PA", lat:40.0931443, lng:-75.137964,
+   tags:["轉乘樞紐","停車$2/天","三線交會"],
+   desc:"Doylestown 線、Warminster 線、West Trenton 線三線交會的轉乘站，停車位多、$2 一天。如果某條線臨時停駛，通常會建議到這站轉乘，是實用的備案。"},
+  {cat:"rail", name:"Jefferson Station（費城市中心）", time:45, addr:"Jefferson Station, Philadelphia, PA", lat:39.9525, lng:-75.1580556,
+   tags:["費城市中心","下車站","近Reading Terminal"],
+   desc:"從二姊家搭火車進費城的主要下車站，出站就是 Reading Terminal Market（百年室內市集），步行可到獨立廳、國家憲法中心等歷史景點，是玩費城歷史區最方便的落腳點。"},
+  {cat:"rail", name:"30th Street Station（費城大站）", time:45, addr:"30th Street Station, 2955 Market St, Philadelphia, PA", lat:39.9560371, lng:-75.1818891,
+   tags:["費城大站","Amtrak","建築宏偉"],
+   desc:"費城最大的火車站，宏偉的老建築本身就值得參觀，Amtrak（美國國鐵）長途列車也停這站，要搭 Amtrak 去紐約或華盛頓從這裡出發。SEPTA 各線也都停靠。"},
+  {cat:"rail", name:"Trenton Transit Center（去紐約轉乘）", time:40, addr:"Trenton Transit Center, 72 S Clinton Ave, Trenton, NJ", lat:40.2188245, lng:-74.7543345,
+   tags:["首選","去紐約","3450個車位","SEPTA也停"], top:true,
+   desc:"去紐約最關鍵的轉乘站——開車 40 分鐘到這裡停車（多達 3,450 個車位），轉搭 NJ Transit 東北走廊線直達紐約 Penn Station，車程 60–80 分鐘、單程約 $20.35（2026年7月）。這站同時也是 SEPTA 的終點，往南可搭去費城，是賓州與紐澤西的交界樞紐。"},
+  {cat:"rail", name:"Hamilton 車站（去紐約・停車舒適）", time:45, addr:"Hamilton Train Station, 850 Sloan Ave, Hamilton Township, NJ", lat:40.254704, lng:-74.703619,
+   tags:["去紐約","室內外停車場","站區乾淨"],
+   desc:"Trenton 的替代方案，比 Trenton 站更新更乾淨、評價更好（4.4星），有室內停車場和露天車位，搭 NJ Transit 到紐約 Penn Station 約一小時、單程未滿 $20。想避開 Trenton 站較雜的環境可以選這裡。注意：晚上約7:30後候車室關閉。"},
+  {cat:"rail", name:"New York Penn Station（紐約下車站）", time:110, addr:"Penn Station, New York, NY", lat:40.75005, lng:-73.99236,
+   tags:["紐約行程","下車站","地鐵樞紐"],
+   desc:"從紐澤西搭火車進紐約的終點站，位於曼哈頓中城地下。出站即可轉乘多條地鐵線，步行約 10 分鐘可到帝國大廈，往北走幾條街是時代廣場，是玩紐約的主要進出門戶。站內有 Shake Shack 等餐飲選擇。"},
+
+  // ---------------- 地鐵站 ----------------
+  {cat:"subway", name:"Times Sq–42 St（時代廣場）", time:110, addr:"Times Square 42nd Street Station, New York, NY", lat:40.755375, lng:-73.987427,
+   tags:["紐約行程","最大轉乘站","多線交會"],
+   desc:"紐約最大的地鐵轉乘樞紐，幾乎所有主要路線都在此交會（1/2/3/7/N/Q/R/W/S/A/C/E），出站就是時代廣場。人潮非常多，建議跟著人流走、不要在通道中間停下來看手機。"},
+  {cat:"subway", name:"86 St 站（往大都會博物館）", time:110, addr:"86 Street Subway Station, Lexington Ave, New York, NY", lat:40.779491, lng:-73.955589,
+   tags:["紐約行程","4/5/6線","走10分到The Met"],
+   desc:"搭 4、5、6 線到這站下車，往西走約 10 分鐘就到大都會藝術博物館（The Met）。這一帶是上東區，街道乾淨、氣氛悠閒，附近也有 Birch Coffee 等在地咖啡館。"},
+  {cat:"subway", name:"81 St–自然史博物館站", time:110, addr:"81st Street Museum of Natural History Station, New York, NY", lat:40.7814404, lng:-73.9721508,
+   tags:["紐約行程","B/C線","出站即到"],
+   desc:"搭 B 或 C 線到這站，出站直接連通美國自然史博物館，完全不用走出戶外，下雨天超方便。站內牆面有恐龍和動物馬賽克藝術，本身就很好拍。注意：週末 B 線常停駛，改搭 C 線。"},
+  {cat:"subway", name:"14 St–8 Av 站（往 Chelsea Market）", time:110, addr:"14 Street 8 Avenue Subway Station, New York, NY", lat:40.7404686, lng:-74.0020316,
+   tags:["紐約行程","A/C/E/L線","近Chelsea Market"],
+   desc:"搭 A、C、E、L 線到這站，步行幾分鐘就到 Chelsea Market（室內美食市集），旁邊也是高線公園（High Line）的入口之一。站內有電梯和洗手間。"},
+  {cat:"subway", name:"Canal St 站（往中國城）", time:110, addr:"Canal Street Subway Station, New York, NY", lat:40.719406, lng:-74.001869,
+   tags:["紐約行程","中國城","近Nom Wah"],
+   desc:"紐約中國城的門戶站，出站周邊都是華人商店和餐館，走幾分鐘就到百年港式飲茶 Nom Wah Tea Parlor。想吃亞洲料理、買紀念品從這站下車最方便。"},
+  {cat:"subway", name:"Fulton St 站（往 9/11 紀念館）", time:110, addr:"Fulton Street Subway Station, 200 Broadway, New York, NY", lat:40.7106484, lng:-74.0092956,
+   tags:["紐約行程","下曼哈頓","多線交會"],
+   desc:"下曼哈頓的大型轉乘站（2/3/4/5/A/C/J/Z），站體現代明亮、有天窗設計。步行約 5 分鐘可到 9/11 紀念館與世貿中心，也是往自由女神渡輪碼頭方向的起點。"},
+
   // ---------------- 步道健行 ----------------
   {cat:"hiking", name:"Core Creek Park（Lake Luxembourg）", time:30, addr:"Core Creek Park, Langhorne, PA", lat:40.195006, lng:-74.909577,
    tags:["首選","親子首選","🟢輕鬆","平緩好走"], top:true,
@@ -2406,7 +2476,8 @@ function extractLatLng(url){
 ========================================================== */
 // 停留時間（小時）：分類預設 + 個別覆寫
 const STAY_DEFAULT = {knowledge:2.5, animal:3, sports:3.5, outdoor:1.5, hiking:1.5,
-  food:1, coffee:0.75, town:1.5, shopping:1.5, shooting:1.5, bookstore:0.75, culture:1.25};
+  food:1, coffee:0.75, town:1.5, shopping:1.5, shooting:1.5, bookstore:0.75, culture:1.25,
+  rail:0.3, subway:0.2};
 const STAY_OVERRIDE = {
   "Six Flags Wild Safari（野生動物開車探險）":4,
   "Citizens Bank Park（費城人 MLB）":3.5, "Yankee Stadium（紐約洋基）":3.5, "Citi Field（紐約大都會）":3.5,
@@ -2509,7 +2580,7 @@ function planDay(regionId, pace, vibeFilter){
   if(foodOnlyMode){
     pool = foods.slice(); // 餐廳＋咖啡當成要排的點
   } else {
-    pool = all.filter(p=>!["food","coffee"].includes(p.cat) && !SUPPLY_PLACES.has(p.name));
+    pool = all.filter(p=>!["food","coffee","rail","subway"].includes(p.cat) && !SUPPLY_PLACES.has(p.name));
     if(vibeFilter && vibeFilter.size>0){
       pool = pool.filter(p=>vibeFilter.has(VIBE_OF_CAT[p.cat]));
     }
@@ -2559,14 +2630,14 @@ function planDay(regionId, pace, vibeFilter){
   const foodRecs = [...restaurantRecs, ...coffeeRecs];
   return {region, picked, foods:foodRecs, supplies, spent:Math.round(spent*10)/10, foodOnlyMode,
           poolSize:pool.length,
-          allSize: foodOnlyMode ? foods.length : all.filter(p=>!["food","coffee"].includes(p.cat)&&!SUPPLY_PLACES.has(p.name)).length};
+          allSize: foodOnlyMode ? foods.length : all.filter(p=>!["food","coffee","rail","subway"].includes(p.cat)&&!SUPPLY_PLACES.has(p.name)).length};
 }
 
 /* ====== 費用等級（粗略估計，分類預設 + 個別覆寫）====== */
 const COST_LABELS = ["免費","$","$$","$$$"];
 const CATEGORY_COST_DEFAULT = {
   outdoor:0, animal:2, knowledge:2, culture:1, sports:3, shooting:3,
-  town:0, food:1, shopping:1, coffee:1, bookstore:1, hiking:0,
+  town:0, food:1, shopping:1, coffee:1, bookstore:1, hiking:0, rail:1, subway:1,
 };
 const COST_OVERRIDE = {
   "Bucks County River Country（德拉瓦河漂浮）":1,
@@ -2763,6 +2834,79 @@ function clearAllCats(){
 ========================================================= */
 let map, allMarkers = [];
 
+/* =========================================================
+   鐵路路線示意圖（連接各站的示意線，非真實軌道路徑）
+========================================================= */
+const RAIL_ROUTES = [
+  {
+    id:"septa_lan", name:"SEPTA Lansdale/Doylestown 線", color:"#0E7C7B",
+    note:"Doylestown → 費城市中心（約70–80分）",
+    stops:[
+      {n:"Doylestown", lat:40.3062612, lng:-75.1308016},
+      {n:"Lansdale",   lat:40.2430708, lng:-75.2851448},
+      {n:"Jenkintown-Wyncote", lat:40.0931443, lng:-75.137964},
+      {n:"Jefferson（費城）", lat:39.9525, lng:-75.1580556},
+      {n:"30th Street", lat:39.9560371, lng:-75.1818891},
+    ]
+  },
+  {
+    id:"septa_war", name:"SEPTA Warminster 線", color:"#2D6E73",
+    note:"Warminster → 費城市中心（約60–70分）",
+    stops:[
+      {n:"Warminster", lat:40.1950946, lng:-75.0889312},
+      {n:"Jenkintown-Wyncote", lat:40.0931443, lng:-75.137964},
+      {n:"Jefferson（費城）", lat:39.9525, lng:-75.1580556},
+      {n:"30th Street", lat:39.9560371, lng:-75.1818891},
+    ]
+  },
+  {
+    id:"njt_nec", name:"NJ Transit 東北走廊線（去紐約）", color:"#D9541E",
+    note:"Trenton → 紐約 Penn Station（約60–80分・單程約$20.35）",
+    stops:[
+      {n:"Trenton Transit Center", lat:40.2188245, lng:-74.7543345},
+      {n:"Hamilton", lat:40.254704, lng:-74.703619},
+      {n:"Princeton Junction", lat:40.3158722, lng:-74.6239727},
+      {n:"New Brunswick", lat:40.496654, lng:-74.446092},
+      {n:"Metropark", lat:40.568114, lng:-74.3296141},
+      {n:"Newark Penn", lat:40.7347101, lng:-74.1647508},
+      {n:"Secaucus Junction", lat:40.761413, lng:-74.0757561},
+      {n:"New York Penn Station", lat:40.75005, lng:-73.99236},
+    ]
+  },
+];
+let railLayers = {};      // routeId → L.layerGroup
+let railRoutesOn = false;
+
+function buildRailRoutes(){
+  if(!map) return;
+  RAIL_ROUTES.forEach(r=>{
+    const g = L.layerGroup();
+    const pts = r.stops.map(s=>[s.lat, s.lng]);
+    // 路線線條（虛線表示為示意圖）
+    L.polyline(pts, {color:r.color, weight:4, opacity:.75, dashArray:"1 8", lineCap:"round"}).addTo(g);
+    // 各站小圓點
+    r.stops.forEach((s,i)=>{
+      const isEnd = (i===0 || i===r.stops.length-1);
+      L.circleMarker([s.lat, s.lng], {
+        radius: isEnd?6:4, color:"#fff", weight:2, fillColor:r.color, fillOpacity:1
+      }).bindPopup(`<b>${s.n}</b><br>${r.name}<br><span style="color:#6B6257">${r.note}</span>`).addTo(g);
+    });
+    railLayers[r.id] = g;
+  });
+}
+function toggleRailRoutes(on){
+  railRoutesOn = on;
+  Object.values(railLayers).forEach(g=>{
+    if(on){ if(!map.hasLayer(g)) g.addTo(map); }
+    else  { if(map.hasLayer(g)) map.removeLayer(g); }
+  });
+  const btn = document.getElementById("railToggleBtn");
+  if(btn){
+    btn.classList.toggle("active", on);
+    btn.textContent = on ? "🚆 隱藏鐵路路線" : "🚆 顯示鐵路路線";
+  }
+}
+
 function initMap(){
   map = L.map('leafletMap', {scrollWheelZoom:false}).setView([ORIGIN_LAT, ORIGIN_LNG], 11);
   L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
@@ -2798,6 +2942,7 @@ function initMap(){
     map.setView([ORIGIN_LAT, ORIGIN_LNG], 11);
   });
 
+  buildRailRoutes();
   rebuildMapLegend();
 }
 
@@ -3274,6 +3419,8 @@ document.getElementById("jumpRow").addEventListener("click", (e)=>{
   if(btn) toggleCategory(btn.dataset.cat, {scroll:true});
 });
 
+document.getElementById("railToggleBtn").addEventListener("click", ()=> toggleRailRoutes(!railRoutesOn));
+
 document.getElementById("mapLegend").addEventListener("click", (e)=>{
   if(e.target.closest("#legendSelectAll")){ selectAllCats(); return; }
   if(e.target.closest("#legendClearAll")){ clearAllCats(); return; }
@@ -3398,7 +3545,7 @@ function buildRegionGrid(){
     return;
   }
   grid.innerHTML = filtered.map(r=>{
-    const cnt = placesByRegion(r.id).filter(p=>!SUPPLY_PLACES.has(p.name)&&!["food","coffee"].includes(p.cat)).length;
+    const cnt = placesByRegion(r.id).filter(p=>!SUPPLY_PLACES.has(p.name)&&!["food","coffee","rail","subway"].includes(p.cat)).length;
     const vibe = regionVibes(r.id).map(v=>VIBE_LABEL[v]).join("・")||"綜合";
     return `<button class="region-btn type-${r.type}" data-region="${r.id}">
       <span class="rb-main"><span class="rb-name">${r.name}</span><span class="rb-vibe">${vibe}</span></span>

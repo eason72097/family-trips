@@ -684,6 +684,50 @@
     border-radius:9px;padding:11px;cursor:pointer;font-family:'Oswald',sans-serif;font-size:13.5px;font-weight:700;
   }
   .fab-btn.fab-talk{background:var(--teal);}
+  .fab-btn.fab-export{background:#4A7C59;}
+
+  /* --- 匯出到 Google 地圖面板 --- */
+  .export-overlay{position:fixed;inset:0;background:rgba(43,36,32,.4);z-index:200;display:none;}
+  .export-overlay.show{display:block;}
+  .export-panel{
+    position:fixed;bottom:0;left:0;right:0;max-height:90vh;overflow-y:auto;
+    background:var(--paper);border-top:2px solid var(--line);border-radius:20px 20px 0 0;
+    padding:20px 20px 36px;z-index:201;
+    transform:translateY(100%);transition:transform .3s ease;
+  }
+  .export-panel.show{transform:translateY(0);}
+  .export-panel h3{margin:0 0 4px;font-size:19px;font-weight:900;}
+  .export-panel .sub{font-size:12px;color:var(--ink-soft);margin:0 0 14px;display:block;}
+  .export-warn{
+    background:#FDF3E3;border:1px solid #E8D5B0;border-radius:11px;
+    padding:11px 13px;font-size:12.5px;line-height:1.7;color:#7A5A1E;margin-bottom:16px;
+  }
+  .export-block{margin-bottom:18px;}
+  .export-block-head{
+    font-family:'Noto Sans TC',sans-serif;font-size:13.5px;font-weight:800;
+    color:var(--ink);margin-bottom:6px;
+  }
+  .export-p{font-size:12.5px;line-height:1.7;color:var(--ink-soft);margin:0 0 9px;}
+  .export-btn{
+    display:block;width:100%;padding:12px;margin-bottom:7px;border-radius:10px;
+    border:1px solid var(--line);background:#fff;color:var(--ink);cursor:pointer;
+    font-family:'Noto Sans TC',sans-serif;font-size:13.5px;font-weight:700;
+    min-height:46px;-webkit-tap-highlight-color:rgba(31,58,95,.15);touch-action:manipulation;
+  }
+  .export-btn:active{opacity:.7;}
+  .export-btn.primary{background:#4A7C59;border-color:#4A7C59;color:#fff;}
+  .export-steps{margin:0;padding-left:20px;font-size:12.5px;line-height:1.9;color:var(--ink);}
+  .export-steps li{margin-bottom:3px;}
+  .export-color-item{
+    display:flex;align-items:center;gap:9px;padding:6px 4px;font-size:12.5px;
+    border-bottom:1px dashed var(--line);
+  }
+  .export-color-item .sw{width:18px;height:18px;border-radius:4px;flex-shrink:0;border:1px solid rgba(0,0,0,.15);}
+  .export-color-item .hex{margin-left:auto;font-family:'Oswald',sans-serif;font-size:11.5px;color:var(--ink-soft);}
+  .export-close{
+    width:100%;margin-top:8px;background:#fff;color:var(--ink-soft);border:1px solid var(--line);
+    border-radius:9px;padding:12px;cursor:pointer;font-family:'Oswald',sans-serif;font-size:13px;min-height:46px;
+  }
 
   .sync-bar{
     text-align:center;font-size:11.5px;color:var(--ink-soft);
@@ -1009,9 +1053,59 @@
     <span class="fab-label">現場對話</span>
     <button class="fab-btn fab-talk" id="talkFab">🗣️</button>
   </div>
+  <div class="fab-item">
+    <span class="fab-label">匯出到 Google 地圖</span>
+    <button class="fab-btn fab-export" id="exportFab">📤</button>
+  </div>
 </div>
 
 <button class="top-btn" id="topBtn">↑</button>
+
+<!-- ========== 匯出到 Google 地圖 ========== -->
+<div class="export-overlay" id="exportOverlay"></div>
+<div class="export-panel" id="exportPanel">
+  <h3>📤 匯出到 Google 地圖</h3>
+  <span class="sub">把網站的地點轉成 Google「我的地圖」，之後手機導航更方便。</span>
+
+  <div class="export-warn">
+    ⚠️ <b>匯入步驟必須用電腦操作</b>（Google 我的地圖的匯入功能不支援手機）。<br>
+    匯入完成後，手機的 Google 地圖 App → 「已儲存」→「地圖」就能看到並直接導航。
+  </div>
+
+  <div class="export-block">
+    <div class="export-block-head">方法一：一次匯入全部（推薦・最省事）</div>
+    <p class="export-p">下載一個 CSV，匯入後在 Google 我的地圖用「<b>依欄位分組</b>」選「分類」，就會自動依分類上不同顏色，不受 10 層圖層限制。</p>
+    <button class="export-btn primary" id="exportCsvAll">⬇️ 下載全部地點 CSV</button>
+  </div>
+
+  <div class="export-block">
+    <div class="export-block-head">方法二：分類分層（顏色完全一致）</div>
+    <p class="export-p">下載 KML，內含各分類的資料夾與網站相同的顏色代碼。因 Google 我的地圖<b>每張地圖最多 10 層</b>，14 個分類會拆成兩個檔案：</p>
+    <button class="export-btn" id="exportKml1">⬇️ 下載 KML①玩樂景點（8類）</button>
+    <button class="export-btn" id="exportKml2">⬇️ 下載 KML②吃喝購物交通（6類）</button>
+  </div>
+
+  <div class="export-block">
+    <div class="export-block-head">📖 匯入步驟</div>
+    <ol class="export-steps">
+      <li>電腦開啟 <b>mymaps.google.com</b>，用你的 Google 帳號登入</li>
+      <li>點「<b>建立新地圖</b>」</li>
+      <li>在左側圖層下方點「<b>匯入</b>」，選剛下載的檔案</li>
+      <li><b>CSV</b>：選「緯度／經度」欄位定位，標題選「名稱」<br>
+          <b>KML</b>：直接匯入即可</li>
+      <li>（CSV 專用）點圖層的「<b>樣式</b>」→「依欄位分組」→ 選「<b>分類</b>」，即自動分色</li>
+      <li>點左上角地圖名稱改成「美國行程地圖」，完成</li>
+      <li>手機開 Google 地圖 → 已儲存 → 地圖，就能看到</li>
+    </ol>
+  </div>
+
+  <div class="export-block">
+    <div class="export-block-head">🎨 分類顏色對照（手動調色時參考）</div>
+    <div id="exportColorList"></div>
+  </div>
+
+  <button class="export-close" id="exportClose">關閉</button>
+</div>
 
 <!-- ========== 排行程面板 ========== -->
 <div class="plan-overlay" id="planOverlay"></div>
@@ -3351,7 +3445,7 @@ function setFab(open){
 }
 fabMain.addEventListener("click", ()=> setFab(!fabOpen));
 // 點任一功能鈕後自動收起選單
-["planFab","addFab","catFab","nearbyFab","prepFab"].forEach(id=>{
+["planFab","addFab","catFab","nearbyFab","prepFab","talkFab","exportFab"].forEach(id=>{
   document.getElementById(id).addEventListener("click", ()=> setFab(false));
 });
 // 點文字標籤等同點該項目的按鈕（加大觸控範圍）
@@ -3439,6 +3533,137 @@ document.getElementById("apKeyBtn").addEventListener("click",()=>{
 document.getElementById("jumpRow").addEventListener("click", (e)=>{
   const btn = e.target.closest(".jumpchip");
   if(btn) toggleCategory(btn.dataset.cat, {scroll:true});
+});
+
+/* =========================================================
+   匯出到 Google 我的地圖（CSV / KML）
+========================================================= */
+// 取得所有要匯出的地點（含自訂、排除已刪除）
+function exportPlaces(){
+  const list = [];
+  DATA.forEach((d,i)=>{
+    const uid = "us_"+i;
+    if(deletedSet.has(uid)) return;
+    if(d.lat==null||d.lng==null) return;
+    list.push({...d, _uid:uid});
+  });
+  Object.entries(customPlaces).forEach(([uid,cp])=>{
+    if(!cp || cp.lat==null || cp.lng==null) return;
+    if(deletedSet.has(uid)) return;
+    list.push({...cp, _uid:uid, isCustom:true});
+  });
+  return list;
+}
+
+function downloadFile(filename, content, mime){
+  const blob = new Blob([content], {type: mime+";charset=utf-8"});
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement("a");
+  a.href = url; a.download = filename;
+  document.body.appendChild(a); a.click();
+  setTimeout(()=>{ document.body.removeChild(a); URL.revokeObjectURL(url); }, 200);
+}
+
+function csvEscape(v){
+  const s = (v==null?"":String(v)).replace(/"/g,'""');
+  return `"${s}"`;
+}
+
+function buildCsv(){
+  const rows = [["名稱","分類","緯度","經度","車程分鐘","費用","標籤","介紹","地址"]];
+  exportPlaces().forEach(p=>{
+    const cat = catMap[p.cat];
+    rows.push([
+      p.name,
+      cat ? (cat.emoji+" "+cat.label) : p.cat,
+      p.lat, p.lng, p.time,
+      COST_LABELS[getCostTier(p)],
+      (p.tags||[]).join("／"),
+      (p.desc||"").replace(/\n/g," "),
+      p.addr||""
+    ]);
+  });
+  // 加 BOM 讓 Excel 正確辨識中文
+  return "\ufeff" + rows.map(r=>r.map(csvEscape).join(",")).join("\r\n");
+}
+
+// #RRGGBB → KML 的 AABBGGRR
+function hexToKmlColor(hex){
+  const h = (hex||"#888888").replace("#","");
+  const r = h.substring(0,2), g = h.substring(2,4), b = h.substring(4,6);
+  return ("ff" + b + g + r).toLowerCase();
+}
+function xmlEscape(s){
+  return String(s==null?"":s)
+    .replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;")
+    .replace(/"/g,"&quot;").replace(/'/g,"&apos;");
+}
+
+// 產生 KML；catIds = 要包含的分類 id 陣列
+function buildKml(catIds, mapName){
+  const places = exportPlaces().filter(p=>catIds.includes(p.cat));
+  let styles = "", folders = "";
+  catIds.forEach(cid=>{
+    const cat = catMap[cid];
+    if(!cat) return;
+    const items = places.filter(p=>p.cat===cid);
+    if(items.length===0) return;
+    const sid = "s_"+cid;
+    styles += `<Style id="${sid}"><IconStyle><color>${hexToKmlColor(cat.color)}</color><scale>1.1</scale>`
+           +  `<Icon><href>http://maps.google.com/mapfiles/kml/paddle/wht-blank.png</href></Icon></IconStyle>`
+           +  `<LabelStyle><scale>0.9</scale></LabelStyle></Style>\n`;
+    const marks = items.map(p=>{
+      const cost = COST_LABELS[getCostTier(p)];
+      const tags = (p.tags||[]).join("／");
+      const desc = `🚗 從二姊家約 ${p.time} 分鐘｜費用：${cost}\n${tags?("標籤："+tags+"\n"):""}\n${p.desc||""}\n\n地址：${p.addr||""}`;
+      return `  <Placemark>\n    <name>${xmlEscape(p.name)}</name>\n`
+           + `    <description>${xmlEscape(desc)}</description>\n`
+           + `    <styleUrl>#${sid}</styleUrl>\n`
+           + `    <Point><coordinates>${p.lng},${p.lat},0</coordinates></Point>\n  </Placemark>`;
+    }).join("\n");
+    folders += `<Folder>\n  <name>${xmlEscape(cat.emoji+" "+cat.label)}</name>\n${marks}\n</Folder>\n`;
+  });
+  return `<?xml version="1.0" encoding="UTF-8"?>\n`
+    + `<kml xmlns="http://www.opengis.net/kml/2.2">\n<Document>\n`
+    + `<name>${xmlEscape(mapName)}</name>\n${styles}${folders}</Document>\n</kml>`;
+}
+
+// 兩張地圖的分類分配（各 ≤10 層）
+const KML_GROUP_1 = ["outdoor","animal","knowledge","culture","sports","shooting","town","hiking"];
+const KML_GROUP_2 = ["food","coffee","shopping","bookstore","rail","subway"];
+
+function renderExportColors(){
+  const box = document.getElementById("exportColorList");
+  if(!box) return;
+  box.innerHTML = CATS.map(c=>
+    `<div class="export-color-item">
+       <span class="sw" style="background:${c.color}"></span>
+       <span>${c.emoji} ${c.label}</span>
+       <span class="hex">${c.color}</span>
+     </div>`).join("");
+}
+
+function openExportPanel(){
+  renderExportColors();
+  document.getElementById("exportOverlay").classList.add("show");
+  document.getElementById("exportPanel").classList.add("show");
+}
+function closeExportPanel(){
+  document.getElementById("exportOverlay").classList.remove("show");
+  document.getElementById("exportPanel").classList.remove("show");
+}
+
+document.getElementById("exportFab").addEventListener("click", openExportPanel);
+document.getElementById("exportOverlay").addEventListener("click", closeExportPanel);
+document.getElementById("exportClose").addEventListener("click", closeExportPanel);
+document.getElementById("exportCsvAll").addEventListener("click", ()=>{
+  downloadFile("美國行程_全部地點.csv", buildCsv(), "text/csv");
+});
+document.getElementById("exportKml1").addEventListener("click", ()=>{
+  downloadFile("美國行程_玩樂景點.kml", buildKml(KML_GROUP_1, "美國行程・玩樂景點"), "application/vnd.google-earth.kml+xml");
+});
+document.getElementById("exportKml2").addEventListener("click", ()=>{
+  downloadFile("美國行程_吃喝購物交通.kml", buildKml(KML_GROUP_2, "美國行程・吃喝購物交通"), "application/vnd.google-earth.kml+xml");
 });
 
 document.getElementById("railToggleBtn").addEventListener("click", ()=> toggleRailRoutes(!railRoutesOn));

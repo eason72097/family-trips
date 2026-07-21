@@ -2018,6 +2018,7 @@ const ORIGIN_LNG = -75.1723344;
 const BASE_CATS = [
   {id:"outdoor",   emoji:"🏞️", label:"戶外自然", color:"#3F6B4A"},
   {id:"animal",    emoji:"🐾", label:"動物",     color:"#C98A2C", textOnActive:"#2B2420"},
+  {id:"farm",      emoji:"🚜", label:"農場採果", color:"#B5651D"},
   {id:"knowledge", emoji:"🔬", label:"室內知識", color:"#2D6E73"},
   {id:"culture",   emoji:"🏛️", label:"文化懷舊", color:"#7A4B32"},
   {id:"sports",    emoji:"⚾", label:"運動",     color:"#B33A2E"},
@@ -2119,6 +2120,17 @@ const DATA = [
   {cat:"animal", name:"Six Flags Wild Safari（野生動物開車探險）", time:105, addr:"Six Flags Great Adventure, Jackson, NJ", lat:40.1360605, lng:-74.4361629,
    tags:["紐約途中","台灣沒有的體驗"],
    desc:"開自己的車穿越非洲草原野放保護區，長頸鹿、犀牛、獅子近在車窗外，台灣完全沒有的獨特體驗，可併紐約行程。"},
+
+  // ---------------- 農場採果 ----------------
+  {cat:"farm", name:"Solebury Orchards（自採藍莓）", time:30, addr:"Solebury Orchards, 3325 Creamery Rd, New Hope, PA 18938", lat:40.3838412, lng:-75.026925,
+   tags:["首選","自採藍莓","僅週四～日"], top:true,
+   desc:"今年整個賓州最值得去的採果點。官網每週更新田況，藍莓狀況良好、開放到 8/3 為止，切花園也開了（百日草、大理花可自己剪）。黑莓剛開始熟但量很少。注意今年 4 月寒害讓櫻桃完全無收成、蘋果要等 8/20 之後且量少，所以來這裡就是專攻藍莓和花。秤重計價、下雨照常開放，園區走道是割過的草地不會泥濘。園內禁止帶狗。週四～週日 9:00–18:00，建議上午去。"},
+  {cat:"farm", name:"Shady Brook Farm（自採蔬菜＋切花）", time:35, addr:"Shady Brook Farm, 931 Stony Hill Rd, Yardley, PA 19067", lat:40.2269445, lng:-74.886184,
+   tags:["自採蔬菜","切花","冰淇淋","週一二休"],
+   desc:"規模最大的農場複合體：採果田、市集、熟食廚房、酒吧、冰淇淋一次滿足。搭曳引機接駁進田區，目前開放花卉、香草、高麗菜、櫛瓜、羽衣甘藍、甜椒、茄子、青花菜；向日葵和黑莓還沒開，水蜜桃今年因霜害完全無收成。7/26 前有「Christmas in July」優惠，接駁免費、只付採到的量，之後恢復每人 $5。田區週三～週日 9:00–17:00（最後一班曳引機 15:30），市集週三～六開到 22:00，傍晚可以留下來吃飯聽音樂。"},
+  {cat:"farm", name:"Hellerick's Adventure Farm（探險農場）", time:20, addr:"Hellerick's Adventure Farm, 5500 Easton Rd, Doylestown, PA 18902", lat:40.371356, lng:-75.145523,
+   tags:["首選","親子必玩","開到晚上"], top:true,
+   desc:"最不受天候和收成影響的一家，50 多項設施：高空繩索探險、迷你高爾夫（晚上有夜光版）、穀倉攀爬牆、麻布袋滑道、曳引機拖車、山羊互動體驗和山羊瑜伽。也有自採花卉、覆盆子、黑莓，百日草現在正好可以剪。現場有霜淇淋和現做迷你甜甜圈。開到晚上 9:30，很適合躲開下午高溫、當作傍晚行程。小孩和大人都能玩，是三家裡最保險的選擇。"},
 
   // ---------------- 室內知識 ----------------
   {cat:"knowledge", name:"The Franklin Institute（科學博物館）", time:45, addr:"The Franklin Institute, Philadelphia, PA", lat:39.9582109, lng:-75.1731347,
@@ -2648,7 +2660,7 @@ function extractLatLng(url){
    行程規劃引擎 — 資料層
 ========================================================== */
 // 停留時間（小時）：分類預設 + 個別覆寫
-const STAY_DEFAULT = {knowledge:2.5, animal:3, sports:3.5, outdoor:1.5, hiking:1.5,
+const STAY_DEFAULT = {knowledge:2.5, animal:3, sports:3.5, outdoor:1.5, hiking:1.5, farm:2,
   food:1, coffee:0.75, town:1.5, shopping:1.5, shooting:1.5, bookstore:0.75, culture:1.25,
   rail:0.3, subway:0.2};
 const STAY_OVERRIDE = {
@@ -2661,6 +2673,8 @@ const STAY_OVERRIDE = {
   "Hershey's Chocolate World":2, "自由女神像與艾利斯島（紐約）":3.5, "Central Park（紐約）":2,
   "Woodbury Common Premium Outlets":3.5, "The Mills at Jersey Gardens（免稅Outlet）":3,
   "Macy's Herald Square（紐約旗艦店）":2, "SoHo 購物區（紐約）":2, "B&H Photo Video（紐約相機店）":1.5,
+  "Hellerick's Adventure Farm（探險農場）":3, "Solebury Orchards（自採藍莓）":2,
+  "Shady Brook Farm（自採蔬菜＋切花）":2.5,
   "Costco Wholesale（North Wales）":1.5, "Five Below（Warminster）":0.75, "Ulta Beauty（Warrington）":0.75,
 };
 function stayOf(item){ return STAY_OVERRIDE[item.name] ?? STAY_DEFAULT[item.cat] ?? 1.5; }
@@ -2675,7 +2689,7 @@ const SUPPLY_PLACES = new Set([
 // 分類 → 調性
 const VIBE_OF_CAT = {
   knowledge:"culture", culture:"culture", bookstore:"culture",
-  outdoor:"outdoor", hiking:"outdoor", animal:"outdoor",
+  outdoor:"outdoor", hiking:"outdoor", animal:"outdoor", farm:"outdoor",
   food:"food", coffee:"food",
   shopping:"shopping", town:"shopping",
   sports:"fun", shooting:"fun",
@@ -3712,7 +3726,7 @@ function buildKml(catIds, mapName){
 }
 
 // 兩張地圖的分類分配（各 ≤10 層）
-const KML_GROUP_1 = ["outdoor","animal","knowledge","culture","sports","shooting","town","hiking"];
+const KML_GROUP_1 = ["outdoor","animal","farm","knowledge","culture","sports","shooting","town","hiking"];
 const KML_GROUP_2 = ["food","coffee","shopping","bookstore","rail","subway"];
 
 function renderExportColors(){

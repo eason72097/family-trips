@@ -779,6 +779,8 @@
   .tag.park-busy{background:#F5EAD0;color:#7A5A1E;}
   .tag.near-station{background:#D5EDEC;color:#0A5A59;font-weight:700;}
   .card p{font-size:13.3px;line-height:1.7;color:var(--ink-soft);margin:0;}
+  .card .best-time{font-size:12.3px;line-height:1.65;margin:9px 0 0;padding:7px 9px;
+    background:rgba(123,94,167,.09);border-left:3px solid #7B5EA7;border-radius:0 6px 6px 0;color:var(--ink);}
   mark{background:#FCE39A;color:inherit;border-radius:2px;padding:0 1px;}
 
   .empty-msg{
@@ -2017,6 +2019,7 @@ const ORIGIN_LNG = -75.1723344;
 
 const BASE_CATS = [
   {id:"outdoor",   emoji:"🏞️", label:"戶外自然", color:"#3F6B4A"},
+  {id:"scenic",    emoji:"🌄", label:"景觀觀賞", color:"#7B5EA7"},
   {id:"animal",    emoji:"🐾", label:"動物",     color:"#C98A2C", textOnActive:"#2B2420"},
   {id:"farm",      emoji:"🚜", label:"農場採果", color:"#B5651D"},
   {id:"knowledge", emoji:"🔬", label:"室內知識", color:"#2D6E73"},
@@ -2106,6 +2109,40 @@ const DATA = [
   {cat:"outdoor", name:"Central Park（紐約）", time:105, addr:"Central Park, New York, NY", lat:40.7825547, lng:-73.9655834,
    tags:["紐約行程"],
    desc:"紐約市中心大型都市公園，可散步、划船、騎協力車，適合安排在紐約一日遊裡的悠閒時段。"},
+
+  // ---------------- 景觀觀賞 ----------------
+  {cat:"scenic", name:"Bowman's Hill Tower（觀景塔）", time:25, addr:"Bowman's Hill Tower, 1 Tower Rd, New Hope, PA 18938", lat:40.3262268, lng:-74.9380499,
+   tags:["首選","20分鐘搞定","需門票"], top:true,
+   best:"上午 10 點開門後人最少；下午光線斜射時河谷層次最好。每天 10:00–16:00，關門前 30 分鐘停止入場。",
+   desc:"125 呎石塔，登頂俯瞰德拉瓦河谷，是這一帶唯一的制高點視野。整趟 20 分鐘就結束，體力負擔極低。⚠️ 有電梯但多位訪客反映經常故障，樓梯窄到只能單人通過，要有爬上去的心理準備。可與旁邊的 Bowman's Hill Wildflower Preserve 買套票同日參觀。上山的路窄且陡，開車慢一點。"},
+  {cat:"scenic", name:"New Hope–Lambertville 鐵橋（跨州步行）", time:25, addr:"New Hope-Lambertville Bridge, W Bridge St, New Hope, PA 18938", lat:40.3649447, lng:-74.9488585,
+   tags:["首選","免費","24小時","跨兩州"], top:true,
+   best:"傍晚日落前一小時最美，河面反光加上兩岸小鎮燈火。假日中午人和車都最多。",
+   desc:"1904 年的六跨桁架鐵橋，有專用人行道，走幾分鐘就從賓州跨到紐澤西。橋上是俯瞰德拉瓦河的最佳角度，兩端分別是 New Hope 和 Lambertville 兩個小鎮，逛完一邊走過去逛另一邊剛剛好。完全免費、24 小時開放，牽狗也可以。⚠️ 假日這一帶停車位很難找，建議早點到或停遠一點走過來。"},
+  {cat:"scenic", name:"Peace Valley Lavender Farm（薰衣草田）", time:15, addr:"Peace Valley Lavender Farm, 802 New Galena Rd, Doylestown, PA 18901", lat:40.3319849, lng:-75.1883036,
+   tags:["需先確認花期","週一二休","可自剪"],
+   best:"薰衣草花期約 6 月中～7 月中，你們這趟很可能已過季。⚠️ 出發前務必打 (215) 249-8462 確認田裡還有沒有花，只剩店面就不值得專程跑。週三～六 10:00–16:00，週日 12:00–16:00。",
+   desc:"就在 Peace Valley Park 旁邊，離二姊家只要 15 分鐘。田區可自己剪一束帶走，也可以直接買店員綁好的。店裡有薰衣草糖漿、香皂等在地小批量製品，糖漿加氣泡水或檸檬水很受歡迎。腹地不大，30 分鐘就能逛完，適合和 Peace Valley Park 排在一起。友善的狗可以帶進去。"},
+  {cat:"scenic", name:"Van Sandt 廊橋（1875）", time:25, addr:"Van Sandt Covered Bridge, New Hope, PA 18938", lat:40.3270045, lng:-74.9578068,
+   tags:["免費","24小時","經典紅白"],
+   best:"隨時可去。清晨或傍晚光線柔和最好拍，且幾乎沒車。",
+   desc:"1875 年建、86 呎長的木造廊橋，跨越 Pidcock Creek，紅色橋身配白色出入口是 Bucks County 廊橋的招牌配色。位置比其他廊橋偏一點，反而遊客少、拍照不用等人。當地有「Cry Baby Bridge」的鬼故事傳說。⚠️ 橋兩側停車位都很勉強，南側空間稍大一些。離 Bowman's Hill Tower 很近，可以串在一起。"},
+  {cat:"scenic", name:"Loux 廊橋（全郡唯一白色）", time:30, addr:"Loux Covered Bridge, Carversville Rd, Pipersville, PA 18947", lat:40.4224636, lng:-75.1276764,
+   tags:["免費","24小時","停車困難"],
+   best:"隨時可去，10 分鐘就看完。適合當開車途中的停靠點。",
+   desc:"1874 年建，60 呎長，是全郡第二短、也是唯一漆成白色的廊橋，跟其他清一色紅白的很不一樣。跨越 Cabin Run 溪，溪谷本身也好看。⚠️ 幾乎沒有停車空間，是三座廊橋裡最不方便的，但也因此最安靜。橋上沒有傳統的解說牌。"},
+  {cat:"scenic", name:"Uhlerstown 廊橋（跨運河）", time:40, addr:"Uhlerstown Covered Bridge, Uhlerstown Hill Rd, Erwinna, PA 18920", lat:40.5254221, lng:-75.0731186,
+   tags:["免費","24小時","運河步道"],
+   best:"隨時可去。從運河步道那側走過來角度最好，也不用擔心停車。",
+   desc:"1856 年建、102 呎長，是郡內最早的廊橋之一，也是唯一橫跨德拉瓦運河的一座。特色是橋身兩側中段開了低矮的窗戶，其他廊橋沒有。旁邊就是運河的 18 號船閘。⚠️ 橋邊幾乎沒停車位，而且周圍多是私人土地，最好的走法是從 D&L 運河步道進來，順便散個步。位置最遠，適合排進 Bucks 北部那天。"},
+  {cat:"scenic", name:"Grounds For Sculpture（雕塑公園）", time:45, addr:"Grounds For Sculpture, 80 Sculptors Way, Hamilton Township, NJ 08619", lat:40.2367883, lng:-74.7188915,
+   tags:["需門票","要走很多路","開到晚上"],
+   best:"週五六日開到 21:00，傍晚去可避開白天酷熱、順便看夜間打光。⚠️ 去之前查官網當日是否為「會員限定日」，有訪客開一小時車被擋在門外。",
+   desc:"42 英畝的戶外雕塑公園，把大型雕塑和造景園林結合，4.8 分、超過一萬則評價。很多作品尺度極大，照片完全拍不出震撼感。園區腹地很大要走不少路，大熱天要留意補水和遮蔭。園內的 Rats 餐廳以《柳林中的風聲》為主題，想吃要先訂位。"},
+  {cat:"scenic", name:"Longwood Gardens（長木公園）", time:75, addr:"Longwood Gardens, 1001 Longwood Rd, Kennett Square, PA 19348", lat:39.8735119, lng:-75.6734217,
+   tags:["需門票","週二休","半天行程","噴泉秀"],
+   best:"週五六日開到 22:00，傍晚進場最划算——先逛白天噴泉秀，接著看夜間燈光噴泉。週二公休。建議線上先買票。",
+   desc:"4.9 分、超過三萬則評價，全美最頂級的植物園之一。大型溫室群、噴泉花園、林間樹屋和水生植物園都是招牌，噴泉秀白天已經很壯觀，晚上加上燈光更誇張。⚠️ 這個規模是半天到一天的獨立行程，不是「順路看一眼」，車程也要一小時多，要排就要認真排一整天。園內餐飲選擇多，不用擔心吃的。"},
 
   // ---------------- 動物 ----------------
   {cat:"animal", name:"Elmwood Park Zoo", time:35, addr:"Elmwood Park Zoo, Norristown, PA", lat:40.1327855, lng:-75.3385921,
@@ -2387,15 +2424,15 @@ const DATA = [
    desc:"全美最大零售商，定位就是「最便宜」——同樣東西通常比 Target 便宜一點點，品項更雜（連汽車零件、五金都有），但陳列較亂、質感普通。早上6點就開到晚上11點，臨時缺東西最方便。"},
   {cat:"shopping", name:"Costco Wholesale（North Wales）", time:15, addr:"Costco Wholesale, 740 Upper State Rd, North Wales, PA", lat:40.2367886, lng:-75.2338694,
    tags:["首選","會員制","大包裝","$1.5熱狗"], top:true,
-   desc:"會員制倉儲賣場（4.5星），**需要會員卡才能進場**（台灣好市多卡可通用）。特色是大包裝、單價超低、品質有保證，維他命、堅果、保健食品是台灣人必買。美食區 $1.5 熱堡套餐、$5 烤雞是傳奇，加油也比外面便宜。注意營業時間較短（晚上8:30打烊）。"},
+   desc:"會員制倉儲賣場（4.5星），<strong>需要會員卡才能進場</strong>（台灣好市多卡可通用）。特色是大包裝、單價超低、品質有保證，維他命、堅果、保健食品是台灣人必買。美食區 $1.5 熱堡套餐、$5 烤雞是傳奇，加油也比外面便宜。注意營業時間較短（晚上8:30打烊）。"},
   {cat:"shopping", name:"BJ's Wholesale Club（Warrington）", time:6, addr:"BJ's Wholesale Club, 200 Easton Rd, Warrington, PA", lat:40.2182156, lng:-75.1417449,
    tags:["會員制","東岸連鎖","可用折價券"],
-   desc:"東岸的會員制倉儲賣場，規模比 Costco 小、商品包裝也小一點，但**接受廠商折價券**（Costco 不接受），生鮮選擇較多。離二姊家更近，但如果只去一家，多數人還是選 Costco。"},
+   desc:"東岸的會員制倉儲賣場，規模比 Costco 小、商品包裝也小一點，但<strong>接受廠商折價券</strong>（Costco 不接受），生鮮選擇較多。離二姊家更近，但如果只去一家，多數人還是選 Costco。"},
 
   // ---- 折扣・特色小店（二姊家周邊）----
   {cat:"shopping", name:"T.J. Maxx（Warrington）", time:5, addr:"T.J. Maxx, 1035 Main St, Warrington, PA", lat:40.2281234, lng:-75.1323511,
    tags:["品牌折扣","尋寶感","衣服免稅"],
-   desc:"美國最紅的「品牌過季折扣店」（4.3星），把名牌的過季／庫存貨用 2–6 折賣。特色是**每次去的東西都不一樣**，像尋寶一樣，運氣好能挖到大牌便宜貨。賓州買衣服鞋子完全免稅，很划算。"},
+   desc:"美國最紅的「品牌過季折扣店」（4.3星），把名牌的過季／庫存貨用 2–6 折賣。特色是<strong>每次去的東西都不一樣</strong>，像尋寶一樣，運氣好能挖到大牌便宜貨。賓州買衣服鞋子完全免稅，很划算。"},
   {cat:"shopping", name:"HomeGoods（Montgomeryville）", time:15, addr:"HomeGoods, 34 Airport Square Rd, Montgomeryville, PA", lat:40.238146, lng:-75.239037,
    tags:["家飾折扣","跟TJ Maxx同集團","4.5星"],
    desc:"T.J. Maxx 的家居版（同集團，4.5星），專賣居家佈置——餐具、寢具、香氛、擺飾、廚具，都是品牌貨打折。喜歡佈置的人會逛到失心瘋，有評論說「這才是 Target 該有的樣子」。"},
@@ -2418,10 +2455,10 @@ const DATA = [
   // ---- 紐約購物 ----
   {cat:"shopping", name:"Macy's Herald Square（紐約旗艦店）", time:110, addr:"Macy's, 151 W 34th St, New York, NY", lat:40.7504817, lng:-73.9882938,
    tags:["紐約行程","☔完全室內","全球最大百貨之一","木製手扶梯"],
-   desc:"全球最大的百貨公司之一（4.4星、8萬則評價），1902年開業，**保留了百年木製手扶梯**是必看亮點。感恩節大遊行的起點就是這裡，就在 Penn Station 隔壁、走路可到。完全室內，下雨天躲雨兼購物很適合。"},
+   desc:"全球最大的百貨公司之一（4.4星、8萬則評價），1902年開業，<strong>保留了百年木製手扶梯</strong>是必看亮點。感恩節大遊行的起點就是這裡，就在 Penn Station 隔壁、走路可到。完全室內，下雨天躲雨兼購物很適合。"},
   {cat:"shopping", name:"B&H Photo Video（紐約相機店）", time:110, addr:"B&H Photo Video, 420 9th Ave, New York, NY", lat:40.7529444, lng:-73.9963276,
    tags:["紐約行程","☔完全室內","相機電子聖地","週六公休"],
-   desc:"全球攝影玩家朝聖的相機電子專賣店（4.6星），店內天花板的輸送帶系統把商品從地下倉庫送到櫃台，本身就是奇景。價格公道、店員超專業。**注意：猶太人經營，每週六及猶太節日公休**，去之前務必確認。"},
+   desc:"全球攝影玩家朝聖的相機電子專賣店（4.6星），店內天花板的輸送帶系統把商品從地下倉庫送到櫃台，本身就是奇景。價格公道、店員超專業。<strong>注意：猶太人經營，每週六及猶太節日公休</strong>，去之前務必確認。"},
   {cat:"shopping", name:"SoHo 購物區（紐約）", time:110, addr:"SoHo, Broadway, New York, NY", lat:40.7201718, lng:-74.0014426,
    tags:["紐約行程","潮牌精品街區","鑄鐵建築"],
    desc:"紐約最時髦的購物街區，鑄鐵建築和石板路很有味道，從 Nike、Uniqlo 等大眾品牌到獨立設計師小店都有。適合邊逛街邊感受紐約氛圍，附近就是中國城和小義大利，可以順道吃飯。"},
@@ -2430,7 +2467,7 @@ const DATA = [
    desc:"全美最有名的 Outlet（4.5星、3萬則評價），250 多個品牌從精品到運動都有，設計成村莊式街道而非商場，逛起來很舒服。在紐約市北方約1小時，紐約市有直達巴士。注意近年部分品牌折扣沒以前深。"},
   {cat:"shopping", name:"The Mills at Jersey Gardens（免稅Outlet）", time:105, addr:"The Mills at Jersey Gardens, 651 Kapkowski Rd, Elizabeth, NJ", lat:40.6600427, lng:-74.1714766,
    tags:["首選","☔完全室內","紐澤西衣服免稅","近紐約"], top:true,
-   desc:"紐澤西最大的室內 Outlet（4.5星），最大優勢是**紐澤西買衣服鞋子完全免稅**，比在紐約買便宜 8.875%。全室內、不怕天氣，離紐約市只要 30 分鐘，很適合安排在紐約行程的來回路上。"},
+   desc:"紐澤西最大的室內 Outlet（4.5星），最大優勢是<strong>紐澤西買衣服鞋子完全免稅</strong>，比在紐約買便宜 8.875%。全室內、不怕天氣，離紐約市只要 30 分鐘，很適合安排在紐約行程的來回路上。"},
 
   // ---------------- 咖啡店 ----------------
   {cat:"coffee", name:"Cowabunga Coffee Roasters", time:5, addr:"Cowabunga Coffee Roasters, Warrington, PA", lat:40.2328798, lng:-75.1356802,
@@ -2660,7 +2697,7 @@ function extractLatLng(url){
    行程規劃引擎 — 資料層
 ========================================================== */
 // 停留時間（小時）：分類預設 + 個別覆寫
-const STAY_DEFAULT = {knowledge:2.5, animal:3, sports:3.5, outdoor:1.5, hiking:1.5, farm:2,
+const STAY_DEFAULT = {knowledge:2.5, animal:3, sports:3.5, outdoor:1.5, hiking:1.5, farm:2, scenic:0.75,
   food:1, coffee:0.75, town:1.5, shopping:1.5, shooting:1.5, bookstore:0.75, culture:1.25,
   rail:0.3, subway:0.2};
 const STAY_OVERRIDE = {
@@ -2673,6 +2710,8 @@ const STAY_OVERRIDE = {
   "Hershey's Chocolate World":2, "自由女神像與艾利斯島（紐約）":3.5, "Central Park（紐約）":2,
   "Woodbury Common Premium Outlets":3.5, "The Mills at Jersey Gardens（免稅Outlet）":3,
   "Macy's Herald Square（紐約旗艦店）":2, "SoHo 購物區（紐約）":2, "B&H Photo Video（紐約相機店）":1.5,
+  "Longwood Gardens（長木公園）":4, "Grounds For Sculpture（雕塑公園）":2.5,
+  "Bowman's Hill Tower（觀景塔）":0.5,
   "Hellerick's Adventure Farm（探險農場）":3, "Solebury Orchards（自採藍莓）":2,
   "Shady Brook Farm（自採蔬菜＋切花）":2.5,
   "Costco Wholesale（North Wales）":1.5, "Five Below（Warminster）":0.75, "Ulta Beauty（Warrington）":0.75,
@@ -2689,7 +2728,7 @@ const SUPPLY_PLACES = new Set([
 // 分類 → 調性
 const VIBE_OF_CAT = {
   knowledge:"culture", culture:"culture", bookstore:"culture",
-  outdoor:"outdoor", hiking:"outdoor", animal:"outdoor", farm:"outdoor",
+  outdoor:"outdoor", hiking:"outdoor", animal:"outdoor", farm:"outdoor", scenic:"outdoor",
   food:"food", coffee:"food",
   shopping:"shopping", town:"shopping",
   sports:"fun", shooting:"fun",
@@ -2914,7 +2953,7 @@ function cardHtml(item, uid, distKm){
     ? `<span class="dist-pill">📍 離你 ${distKm<1 ? Math.round(distKm*1000)+' 公尺' : distKm.toFixed(1)+' 公里'}</span>`
     : '';
   return `
-  <div class="card" data-uid="${uid}" data-cat="${item.cat}" data-time="${item.time}" data-tier="${tierOf(item.time)}" data-search="${(item.name+" "+(item.desc||"")).toLowerCase()}">
+  <div class="card" data-uid="${uid}" data-cat="${item.cat}" data-time="${item.time}" data-tier="${tierOf(item.time)}" data-search="${(item.name+" "+(item.desc||"")+" "+(item.best||"")).toLowerCase()}">
     <div class="stamp" style="--cat-color:${cat.color}">${cat.emoji}</div>
     <button class="delete-btn" data-del="${uid}" title="刪除">✕</button>
     ${item.isCustom ? `<button class="edit-btn" data-edit="${uid}" title="編輯">✏️</button>` : ''}
@@ -2922,6 +2961,7 @@ function cardHtml(item, uid, distKm){
     <h3><a href="${mapsUrl(item.addr)}" target="_blank" rel="noopener">${item.name}</a></h3>
     <div class="tagrow">${customBadge}${costBadge}${stationBadge}${parkBadge}${tags}</div>
     <p>${item.desc||""}</p>
+    ${item.best ? `<div class="best-time">🕐 ${item.best}</div>` : ''}
     <div class="card-footer">
       <button class="want-btn" data-uid="${uid}">🤍 想去</button>
     </div>
@@ -3712,7 +3752,7 @@ function buildKml(catIds, mapName){
     const marks = items.map(p=>{
       const cost = COST_LABELS[getCostTier(p)];
       const tags = (p.tags||[]).join("／");
-      const desc = `🚗 從二姊家約 ${p.time} 分鐘｜費用：${cost}\n${tags?("標籤："+tags+"\n"):""}\n${p.desc||""}\n\n地址：${p.addr||""}`;
+      const desc = `🚗 從二姊家約 ${p.time} 分鐘｜費用：${cost}\n${tags?("標籤："+tags+"\n"):""}\n${p.desc||""}\n${p.best?("\n🕐 適合時段："+p.best+"\n"):""}\n地址：${p.addr||""}`;
       return `  <Placemark>\n    <name>${xmlEscape(p.name)}</name>\n`
            + `    <description>${xmlEscape(desc)}</description>\n`
            + `    <styleUrl>#${sid}</styleUrl>\n`
@@ -3727,7 +3767,7 @@ function buildKml(catIds, mapName){
 
 // 兩張地圖的分類分配（各 ≤10 層）
 const KML_GROUP_1 = ["outdoor","animal","farm","knowledge","culture","sports","shooting","town","hiking"];
-const KML_GROUP_2 = ["food","coffee","shopping","bookstore","rail","subway"];
+const KML_GROUP_2 = ["food","coffee","shopping","bookstore","scenic","rail","subway"];
 
 function renderExportColors(){
   const box = document.getElementById("exportColorList");

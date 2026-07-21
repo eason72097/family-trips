@@ -1224,6 +1224,30 @@
     </ul>
   </div>
 
+  <div class="prep-section">
+    <div class="prep-section-head"><span class="emoji">🛍️</span><h4>美國購物指南</h4></div>
+    <ul class="prep-list">
+      <li><b>💰 最重要：賓州買衣服鞋子「完全免稅」</b><br>
+        賓州（二姊家所在地）服飾與鞋類<b>不課銷售稅</b>（皮草、正式禮服、運動器材除外）；紐澤西也免稅；<b>紐約則是單品超過 $110 就要課 8.875%</b>。所以<b>衣服鞋子盡量在賓州或紐澤西買</b>，同一件在紐約可能貴快一成。其他商品在賓州約課 6%。</li>
+      <li><b>🏪 大型量販怎麼選</b><br>
+        <b>Target</b>＝比較精緻的平價百貨，設計感好、逛起來舒服，買伴手禮首選<br>
+        <b>Walmart</b>＝最便宜、品項最雜，但陳列較亂<br>
+        <b>Costco</b>＝會員制倉儲（台灣好市多卡可用），大包裝超便宜，維他命保健品必買<br>
+        <b>BJ's</b>＝東岸版倉儲，比 Costco 小但可用折價券</li>
+      <li><b>🏷️ 折扣店（美國特有，台灣少見）</b><br>
+        <b>T.J. Maxx / Marshalls</b>＝名牌過季 2–6 折，每次貨都不同，像尋寶<br>
+        <b>HomeGoods</b>＝同集團的家居版，佈置控會失心瘋<br>
+        <b>Five Below</b>＝幾乎都 $5 以下，小孩天堂、伴手禮好買</li>
+      <li><b>🛒 超市差異</b><br>
+        <b>Wegmans</b>＝美國評價最高的超市，熟食超強<br>
+        <b>Whole Foods</b>＝高端有機，貴（美國人戲稱「整份薪水」）<br>
+        <b>Trader Joe's</b>＝自有品牌零食伴手禮神店，包裝可愛價格便宜<br>
+        <b>Wawa</b>＝賓州人的超商信仰，現做三明治好吃</li>
+      <li><b>🎁 台灣人常買清單</b>：維他命保健品（Costco）、Trader Joe's 零食、名牌過季衣服（T.J. Maxx）、球隊周邊（DICK'S）、美妝（Ulta）、廚房用品（HomeGoods）</li>
+      <li><b>⚠️ 注意</b>：標價都<b>不含稅</b>，結帳才加；退貨政策通常很寬鬆（Costco 尤其），記得留收據；Costco 需要會員卡才能進場。</li>
+    </ul>
+  </div>
+
   <button class="prep-close" id="prepClose">知道了，關閉</button>
 </div>
 
@@ -2342,6 +2366,60 @@ const DATA = [
    tags:["特色賣場","可併Hershey行程"],
    desc:"戶外狩獵／釣魚主題大賣場，本身就像個景點，店內還有水族缸和獵物標本展示，獵刀、戶外裝備、特色紀念品好逛，建議跟 Hershey 排在同一天的路上。"},
 
+  // ---- 大型量販・百貨（二姊家周邊）----
+  {cat:"shopping", name:"Target（Warrington）", time:5, addr:"Target, 401 Easton Rd, Warrington, PA", lat:40.2237688, lng:-75.1364781,
+   tags:["首選","平價百貨","什麼都有","🇺🇸美式代表"], top:true,
+   desc:"美國中產家庭最愛的平價百貨（4.1星），定位是「比 Walmart 精緻、比百貨便宜」——服飾、家居、玩具、美妝、生鮮、藥妝全都有，自有品牌設計感好、CP值高。買伴手禮、零食、小家電最方便的一站式選擇，離二姊家只要5分鐘。營業到晚上11點。"},
+  {cat:"shopping", name:"Walmart Supercenter（Warrington）", time:5, addr:"Walmart Supercenter, 299 Valley Gate Dr, Warrington, PA", lat:40.2202079, lng:-75.1379376,
+   tags:["最便宜","品項最多","早6點開"],
+   desc:"全美最大零售商，定位就是「最便宜」——同樣東西通常比 Target 便宜一點點，品項更雜（連汽車零件、五金都有），但陳列較亂、質感普通。早上6點就開到晚上11點，臨時缺東西最方便。"},
+  {cat:"shopping", name:"Costco Wholesale（North Wales）", time:15, addr:"Costco Wholesale, 740 Upper State Rd, North Wales, PA", lat:40.2367886, lng:-75.2338694,
+   tags:["首選","會員制","大包裝","$1.5熱狗"], top:true,
+   desc:"會員制倉儲賣場（4.5星），**需要會員卡才能進場**（台灣好市多卡可通用）。特色是大包裝、單價超低、品質有保證，維他命、堅果、保健食品是台灣人必買。美食區 $1.5 熱堡套餐、$5 烤雞是傳奇，加油也比外面便宜。注意營業時間較短（晚上8:30打烊）。"},
+  {cat:"shopping", name:"BJ's Wholesale Club（Warrington）", time:6, addr:"BJ's Wholesale Club, 200 Easton Rd, Warrington, PA", lat:40.2182156, lng:-75.1417449,
+   tags:["會員制","東岸連鎖","可用折價券"],
+   desc:"東岸的會員制倉儲賣場，規模比 Costco 小、商品包裝也小一點，但**接受廠商折價券**（Costco 不接受），生鮮選擇較多。離二姊家更近，但如果只去一家，多數人還是選 Costco。"},
+
+  // ---- 折扣・特色小店（二姊家周邊）----
+  {cat:"shopping", name:"T.J. Maxx（Warrington）", time:5, addr:"T.J. Maxx, 1035 Main St, Warrington, PA", lat:40.2281234, lng:-75.1323511,
+   tags:["品牌折扣","尋寶感","衣服免稅"],
+   desc:"美國最紅的「品牌過季折扣店」（4.3星），把名牌的過季／庫存貨用 2–6 折賣。特色是**每次去的東西都不一樣**，像尋寶一樣，運氣好能挖到大牌便宜貨。賓州買衣服鞋子完全免稅，很划算。"},
+  {cat:"shopping", name:"HomeGoods（Montgomeryville）", time:15, addr:"HomeGoods, 34 Airport Square Rd, Montgomeryville, PA", lat:40.238146, lng:-75.239037,
+   tags:["家飾折扣","跟TJ Maxx同集團","4.5星"],
+   desc:"T.J. Maxx 的家居版（同集團，4.5星），專賣居家佈置——餐具、寢具、香氛、擺飾、廚具，都是品牌貨打折。喜歡佈置的人會逛到失心瘋，有評論說「這才是 Target 該有的樣子」。"},
+  {cat:"shopping", name:"Five Below（Warminster）", time:10, addr:"Five Below, 978 W Street Rd, Warminster, PA", lat:40.2108004, lng:-75.1105325,
+   tags:["幾乎都$5以下","小孩最愛","伴手禮好買"],
+   desc:"主打「幾乎所有東西都在 $5 以下」的青少年雜貨店（4.4星），玩具、文具、耳機、零食、小飾品應有盡有。帶小孩去會超開心，也很適合買一堆便宜伴手禮回台灣。（近年部分商品漲到 $5 以上，但整體仍便宜。）"},
+  {cat:"shopping", name:"Ulta Beauty（Warrington）", time:6, addr:"Ulta Beauty, 1561 Main St, Warrington, PA", lat:40.2320351, lng:-75.1354304,
+   tags:["美妝專門店","開架＋專櫃都有"],
+   desc:"美國最大的美妝連鎖，同時賣開架品牌和專櫃品牌（這是它跟 Sephora 最大的差別——Sephora 只賣中高價位）。美國藥妝、保養品比台灣便宜不少，是女性採購的好去處。"},
+  {cat:"shopping", name:"Best Buy（North Wales）", time:15, addr:"Best Buy, 801 Bethlehem Pike, North Wales, PA", lat:40.237643, lng:-75.238528,
+   tags:["3C電子","可試用","Geek Squad"],
+   desc:"美國最大的 3C 連鎖賣場，電腦、相機、耳機、家電都能現場試用比較。美國電子產品含稅後有時仍比台灣便宜（尤其 Apple 產品和遊戲主機），但記得確認電壓與保固範圍。"},
+  {cat:"shopping", name:"DICK'S Sporting Goods（North Wales）", time:15, addr:"DICK'S Sporting Goods, 1251 Knapp Rd, North Wales, PA", lat:40.2289518, lng:-75.2394352,
+   tags:["運動用品","MLB周邊","鞋款齊全"],
+   desc:"美國最大運動用品連鎖，球鞋、球衣、露營釣魚裝備都很齊。想買 MLB 球隊周邊（帽子、球衣）或 Nike/Adidas 美國限定款可以來逛，賓州運動鞋也免稅。"},
+  {cat:"shopping", name:"Whole Foods Market（Jenkintown）", time:30, addr:"Whole Foods Market, 1575 The Fairway, Jenkintown, PA", lat:40.1078294, lng:-75.1156337,
+   tags:["高端有機超市","熟食好吃","價格較高"],
+   desc:"Amazon 旗下的高端有機超市，定位比 Wegmans 更精緻也更貴（美國人戲稱 Whole Paycheck＝整份薪水）。熟食吧和沙拉吧品質很好，想買有機食材或高級零食伴手禮可以來。"},
+
+  // ---- 紐約購物 ----
+  {cat:"shopping", name:"Macy's Herald Square（紐約旗艦店）", time:110, addr:"Macy's, 151 W 34th St, New York, NY", lat:40.7504817, lng:-73.9882938,
+   tags:["紐約行程","☔完全室內","全球最大百貨之一","木製手扶梯"],
+   desc:"全球最大的百貨公司之一（4.4星、8萬則評價），1902年開業，**保留了百年木製手扶梯**是必看亮點。感恩節大遊行的起點就是這裡，就在 Penn Station 隔壁、走路可到。完全室內，下雨天躲雨兼購物很適合。"},
+  {cat:"shopping", name:"B&H Photo Video（紐約相機店）", time:110, addr:"B&H Photo Video, 420 9th Ave, New York, NY", lat:40.7529444, lng:-73.9963276,
+   tags:["紐約行程","☔完全室內","相機電子聖地","週六公休"],
+   desc:"全球攝影玩家朝聖的相機電子專賣店（4.6星），店內天花板的輸送帶系統把商品從地下倉庫送到櫃台，本身就是奇景。價格公道、店員超專業。**注意：猶太人經營，每週六及猶太節日公休**，去之前務必確認。"},
+  {cat:"shopping", name:"SoHo 購物區（紐約）", time:110, addr:"SoHo, Broadway, New York, NY", lat:40.7201718, lng:-74.0014426,
+   tags:["紐約行程","潮牌精品街區","鑄鐵建築"],
+   desc:"紐約最時髦的購物街區，鑄鐵建築和石板路很有味道，從 Nike、Uniqlo 等大眾品牌到獨立設計師小店都有。適合邊逛街邊感受紐約氛圍，附近就是中國城和小義大利，可以順道吃飯。"},
+  {cat:"shopping", name:"Woodbury Common Premium Outlets", time:140, addr:"Woodbury Common Premium Outlets, 498 Red Apple Ct, Central Valley, NY", lat:41.3177184, lng:-74.1257385,
+   tags:["最有名Outlet","250+品牌","村莊式設計"],
+   desc:"全美最有名的 Outlet（4.5星、3萬則評價），250 多個品牌從精品到運動都有，設計成村莊式街道而非商場，逛起來很舒服。在紐約市北方約1小時，紐約市有直達巴士。注意近年部分品牌折扣沒以前深。"},
+  {cat:"shopping", name:"The Mills at Jersey Gardens（免稅Outlet）", time:105, addr:"The Mills at Jersey Gardens, 651 Kapkowski Rd, Elizabeth, NJ", lat:40.6600427, lng:-74.1714766,
+   tags:["首選","☔完全室內","紐澤西衣服免稅","近紐約"], top:true,
+   desc:"紐澤西最大的室內 Outlet（4.5星），最大優勢是**紐澤西買衣服鞋子完全免稅**，比在紐約買便宜 8.875%。全室內、不怕天氣，離紐約市只要 30 分鐘，很適合安排在紐約行程的來回路上。"},
+
   // ---------------- 咖啡店 ----------------
   {cat:"coffee", name:"Cowabunga Coffee Roasters", time:5, addr:"Cowabunga Coffee Roasters, Warrington, PA", lat:40.2328798, lng:-75.1356802,
    tags:["首選","最近","自烘阿拉比卡豆"], top:true,
@@ -2581,12 +2659,17 @@ const STAY_OVERRIDE = {
   "Please Touch Museum":2.5, "Reading Terminal Market":1.5, "Peddler's Village（Lahaska）":2,
   "King of Prussia Mall":2.5, "Philadelphia Premium Outlets":2.5, "Bucks County River Country（德拉瓦河漂浮）":3.5,
   "Hershey's Chocolate World":2, "自由女神像與艾利斯島（紐約）":3.5, "Central Park（紐約）":2,
+  "Woodbury Common Premium Outlets":3.5, "The Mills at Jersey Gardens（免稅Outlet）":3,
+  "Macy's Herald Square（紐約旗艦店）":2, "SoHo 購物區（紐約）":2, "B&H Photo Video（紐約相機店）":1.5,
+  "Costco Wholesale（North Wales）":1.5, "Five Below（Warminster）":0.75, "Ulta Beauty（Warrington）":0.75,
 };
 function stayOf(item){ return STAY_OVERRIDE[item.name] ?? STAY_DEFAULT[item.cat] ?? 1.5; }
 
 // 純補給型地點（超市/超商/保健品）— 不排進景點行程，只當補貨參考
 const SUPPLY_PLACES = new Set([
   "Wegmans Warrington","Wawa（在地超商）","Trader Joe's North Wales","GNC（保健食品）",
+  "Walmart Supercenter（Warrington）","BJ's Wholesale Club（Warrington）",
+  "Whole Foods Market（Jenkintown）",
 ]);
 
 // 分類 → 調性

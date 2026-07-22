@@ -778,6 +778,8 @@
   .tag.park-transit{background:#D6E4F0;color:#1F4E79;}
   .tag.park-busy{background:#F5EAD0;color:#7A5A1E;}
   .tag.near-station{background:#D5EDEC;color:#0A5A59;font-weight:700;}
+  .tag.safety-watch{background:#F7E3D4;color:#8A4A1E;font-weight:700;}
+  .tag.safety-night{background:#E2E0EC;color:#453C6B;font-weight:700;}
   .card p{font-size:13.3px;line-height:1.7;color:var(--ink-soft);margin:0;}
   .card .best-time{font-size:12.3px;line-height:1.65;margin:9px 0 0;padding:7px 9px;
     background:rgba(123,94,167,.09);border-left:3px solid #7B5EA7;border-radius:0 6px 6px 0;color:var(--ink);}
@@ -1247,6 +1249,25 @@
         <b>Wawa</b>＝賓州人的超商信仰，現做三明治好吃</li>
       <li><b>🎁 台灣人常買清單</b>：維他命保健品（Costco）、Trader Joe's 零食、名牌過季衣服（T.J. Maxx）、球隊周邊（DICK'S）、美妝（Ulta）、廚房用品（HomeGoods）</li>
       <li><b>⚠️ 注意</b>：標價都<b>不含稅</b>，結帳才加；退貨政策通常很寬鬆（Costco 尤其），記得留收據；Costco 需要會員卡才能進場。</li>
+    </ul>
+  </div>
+
+  <div class="prep-section">
+    <div class="prep-section-head"><span class="emoji">🛡️</span><h4>紐約治安：實際狀況與對策</h4></div>
+    <ul class="prep-list">
+      <li><b>先講結論：比你想的安全，但要防扒手</b><br>
+        依 2026 年公開資料，紐約全市重大犯罪年減約 6%，前五個月的謀殺案是有紀錄以來最低。<b>觀光客實際遇到的幾乎都是扒竊與詐騙，不是暴力犯罪</b>。我們排的景點（洛克斐勒、中央車站、Hudson Yards、金融區、布魯克林大橋、DUMBO、High Line）都在警力密集的區域。</li>
+      <li><b>👜 防扒手三個動作</b><br>
+        ① 用<b>斜背包並背在身前</b>，拉鍊朝內；② <b>手機錢包絕不放後口袋</b>；③ 在時代廣場、地鐵尖峰、中國城、Macy's 這種人擠人的地方特別留意——有人「不小心撞你」或突然問路時，先護住包包。</li>
+      <li><b>⚠️ 三種常見詐騙</b><br>
+        ① <b>假自由女神船票</b>：史泰登島渡輪是<b>完全免費、不用買票</b>，碼頭有人推銷船票一律是詐騙；② <b>假導遊</b>：布魯克林大橋、時代廣場常有人自稱「持照導遊」搭訕，要用就用官方平台預訂；③ <b>玩偶／CD 索費</b>：時代廣場的卡通人偶合照後會強要小費，光頭黨會塞 CD 給你再索錢——<b>不要接、不要停下、直接走</b>。</li>
+      <li><b>🚇 搭地鐵</b><br>
+        地鐵犯罪率接近 16 年新低，白天很安全。晚上的原則：<b>不要待在空無一人的月台或車廂</b>，往人多的車廂走；車門開關的瞬間是搶手機的高峰，這時把手機收好。</li>
+      <li><b>🌙 天黑後</b><br>
+        金融區（世貿中心一帶）晚上安靜但安全，只是店家關門、街上人少；羅斯福島和 Little Island 入夜後較冷清。原則是<b>晚上盡量走大街、人多的路線，不要為了抄近路走進暗巷</b>。</li>
+      <li><b>❌ 真正該避開的區域</b>：南布朗克斯（Hunts Point、Mott Haven）、布魯克林的 Brownsville——<b>這些都不在任何觀光路線上</b>，你們照著行程走不會經過。</li>
+      <li><b>🆘 遇到狀況</b>：緊急打 <b>911</b>，非緊急打 <b>311</b>。覺得不對勁就走進飯店大廳、商店、餐廳或有站務員的車站——這些地方隨時可以進去。</li>
+      <li><b>💡 帶小孩的家庭</b>：人多處先講好走散時的集合點；可以先拍一張今天孩子穿什麼的照片，萬一走散能立刻給警察看。</li>
     </ul>
   </div>
 
@@ -2985,6 +3006,31 @@ function nearStationHint(item){
   return {cls:"near-station", txt:`🚶${icon}走路${mins}分`, station:best.name};
 }
 
+/* 治安提醒：只標「有具體注意事項」的地點，其餘不標＝正常安全
+   依據 2026 年公開治安資料：紐約重大犯罪處於歷史低點，
+   觀光客的實際風險集中在人潮中的扒竊與詐騙，而非暴力犯罪。 */
+const SAFETY_PICKPOCKET = [
+  "Times Sq","Macy's Herald Square","Canal St","New York Penn Station",
+  "布魯克林大橋步道","DUMBO","SoHo 購物區","Top of the Rock",
+  "自由女神","Chelsea Market","Nom Wah",
+];
+const SAFETY_SCAM = [
+  "史泰登島渡輪","布魯克林大橋步道","Times Sq",
+];
+const SAFETY_QUIET_NIGHT = [
+  "One World Observatory","Fulton St","Little Island","羅斯福島空中纜車",
+];
+function safetyHint(item){
+  const n = item.name || "";
+  const hit = (arr)=> arr.some(k=>n.includes(k));
+  if(hit(SAFETY_SCAM) && hit(SAFETY_PICKPOCKET))
+    return {cls:"safety-watch", txt:"👜防扒手・防詐騙"};
+  if(hit(SAFETY_SCAM))       return {cls:"safety-watch", txt:"⚠️注意詐騙"};
+  if(hit(SAFETY_PICKPOCKET)) return {cls:"safety-watch", txt:"👜人多防扒手"};
+  if(hit(SAFETY_QUIET_NIGHT))return {cls:"safety-night", txt:"🌙入夜較冷清"};
+  return null;
+}
+
 function parkingHint(item){
   // 依區域自動判斷停車難易（只標需注意的，好停的不標）
   if(item.lat==null || item.lng==null) return null;
@@ -3012,6 +3058,8 @@ function cardHtml(item, uid, distKm){
   const costBadge = `<span class="tag cost-tag cost-${costTier}">${COST_LABELS[costTier]}</span>`;
   const ph = parkingHint(item);
   const parkBadge = ph ? `<span class="tag ${ph.cls}">${ph.txt}</span>` : '';
+  const sf = safetyHint(item);
+  const safetyBadge = sf ? `<span class="tag ${sf.cls}">${sf.txt}</span>` : '';
   const ns = nearStationHint(item);
   const stationBadge = ns ? `<span class="tag ${ns.cls}" title="${ns.station}">${ns.txt}</span>` : '';
   const distPill = (distKm!=null)
@@ -3024,7 +3072,7 @@ function cardHtml(item, uid, distKm){
     ${item.isCustom ? `<button class="edit-btn" data-edit="${uid}" title="編輯">✏️</button>` : ''}
     <div class="card-top"><span class="time-pill">🚗 ${item.time} 分</span>${distPill}</div>
     <h3><a href="${mapsUrl(item.addr)}" target="_blank" rel="noopener">${item.name}</a></h3>
-    <div class="tagrow">${customBadge}${costBadge}${stationBadge}${parkBadge}${tags}</div>
+    <div class="tagrow">${customBadge}${costBadge}${stationBadge}${parkBadge}${safetyBadge}${tags}</div>
     <p>${item.desc||""}</p>
     ${item.best ? `<div class="best-time">🕐 ${item.best}</div>` : ''}
     <div class="card-footer">

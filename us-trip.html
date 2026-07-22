@@ -2034,6 +2034,7 @@ const BASE_CATS = [
   {id:"hiking",    emoji:"🥾", label:"步道健行", color:"#556B2F"},
   {id:"rail",      emoji:"🚆", label:"火車站",   color:"#0E7C7B"},
   {id:"subway",    emoji:"🚇", label:"地鐵站",   color:"#5C4B99"},
+  {id:"military",  emoji:"✈️", label:"飛機軍艦", color:"#4E5A65"},
 ];
 let CATS = [...BASE_CATS];
 let customCats = {}; // uid → {id, emoji, label, color}
@@ -2186,9 +2187,28 @@ const DATA = [
   {cat:"knowledge", name:"Liberty Science Center", time:80, addr:"Liberty Science Center, Jersey City, NJ", lat:40.7082308, lng:-74.0546336,
    tags:["紐約途中"],
    desc:"紐澤西大型科學中心，IMAX 巨型銀幕、互動科學展區豐富，可作為前往紐約途中的中停點。"},
-  {cat:"knowledge", name:"Intrepid Sea-Air-Space Museum", time:105, addr:"Intrepid Museum, Pier 86, New York, NY", lat:40.7648801, lng:-74.0008306,
-   tags:["紐約行程","退役航艦"],
-   desc:"停泊在紐約哈德遜河畔的退役航空母艦改建博物館，可登艦參觀戰機與太空梭，喜歡軍事題材的家庭別錯過。"},
+  // ---------------- 飛機軍艦 ----------------
+  {cat:"military", name:"Wings of Freedom 航空博物館（Horsham）", time:13, addr:"Harold F. Pitcairn Wings of Freedom Aviation Museum, 1155 Easton Rd, Horsham, PA", lat:40.2019966, lng:-75.1395984,
+   tags:["首選","離二姊家最近","4.8星","飛機可以摸"], top:true,
+   desc:"離二姊家只要13分鐘的航空博物館（4.8星），前身是威洛格羅夫海軍航空站。館藏22架軍機橫跨二戰到阿富汗戰爭，最珍貴的是全球僅存4架的 F2Y Sea Dart「海鏢」——史上唯一的超音速水上飛機。特色是**飛機可以近距離觸摸**，志工多是退役軍人會親自講飛行故事，小孩還能坐進直升機駕駛艙。注意：週一二公休，多數飛機在戶外展示，避開大太陽時段去。"},
+  {cat:"military", name:"戰艦紐澤西號 Battleship New Jersey", time:50, addr:"Battleship New Jersey Museum & Memorial, 100 Clinton St, Camden, NJ", lat:39.9395225, lng:-75.1328185,
+   tags:["首選","4.8星","☔多為室內","美國最多勳章戰艦","可爬進砲塔"], top:true,
+   desc:"美國史上獲得最多勳章的戰艦（4.8星、4300則評價），1943年下水，服役橫跨二戰、韓戰、越戰到冷戰。停泊在德拉瓦河對岸的 Camden，**幾乎整艘船都開放**——可以坐上海爾賽上將的指揮椅、躺在水兵床鋪、爬進16吋主砲塔看砲彈怎麼裝填。甲板上能拍到費城天際線。建議預留3小時以上，會爬很多樓梯、要低頭鑽艙門，不能背背包（有置物櫃）。"},
+  {cat:"military", name:"巡洋艦 Olympia＋潛艦 Becuna（費城）", time:48, addr:"Independence Seaport Museum, 211 S Christopher Columbus Blvd, Philadelphia, PA", lat:39.9436254, lng:-75.1413524,
+   tags:["4.7星","☔多為室內","一次看兩艘","潛艦體驗"],
+   desc:"費城 Penn's Landing 碼頭邊，一票可看兩艘軍艦：**Olympia 是現存最古老的鋼製軍艦**（1892年，美西戰爭旗艦），**Becuna 是二戰潛艦**，鑽進狹窄艙房體驗潛艦兵的生活很震撼。導覽志工講解生動。巡洋艦約1小時、潛艦約45分鐘，也可順逛旁邊的獨立海港博物館。注意停車較貴（約$25）。"},
+  {cat:"military", name:"美國直升機博物館（West Chester）", time:55, addr:"American Helicopter Museum, 1220 American Blvd, West Chester, PA", lat:39.9918628, lng:-75.5788669,
+   tags:["4.6星","☔完全室內","可進直升機","旁邊機場看飛機"],
+   desc:"全美少見的直升機專門博物館（4.6星），展示直升機的演進史，**多架可以走進去坐駕駛座**，有互動展示和幼兒遊戲區，帶小孩很適合。後方有觀景區可看隔壁小機場的飛機起降。注意：週一到週三公休，閉館前1小時停止入場。"},
+  {cat:"military", name:"空中機動司令部博物館（免費・Dover）", time:100, addr:"Air Mobility Command Museum, 1301 Heritage Rd, Dover AFB, DE", lat:39.1190036, lng:-75.4568074,
+   tags:["4.9星最高分","完全免費","☔多為室內","B-17轟炸機","A-10疣豬"],
+   desc:"**全站評分最高的軍事博物館（4.9星、2300則評價）而且完全免費**，位於德拉瓦州 Dover 空軍基地。專門收藏軍用運輸機與空中加油機，包括二戰 B-17 轟炸機、A-10 疣豬攻擊機，戶外展示機保存狀況極佳、可以走到機身下方感受尺寸。志工多是退役軍人。**每月第三個週六是「駕駛艙日」，多數飛機開放進入駕駛艙**。週一到三公休。車程較遠但值得專程。"},
+  {cat:"military", name:"中大西洋航空博物館（Reading）", time:70, addr:"Mid Atlantic Air Museum, 110 Air Museum Dr, Reading, PA", lat:40.3827241, lng:-75.9666126,
+   tags:["4.8星","☔完全室內","二戰復原機","可併Hawk Mountain"],
+   desc:"賓州隱藏的航空寶庫（4.8星），專注於二戰軍機的修復與保存，機庫裡滿是修復中和已完成的老飛機，志工的熱情是最大特色。每年六月的「二戰週末」有大型重演活動。位置在 Reading，可與 Hawk Mountain 排同一天。注意：週五、週日公休。"},
+  {cat:"military", name:"無畏號航艦博物館 Intrepid（紐約）", time:105, addr:"Intrepid Museum, Pier 86, New York, NY", lat:40.7648801, lng:-74.0008306,
+   tags:["紐約行程","4.7星","航艦＋太空梭＋協和號","☔部分室內"],
+   desc:"紐約哈德遜河畔的退役航空母艦博物館（4.7星、4.7萬則評價），一個地方看到四種傳奇：**無畏號航空母艦**（二戰服役，甲板上停滿戰機）、**企業號太空梭**、**協和號超音速客機**、**成長者號潛艦**。可以走進航艦內部狹窄通道、機艙、輪機室。有評論說帶8歲小孩來覺得「這是最酷的地方」，建議預留3–5小時。"},
   {cat:"knowledge", name:"大都會藝術博物館 The Met（紐約）", time:110, addr:"The Metropolitan Museum of Art, 1000 5th Ave, New York, NY", lat:40.7794366, lng:-73.963244,
    tags:["首選","紐約行程","☔雨天首選","世界級博物館"], top:true,
    desc:"全球最偉大的博物館之一（4.8星、近10萬則評價），從古埃及神廟、印象派名畫到中世紀盔甲應有盡有，一整天都逛不完，下雨天躲進來待一整個下午最舒服。建議先線上買票、鎖定想看的展區。週三公休。"},
@@ -2700,7 +2720,7 @@ function extractLatLng(url){
 // 停留時間（小時）：分類預設 + 個別覆寫
 const STAY_DEFAULT = {knowledge:2.5, animal:3, sports:3.5, outdoor:1.5, hiking:1.5, farm:2, scenic:0.75,
   food:1, coffee:0.75, town:1.5, shopping:1.5, shooting:1.5, bookstore:0.75, culture:1.25,
-  rail:0.3, subway:0.2};
+  rail:0.3, subway:0.2, military:2.5};
 const STAY_OVERRIDE = {
   "Six Flags Wild Safari（野生動物開車探險）":4,
   "Citizens Bank Park（費城人 MLB）":3.5, "Yankee Stadium（紐約洋基）":3.5, "Citi Field（紐約大都會）":3.5,
@@ -2716,6 +2736,9 @@ const STAY_OVERRIDE = {
   "Hellerick's Adventure Farm（探險農場）":3, "Solebury Orchards（自採藍莓）":2,
   "Shady Brook Farm（自採蔬菜＋切花）":2.5,
   "Costco Wholesale（North Wales）":1.5, "Five Below（Warminster）":0.75, "Ulta Beauty（Warrington）":0.75,
+  "戰艦紐澤西號 Battleship New Jersey":3.5, "無畏號航艦博物館 Intrepid（紐約）":3.5,
+  "巡洋艦 Olympia＋潛艦 Becuna（費城）":2, "空中機動司令部博物館（免費・Dover）":2.5,
+  "Wings of Freedom 航空博物館（Horsham）":1.5, "美國直升機博物館（West Chester）":1.5,
 };
 function stayOf(item){ return STAY_OVERRIDE[item.name] ?? STAY_DEFAULT[item.cat] ?? 1.5; }
 
@@ -2728,7 +2751,7 @@ const SUPPLY_PLACES = new Set([
 
 // 分類 → 調性
 const VIBE_OF_CAT = {
-  knowledge:"culture", culture:"culture", bookstore:"culture",
+  knowledge:"culture", culture:"culture", bookstore:"culture", military:"culture",
   outdoor:"outdoor", hiking:"outdoor", animal:"outdoor", farm:"outdoor", scenic:"outdoor",
   food:"food", coffee:"food",
   shopping:"shopping", town:"shopping",
@@ -2869,7 +2892,7 @@ function planDay(regionId, pace, vibeFilter){
 const COST_LABELS = ["免費","$","$$","$$$"];
 const CATEGORY_COST_DEFAULT = {
   outdoor:0, animal:2, knowledge:2, culture:1, sports:3, shooting:3,
-  town:0, food:1, shopping:1, coffee:1, bookstore:1, hiking:0, rail:1, subway:1,
+  town:0, food:1, shopping:1, coffee:1, bookstore:1, hiking:0, rail:1, subway:1, military:2,
 };
 const COST_OVERRIDE = {
   "Bucks County River Country（德拉瓦河漂浮）":1,
@@ -2894,6 +2917,7 @@ const COST_OVERRIDE = {
   "9/11 Memorial ＆ Museum（紐約）":2,
   "Liberty Science Center":2,
   "Statue of Liberty":2,
+  "空中機動司令部博物館（免費・Dover）":0,
   "Hawk Mountain Sanctuary":1,
 };
 function getCostTier(item){

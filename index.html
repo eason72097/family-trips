@@ -226,6 +226,10 @@
   .leaflet-popup-content a{color:#b5651d;font-weight:700;text-decoration:none}
   #filterBody.collapsed{display:none}
   #mcatFilter,#mregFilter{margin-top:6px}
+  .b-cost0{background:#d9efe0;color:#1f7a4d}
+  .b-cost1{background:#eef1d9;color:#6b7a1c}
+  .b-cost2{background:#fbe8cf;color:#a15c1e}
+  .b-cost3{background:#f5d9d2;color:#a5361e}
 </style>
 </head>
 <body>
@@ -249,6 +253,7 @@
       <button class="chip" id="viewMap">🗺️ 地圖</button>
     </div>
     <button id="filterToggle" class="chip">🎛️ 篩選 ▾</button>
+    <button id="nearbyBtn" class="chip">📍 找附近</button>
     <div class="search-count" id="mapCount"></div>
   </div>
   <div class="ctl-row">
@@ -284,7 +289,20 @@
     <div class="filter-label">大類別</div>
     <div class="chips" id="groupFilter"></div>
     <div class="chips" id="mcatFilter" style="display:none"></div>
-    <div class="chips" id="mregFilter" style="display:none"></div>
+  </div>
+  <div class="ctl-row">
+    <div class="filter-label">區域</div>
+    <div class="chips" id="mregFilter"></div>
+  </div>
+  <div class="ctl-row">
+    <div class="filter-label">費用（分類預設，約略）</div>
+    <div class="chips" id="costFilter">
+      <button class="chip active" data-cost="all">全部</button>
+      <button class="chip" data-cost="0">🆓免費</button>
+      <button class="chip" data-cost="1">💲$</button>
+      <button class="chip" data-cost="2">💲$$</button>
+      <button class="chip" data-cost="3">💲$$$</button>
+    </div>
   </div>
   <div class="ctl-row">
     <div class="filter-label">快速跳到大類（清單用）</div>
@@ -996,8 +1014,27 @@ function normName(n){return n.replace(/[（(].*$/,"").replace(/[・·]/g,"").tri
 const xref={};      // name -> [{secId}]
 const secMeta={};   // secId -> {title, groupId, emoji}
 
+function regionOf(a){
+  a=a||"";
+  if(/(宜蘭|羅東|冬山|頭城|礁溪|三星|蘇澳|五結|壯圍|員山|大同鄉|花蓮|壽豐|瑞穗|玉里|鳳林|光復|新城|臺東|台東|池上|關山|卑南|鹿野|成功|綠島|蘭嶼|太麻里|海端)/.test(a)) return "east";
+  if(/(雲林|斗六|虎尾|西螺|北港|古坑|嘉義|民雄|朴子|大林|臺南|台南|新化|鹽水|菁寮|後壁|玉井|左鎮|山上|永康|仁德|安平|善化|高雄|旗山|美濃|岡山|左營|前鎮|鼓山|苓雅|鳳山|大寮|甲仙|屏東|內埔|竹田|東港|恆春|車城|獅子|枋寮|萬丹|琉球|澎湖|馬公|金門|連江|南竿)/.test(a)) return "south";
+  if(/(臺中|台中|彰化|南投|鹿港|員林|田中|清水|梧棲|沙鹿|后里|豐原|東勢|和平|谷關|武陵|新社|大里|太平區|霧峰|北屯|西屯|南屯|潭子|烏日|龍井|大甲|埔里|魚池|日月潭|清境|仁愛|信義鄉|竹山|集集|名間|草屯|大村|溪湖|線西|二林|花壇|秀水|福興)/.test(a)) return "central";
+  if(/(臺北|台北|新北|基隆|淡水|北投|士林|內湖|南港|文山|木柵|松山|大安|中山|大同|萬華|中正|板橋|三重|新莊|中和|永和|三峽|鶯歌|土城|樹林|新店|烏來|瑞芳|九份|金瓜石|八里|林口|汐止|萬里|金山|石碇|坪林|貢寮|雙溪|五股)/.test(a)) return "north";
+  if(/(桃園|中壢|平鎮|八德|楊梅|富岡|龍潭|大溪|復興|龜山|蘆竹|新竹|竹北|竹東|竹南|香山|寶山|新豐|芎林|北埔|峨眉|關西|新埔|湖口|尖石|五峰|苗栗|三義|南庄|獅潭|卓蘭|大湖|通霄|苑裡|後龍|造橋|三灣|頭屋|公館|銅鑼|泰安)/.test(a)) return "tcm";
+  return "";
+}
 const HOME={lat:24.823,lng:121.011,name:"竹北家（爵士悅）"};
 const MAP_POINTS=[];
+const COST={
+ park:0,water:0,coast:0,night:0,street:0,hike:0,"baiyue-small":0,"baiyue-big":0,library:0,
+ "town-n":0,"town-c":0,"town-s":0,"town-e":0,"book-tcm":0,"book-north":0,"book-central":0,"book-south":0,"book-east":0,
+ "museum-tcm":1,"museum-north":1,"museum-central":1,"museum-south":1,"museum-east":1,factory:1,
+ "coffee-tcm":1,"coffee-spec":1,"coffee-origin":1,"coffee-view":1,"coffee-old":1,"coffee-spot":1,
+ "food-salty-tcm":1,"food-salty-tw":1,"food-sweet-tcm":1,"food-sweet-tw":1,"food-other":1,
+ "forest-n":1,"forest-c":1,"forest-s":1,"forest-e":1,flower:1,sky:1,rail:1,
+ animal:2,pick:2,eco:2,forest:2, waterpark:3,indoor:3
+};
+const COSTLABEL={0:["🆓免費","b-cost0"],1:["💲$","b-cost1"],2:["💲$$","b-cost2"],3:["💲$$$","b-cost3"]};
 
 function renderCard(it,curSecId,idx){
   const placeId=curSecId+"-"+idx;
@@ -1027,9 +1064,12 @@ function renderCard(it,curSecId,idx){
   const CATKEYS=[["自然科學","自然科學"],["歷史人文","歷史人文"],["藝術","藝術"],["產業主題","產業主題"],["原民客家","原民客家"],["親子","親子"],["書店咖啡","書店咖啡"],["二手","二手書"]];
   const cats=[];
   (it.tags||[]).forEach(t=>{const s=(typeof t==="string")?t:(t.t||"");CATKEYS.forEach(([sub,key])=>{if(s.indexOf(sub)!==-1&&cats.indexOf(key)===-1)cats.push(key);});});
-  if(it.lat&&it.lng){MAP_POINTS.push({pid:placeId,name:it.n,lat:+it.lat,lng:+it.lng,cats:cats.slice(),group:(secMeta[curSecId]||{}).groupId||'',note:it.note||"",a:it.a||""});}
   const hay=(it.n+" "+(it.a||"")+" "+it.note+" "+tagText).toLowerCase();
-  return `<div class="card ${it.star?'star':''}" data-pid="${placeId}" data-dist="${fd}" data-cats="${cats.join(' ')}" data-group="${(secMeta[curSecId]||{}).groupId||''}" data-sec="${curSecId}" data-hay="${hay.replace(/"/g,'')}" data-name="${it.n}">
+  const _reg=(curSecId.indexOf("museum-")===0||curSecId.indexOf("book-")===0)?curSecId.split("-")[1]:regionOf(it.a);
+  const _cost=(COST[curSecId]!==undefined)?COST[curSecId]:1;
+  const _cl=COSTLABEL[_cost]; if(_cl) badges+=badge(_cl[0],_cl[1]);
+  if(it.lat&&it.lng){MAP_POINTS.push({pid:placeId,name:it.n,lat:+it.lat,lng:+it.lng,cats:cats.slice(),group:(secMeta[curSecId]||{}).groupId||'',cost:_cost,note:it.note||"",a:it.a||""});}
+  return `<div class="card ${it.star?'star':''}" data-pid="${placeId}" data-dist="${fd}" data-cats="${cats.join(' ')}" data-group="${(secMeta[curSecId]||{}).groupId||''}" data-sec="${curSecId}" data-region="${_reg}" data-cost="${_cost}" data-hay="${hay.replace(/"/g,'')}" data-name="${it.n}">
     <div class="card-top"><div>
       <a class="name map-link" href="${mapsUrl}" target="_blank" rel="noopener">${it.n}${star} <span class="pin">📍</span></a>
       <div class="area">${it.a}</div>
@@ -1216,7 +1256,8 @@ const searchInput=document.getElementById("search");
 const searchClear=document.getElementById("searchClear");
 const searchCount=document.getElementById("searchCount");
 let curDist="all";
-let curGroup="all", curMcat="all", curMreg="all", curKid=false;
+let curGroup="all", curMcat="all", curMreg="all", curKid=false, curCost="all";
+const costFilter=document.getElementById("costFilter");
 const groupFilter=document.getElementById("groupFilter");
 const mcatFilter=document.getElementById("mcatFilter");
 const mregFilter=document.getElementById("mregFilter");
@@ -1244,13 +1285,13 @@ function applyFilters(){
     const g=c.dataset.group||"";
     const okGroup=(curGroup==="all"||g===curGroup);
     const okMcat=((curGroup!=="g-museum"&&curGroup!=="g-book")||curMcat==="all"||cardCats.indexOf(curMcat)!==-1);
-    const prefix=(curGroup==="g-museum")?"museum-":(curGroup==="g-book")?"book-":"";
-    const okMreg=(!prefix||curMreg==="all"||c.dataset.sec===(prefix+curMreg));
+    const okMreg=(curMreg==="all"||c.dataset.region===curMreg);
+    const okCost=(curCost==="all"||c.dataset.cost===curCost);
     const okKid=(!curKid||cardCats.indexOf("親子")!==-1);
     const okQ=(!q || c.dataset.hay.indexOf(q)!==-1);
     const st=wantState[c.dataset.pid]||{};
     const okWant=(!onlyWantActive || !!st[currentWho]);
-    const show=okDist&&okGroup&&okMcat&&okMreg&&okKid&&okQ&&okWant;
+    const show=okDist&&okGroup&&okMcat&&okMreg&&okCost&&okKid&&okQ&&okWant;
     c.style.display=show?"":"none";
     if(show)shown++;
     // 高亮店名中的關鍵字
@@ -1293,8 +1334,7 @@ groupFilter.addEventListener("click",e=>{
   const isMus=(curGroup==="g-museum"), isBook=(curGroup==="g-book");
   if(isMus)buildMcat(MCATS); else if(isBook)buildMcat(MBOOK);
   mcatFilter.style.display=(isMus||isBook)?"":"none";
-  mregFilter.style.display=(isMus||isBook)?"":"none";
-  curMcat="all"; if(!isMus&&!isBook){curMreg="all"; resetChips(mregFilter);}
+  curMcat="all";
   applyFilters();
 });
 mcatFilter.addEventListener("click",e=>{
@@ -1308,6 +1348,11 @@ mregFilter.addEventListener("click",e=>{
   e.target.classList.add("active"); curMreg=e.target.dataset.mr; applyFilters();
 });
 kidOnly.addEventListener("click",()=>{curKid=!curKid; kidOnly.classList.toggle("active",curKid); applyFilters();});
+costFilter.addEventListener("click",e=>{
+  if(!e.target.classList.contains("chip"))return;
+  [...costFilter.children].forEach(c=>c.classList.remove("active"));
+  e.target.classList.add("active"); curCost=e.target.dataset.cost; applyFilters();
+});
 filterToggle.addEventListener("click",()=>{
   filterBody.classList.toggle("collapsed");
   filterToggle.textContent=filterBody.classList.contains("collapsed")?"🎛️ 篩選 ▸":"🎛️ 篩選 ▾";
@@ -1327,7 +1372,7 @@ function initMap(){
   MAP_POINTS.forEach(p=>{
     const m=L.circleMarker([p.lat,p.lng],{radius:6,color:"#fff",weight:1.5,fillColor:colorOf(p.group),fillOpacity:.9});
     const g="https://www.google.com/maps/search/?api=1&query="+encodeURIComponent(p.name+" "+(p.a||"").split("・")[0]);
-    m.bindPopup(`<b>${p.name}</b><br><span style="font-size:12px;color:#555">${(p.note||"").slice(0,60)}</span><br><a href="${g}" target="_blank" rel="noopener">📍 開 Google 地圖</a>`);
+    m.bindPopup(`<b>${p.name}</b> <span style="font-size:12px">${["🆓免費","💲$","💲$$","💲$$$"][p.cost]||""}</span><br><span style="font-size:12px;color:#555">${(p.note||"").slice(0,60)}</span><br><a href="${g}" target="_blank" rel="noopener">📍 開 Google 地圖</a>`);
     m.addTo(leafMap); markerMap[p.pid]=m; pts.push([p.lat,p.lng]);
   });
   if(pts.length){try{leafMap.fitBounds(pts,{padding:[30,30],maxZoom:11});}catch(e){}}
@@ -1366,6 +1411,31 @@ function showView(v){
 }
 viewList.addEventListener("click",()=>showView("list"));
 viewMap.addEventListener("click",()=>showView("map"));
+
+/* 找附近（GPS） */
+let userMarker=null;
+const nearbyBtn=document.getElementById("nearbyBtn");
+function havKm(a,b,c,d){const R=6371,p=Math.PI/180;const dla=(c-a)*p,dln=(d-b)*p;const x=Math.sin(dla/2)**2+Math.cos(a*p)*Math.cos(c*p)*Math.sin(dln/2)**2;return 2*R*Math.asin(Math.sqrt(x));}
+nearbyBtn.addEventListener("click",()=>{
+  if(!navigator.geolocation){alert("此裝置不支援定位");return;}
+  nearbyBtn.textContent="📍 定位中…";
+  navigator.geolocation.getCurrentPosition(pos=>{
+    nearbyBtn.textContent="📍 找附近";
+    const ulat=pos.coords.latitude, ulng=pos.coords.longitude;
+    showView("map");
+    setTimeout(()=>{
+      if(!leafMap)return;
+      if(userMarker)leafMap.removeLayer(userMarker);
+      userMarker=L.circleMarker([ulat,ulng],{radius:8,color:"#fff",weight:2,fillColor:"#1e73e8",fillOpacity:1}).addTo(leafMap).bindPopup("📍 你在這").openPopup();
+      leafMap.setView([ulat,ulng],12);
+      const vis=MAP_POINTS.filter(pt=>{const card=document.querySelector('.card[data-pid="'+pt.pid+'"]');return card&&card.style.display!=="none";});
+      vis.forEach(pt=>pt._d=havKm(ulat,ulng,pt.lat,pt.lng));
+      vis.sort((a,b)=>a._d-b._d);
+      const near=vis.slice(0,3).map(pt=>`${pt.name}(${pt._d.toFixed(1)}km)`).join("、");
+      const mc=document.getElementById("mapCount"); if(mc)mc.textContent=near?("最近："+near):"附近沒有符合目前篩選的點";
+    },250);
+  },err=>{nearbyBtn.textContent="📍 找附近"; alert("無法取得定位："+err.message+"（需允許定位權限）");},{enableHighAccuracy:true,timeout:10000});
+});
 
 /* ---------- 浮動回頂 ---------- */
 const fab=document.getElementById("fab");

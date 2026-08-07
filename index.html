@@ -259,6 +259,15 @@
       <button class="chip" data-d="far">遠・1.5–2.5hr</button>
       <button class="chip" data-d="veryfar">🛣 很遠・2.5hr＋</button>
     </div>
+    <div class="chips" id="catFilter">
+      <button class="chip active" data-c="all">全部分類</button>
+      <button class="chip" data-c="自然科學">🔬自然科學</button>
+      <button class="chip" data-c="歷史人文">🏛️歷史人文</button>
+      <button class="chip" data-c="藝術">🎨藝術</button>
+      <button class="chip" data-c="產業主題">🚂產業</button>
+      <button class="chip" data-c="原民客家">🪶原民客家</button>
+      <button class="chip" data-c="親子">👶親子友善</button>
+    </div>
   </div>
   <div class="ctl-row">
     <div class="filter-label">快速跳到大類</div>
@@ -1013,8 +1022,12 @@ function renderCard(it,curSecId,idx){
   }
   // 可搜尋文字（去除標點利於比對）
   const tagText=(it.tags||[]).map(t=>typeof t==="string"?t:t.t).join(" ");
+  // 分類鍵（供分類篩選；由分類 tag 推導）
+  const CATKEYS=[["自然科學","自然科學"],["歷史人文","歷史人文"],["藝術","藝術"],["產業主題","產業主題"],["原民客家","原民客家"],["親子","親子"]];
+  const cats=[];
+  (it.tags||[]).forEach(t=>{const s=(typeof t==="string")?t:(t.t||"");CATKEYS.forEach(([sub,key])=>{if(s.indexOf(sub)!==-1&&cats.indexOf(key)===-1)cats.push(key);});});
   const hay=(it.n+" "+(it.a||"")+" "+it.note+" "+tagText).toLowerCase();
-  return `<div class="card ${it.star?'star':''}" data-pid="${placeId}" data-dist="${fd}" data-hay="${hay.replace(/"/g,'')}" data-name="${it.n}">
+  return `<div class="card ${it.star?'star':''}" data-pid="${placeId}" data-dist="${fd}" data-cats="${cats.join(' ')}" data-hay="${hay.replace(/"/g,'')}" data-name="${it.n}">
     <div class="card-top"><div>
       <a class="name map-link" href="${mapsUrl}" target="_blank" rel="noopener">${it.n}${star} <span class="pin">📍</span></a>
       <div class="area">${it.a}</div>
@@ -1201,6 +1214,8 @@ const searchInput=document.getElementById("search");
 const searchClear=document.getElementById("searchClear");
 const searchCount=document.getElementById("searchCount");
 let curDist="all";
+let curCat="all";
+const catFilter=document.getElementById("catFilter");
 
 function applyFilters(){
   const q=searchInput.value.trim().toLowerCase();
@@ -1208,10 +1223,11 @@ function applyFilters(){
   let shown=0;
   document.querySelectorAll(".card").forEach(c=>{
     const okDist=(curDist==="all"||c.dataset.dist===curDist);
+    const okCat=(curCat==="all"||(c.dataset.cats||"").split(" ").indexOf(curCat)!==-1);
     const okQ=(!q || c.dataset.hay.indexOf(q)!==-1);
     const st=wantState[c.dataset.pid]||{};
     const okWant=(!onlyWantActive || !!st[currentWho]);
-    const show=okDist&&okQ&&okWant;
+    const show=okDist&&okCat&&okQ&&okWant;
     c.style.display=show?"":"none";
     if(show)shown++;
     // 高亮店名中的關鍵字
@@ -1235,7 +1251,7 @@ function applyFilters(){
     const any=[...secs].some(s=>s.style.display!=="none");
     div.style.display=any?"":"none";
   });
-  searchCount.textContent = q ? `找到 ${shown} 個符合「${searchInput.value.trim()}」的結果` : (onlyWantActive ? `共 ${shown} 個想去的地點` : "");
+  searchCount.textContent = q ? `找到 ${shown} 個符合「${searchInput.value.trim()}」的結果` : (onlyWantActive ? `共 ${shown} 個想去的地點` : (curCat!=="all" ? `共 ${shown} 個「${curCat}」景點` : ""));
 }
 
 filter.addEventListener("click",e=>{
@@ -1243,6 +1259,13 @@ filter.addEventListener("click",e=>{
   [...filter.children].forEach(c=>c.classList.remove("active"));
   e.target.classList.add("active");
   curDist=e.target.dataset.d;
+  applyFilters();
+});
+catFilter.addEventListener("click",e=>{
+  if(!e.target.classList.contains("chip"))return;
+  [...catFilter.children].forEach(c=>c.classList.remove("active"));
+  e.target.classList.add("active");
+  curCat=e.target.dataset.c;
   applyFilters();
 });
 searchInput.addEventListener("input",applyFilters);

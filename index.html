@@ -7,6 +7,8 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@500;700;900&family=Noto+Sans+TC:wght@400;500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 <style>
   :root{
     --bg:#f4efe4;        /* warm cream */
@@ -216,6 +218,12 @@
   .want-btn:hover{border-color:var(--gold)}
   .want-who{font-size:.68rem;color:var(--moss);margin-left:6px}
   .card-foot{display:flex;align-items:center;justify-content:space-between;margin-top:10px;flex-wrap:wrap;gap:6px}
+  #mapPanel{max-width:1100px;margin:0 auto;padding:4px 16px 20px}
+  #leafMap{height:70vh;min-height:420px;width:100%;border-radius:14px;overflow:hidden;border:1px solid #e5d9c9;z-index:0}
+  .map-hint{font-size:.82rem;color:#7a6a58;margin:10px 4px 0;line-height:1.6}
+  .map-legend{background:rgba(255,255,255,.93);padding:8px 11px;border-radius:9px;font-size:12px;line-height:1.75;box-shadow:0 1px 5px rgba(0,0,0,.2)}
+  .leaflet-popup-content{font-family:inherit;margin:10px 12px}
+  .leaflet-popup-content a{color:#b5651d;font-weight:700;text-decoration:none}
 </style>
 </head>
 <body>
@@ -226,13 +234,20 @@
   <p>從竹南出發整理的避暑收藏清單。上方選單常駐：可依距離五段篩選（近～很遠），或在各大類間快速跳轉；捲到任何位置都能用右下角「↑」回到頂端。每張卡片點店名／地名即可一鍵開 Google 地圖。</p>
   <div class="meta">
     <span>📍 以竹南為起點</span>
-    <span>🛝 新增公園綠地</span>
+    <span>🗺️ 地圖檢視上線（上方切換）</span>
     <span>📏 距離分 5 段（近→很遠）</span>
     <span>🏛 博物館 145・📚 特色書店 137</span>
   </div>
 </header>
 
 <div class="controls">
+  <div class="ctl-row">
+    <div class="chips" id="viewSwitch">
+      <button class="chip active" id="viewList">📋 清單</button>
+      <button class="chip" id="viewMap">🗺️ 地圖</button>
+    </div>
+    <div class="search-count" id="mapCount"></div>
+  </div>
   <div class="ctl-row">
     <div class="searchbox">
       <span class="search-ico">🔍</span>
@@ -276,6 +291,11 @@
 </div>
 
 <div class="sync-status" id="syncStatus">☁️ 連接中…</div>
+
+<div id="mapPanel" style="display:none">
+  <div id="leafMap"></div>
+  <p class="map-hint">🏠 紅點是竹北家（出發點）。目前顯示有座標的博物館與書店；公園、步道、動物等會在 Round 2 補座標後陸續上圖。點下方「距離／分類／搜尋」篩選，地圖會同步只亮符合的點。</p>
+</div>
 
 <div class="wrap">
   <div id="app"></div>
@@ -998,6 +1018,9 @@ function normName(n){return n.replace(/[（(].*$/,"").replace(/[・·]/g,"").tri
 const xref={};      // name -> [{secId}]
 const secMeta={};   // secId -> {title, groupId, emoji}
 
+const HOME={lat:24.823,lng:121.011,name:"竹北家（爵士悅）"};
+const MAP_POINTS=[];
+
 function renderCard(it,curSecId,idx){
   const placeId=curSecId+"-"+idx;
   let badges="";
@@ -1026,6 +1049,7 @@ function renderCard(it,curSecId,idx){
   const CATKEYS=[["自然科學","自然科學"],["歷史人文","歷史人文"],["藝術","藝術"],["產業主題","產業主題"],["原民客家","原民客家"],["親子","親子"]];
   const cats=[];
   (it.tags||[]).forEach(t=>{const s=(typeof t==="string")?t:(t.t||"");CATKEYS.forEach(([sub,key])=>{if(s.indexOf(sub)!==-1&&cats.indexOf(key)===-1)cats.push(key);});});
+  if(it.lat&&it.lng){MAP_POINTS.push({pid:placeId,name:it.n,lat:+it.lat,lng:+it.lng,cats:cats.slice(),note:it.note||"",a:it.a||""});}
   const hay=(it.n+" "+(it.a||"")+" "+it.note+" "+tagText).toLowerCase();
   return `<div class="card ${it.star?'star':''}" data-pid="${placeId}" data-dist="${fd}" data-cats="${cats.join(' ')}" data-hay="${hay.replace(/"/g,'')}" data-name="${it.n}">
     <div class="card-top"><div>
@@ -1252,6 +1276,7 @@ function applyFilters(){
     div.style.display=any?"":"none";
   });
   searchCount.textContent = q ? `找到 ${shown} 個符合「${searchInput.value.trim()}」的結果` : (onlyWantActive ? `共 ${shown} 個想去的地點` : (curCat!=="all" ? `共 ${shown} 個「${curCat}」景點` : ""));
+  if(typeof syncMapMarkers==="function") syncMapMarkers();
 }
 
 filter.addEventListener("click",e=>{
@@ -1270,6 +1295,54 @@ catFilter.addEventListener("click",e=>{
 });
 searchInput.addEventListener("input",applyFilters);
 searchClear.addEventListener("click",()=>{searchInput.value="";searchInput.focus();applyFilters();});
+
+/* ---------- Round 1：互動地圖 ---------- */
+const CATCOLOR=[["自然科學","#2e86de"],["歷史人文","#8a5a2b"],["藝術","#d63384"],["產業主題","#e67e22"],["原民客家","#2d8a4e"]];
+function colorOf(cats){for(const [k,c] of CATCOLOR){if(cats.indexOf(k)!==-1)return c;}return "#7d5fff";}
+let leafMap=null, markerMap={}, mapReady=false;
+function initMap(){
+  if(mapReady||typeof L==="undefined")return;
+  leafMap=L.map("leafMap",{zoomControl:true}).setView([HOME.lat,HOME.lng],9);
+  L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",{maxZoom:19,attribution:"© OpenStreetMap"}).addTo(leafMap);
+  L.marker([HOME.lat,HOME.lng],{title:HOME.name,zIndexOffset:1000}).addTo(leafMap).bindPopup("🏠 "+HOME.name+"（出發點）");
+  const pts=[];
+  MAP_POINTS.forEach(p=>{
+    const m=L.circleMarker([p.lat,p.lng],{radius:6,color:"#fff",weight:1.5,fillColor:colorOf(p.cats),fillOpacity:.9});
+    const g="https://www.google.com/maps/search/?api=1&query="+encodeURIComponent(p.name+" "+(p.a||"").split("・")[0]);
+    m.bindPopup(`<b>${p.name}</b><br><span style="font-size:12px;color:#555">${(p.note||"").slice(0,60)}</span><br><a href="${g}" target="_blank" rel="noopener">📍 開 Google 地圖</a>`);
+    m.addTo(leafMap); markerMap[p.pid]=m; pts.push([p.lat,p.lng]);
+  });
+  if(pts.length){try{leafMap.fitBounds(pts,{padding:[30,30],maxZoom:11});}catch(e){}}
+  const lg=L.control({position:"bottomright"});
+  lg.onAdd=function(){const d=L.DomUtil.create("div","map-legend");
+    d.innerHTML="<b>分類</b><br>"+CATCOLOR.map(([k,c])=>`<span style="color:${c}">●</span> ${k}`).join("<br>")+`<br><span style="color:#7d5fff">●</span> 書店/其他`;
+    return d;};
+  lg.addTo(leafMap);
+  mapReady=true;
+}
+function syncMapMarkers(){
+  if(!mapReady)return;
+  let n=0;
+  MAP_POINTS.forEach(p=>{
+    const card=document.querySelector('.card[data-pid="'+p.pid+'"]');
+    const vis=card&&card.style.display!=="none";
+    const m=markerMap[p.pid]; if(!m)return;
+    if(vis){if(!leafMap.hasLayer(m))m.addTo(leafMap);n++;}
+    else{if(leafMap.hasLayer(m))leafMap.removeLayer(m);}
+  });
+  const mc=document.getElementById("mapCount"); if(mc)mc.textContent=`🗺️ 地圖顯示 ${n} 個（有座標者，共 ${MAP_POINTS.length} 個）`;
+}
+const viewList=document.getElementById("viewList"), viewMap=document.getElementById("viewMap");
+const listWrap=document.querySelector(".wrap"), mapPanel=document.getElementById("mapPanel");
+function showView(v){
+  const isMap=(v==="map");
+  viewMap.classList.toggle("active",isMap); viewList.classList.toggle("active",!isMap);
+  mapPanel.style.display=isMap?"":"none";
+  if(listWrap)listWrap.style.display=isMap?"none":"";
+  if(isMap){initMap(); setTimeout(()=>{if(leafMap){leafMap.invalidateSize();syncMapMarkers();}},80);}
+}
+viewList.addEventListener("click",()=>showView("list"));
+viewMap.addEventListener("click",()=>showView("map"));
 
 /* ---------- 浮動回頂 ---------- */
 const fab=document.getElementById("fab");

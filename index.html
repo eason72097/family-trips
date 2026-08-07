@@ -1179,7 +1179,10 @@ function renderCard(it,curSecId,idx){
     if(COFFEE_SEC_STYLE[curSecId]) ss.add(COFFEE_SEC_STYLE[curSecId]);
     const txt=it.n+" "+(it.note||"");
     COFFEE_STYLES.forEach(([k,re])=>{if(re.test(txt))ss.add(k);});
-    ss.forEach(s=>{if(cats.indexOf(s)===-1)cats.push(s); badges+=badge(s,"b-style");});
+    ss.forEach(s=>{if(cats.indexOf(s)===-1)cats.push(s);});
+    const order=["工作久坐","純喝咖啡","甜點蛋糕","景觀","老宅古蹟","網美打卡","寵物友善","親子"];
+    const list=order.filter(s=>ss.has(s));
+    if(list.length) badges+=badge("🎨 風格："+list.join("・"),"b-style");
   }
   if(it.lat&&it.lng){MAP_POINTS.push({pid:placeId,name:it.n,lat:+it.lat,lng:+it.lng,cats:cats.slice(),group:(secMeta[curSecId]||{}).groupId||'',cost:_cost,note:it.note||"",a:it.a||""});}
   return `<div class="card ${it.star?'star':''}" data-pid="${placeId}" data-dist="${fd}" data-cats="${cats.join(' ')}" data-group="${(secMeta[curSecId]||{}).groupId||''}" data-sec="${curSecId}" data-region="${_reg}" data-cost="${_cost}" data-hay="${hay.replace(/"/g,'')}" data-name="${it.n}">

@@ -232,6 +232,10 @@
   .b-cost3{background:#f5d9d2;color:#a5361e}
   .b-occ{background:#e7e0f2;color:#5b3c88}
   .b-bib{background:#7a1f2b;color:#fff}
+  .del-btn{position:absolute;top:6px;right:6px;width:24px;height:24px;border-radius:50%;border:1px solid #e3d5c3;background:#fff;color:#b06a5a;font-size:.8rem;line-height:1;cursor:pointer;opacity:.55;z-index:2;padding:0}
+  .del-btn:hover{opacity:1;background:#f6e2dc;border-color:#d9a99a}
+  .del-btn.restore{color:#2f7a4d;border-color:#bfe0cc}
+  .del-btn.restore:hover{background:#e0f2e7}
 </style>
 </head>
 <body>
@@ -275,6 +279,7 @@
     </div>
     <button id="onlyWant" class="chip" style="margin-left:8px">⭐ 只看想去的</button>
     <button id="kidOnly" class="chip" style="margin-left:8px">👶 只看親子友善</button>
+    <button id="trashToggle" class="chip" style="margin-left:8px">🗑 已刪除</button>
   </div>
   <div class="ctl-row">
     <div class="filter-label">依距離篩選</div>
@@ -815,7 +820,10 @@ const sections = [
     {n:"鳴草咖啡自家烘焙館",a:"宜蘭市・遠",dist:"far",tags:["☕ 精品手沖","🐱 有店貓","🛋 座位舒適"],note:"優點：4.7，自家烘焙、台灣豆果香明顯，老闆 Jack 很懂咖啡可聊，小巧溫馨還有店貓。",lat:25.128,lng:121.742},
     {n:"RUFOUS Coffee",a:"台北・遠",dist:"far",note:"台北精品咖啡名店，深焙手沖與虹吸，咖啡迷朝聖。",lat:25.0270,lng:121.5435},
     {n:"GABEE.",a:"台北・遠",dist:"far",note:"台灣咖啡師名店，創意咖啡與甜點。",lat:25.0585,lng:121.5605},
-    {n:"湛盧咖啡（南京店）",a:"台北・遠",dist:"far",note:"手沖單品專門店，安靜適合久坐。",lat:25.0520,lng:121.5450}
+    {n:"湛盧咖啡（南京店）",a:"台北・遠",dist:"far",note:"手沖單品專門店，安靜適合久坐。",lat:25.0520,lng:121.5450},
+    {n:"深夜裡的法國手工甜點",a:"台北・遠",dist:"far",note:"台北名甜點店，法式手工蛋糕細膩，需預約，甜點控朝聖。",lat:25.0260,lng:121.5430},
+    {n:"% Arabica 台北",a:"台北・遠",dist:"far",note:"日本人氣咖啡品牌，極簡網紅風，拿鐵拉花招牌。",lat:25.0330,lng:121.5640},
+    {n:"Quelques Pâtisseries 某某甜點",a:"台北・遠",dist:"far",note:"台北預約制法式甜點名店，季節限定蛋糕精緻。",lat:25.0410,lng:121.5340}
   ]},
 
   { id:"coffee-origin", emoji:"🌍", title:"咖啡產地・莊園（偏學習）", sub:"想了解咖啡從種植到烘焙的好選擇；建議先預約導覽。", items:[
@@ -908,7 +916,14 @@ const sections = [
     {n:"阿城號米粉",a:"新竹城隍廟・近",dist:"near",tags:["🍜 炒米粉","🥣 貢丸湯","👵 三代老店"],note:"優點：城隍廟一帶最受好評的米粉貢丸，家族三代經營、炒米粉鹹香溫潤、貢丸湯鮮。⚠️用餐時段需併桌、空間擁擠。",lat:24.804,lng:120.966},
     {n:"郭家元祖潤餅",a:"新竹城隍廟・近",dist:"near",tags:["🌯 潤餅","💰 銅板美食"],note:"優點：城隍廟前排隊名攤，花生、豆芽、肉丁裹薄餅像台式潤餅捲，一捲約 35 元 CP 值極高、口味穩定。⚠️常要排隊。",lat:24.804,lng:120.966},
     {n:"廟口鴨香飯",a:"新竹城隍廟・近",dist:"near",tags:["🍚 鴨香飯","🥢 在地必吃"],note:"優點：新竹城隍廟代表性小吃之一，鴨油拌飯香氣足、滷味與鴨肉受在地人喜愛。建議避開正中午尖峰。",lat:24.804,lng:120.967},
-    {n:"頭份蚵仔麵線・在地麵攤",a:"苗栗頭份・近",dist:"near",tags:["🍜 麵線","🥢 銅板"],note:"優點：頭份市區巷弄麵線與小吃聚集，距竹南極近，是在地人日常早午餐。建議挑人潮穩定、現煮的攤位。",lat:24.688,lng:120.917}
+    {n:"頭份蚵仔麵線・在地麵攤",a:"苗栗頭份・近",dist:"near",tags:["🍜 麵線","🥢 銅板"],note:"優點：頭份市區巷弄麵線與小吃聚集，距竹南極近，是在地人日常早午餐。建議挑人潮穩定、現煮的攤位。",lat:24.688,lng:120.917},
+    {n:"三代目牛肉麵",a:"竹北・近",dist:"near",occ:"平常吃",note:"竹北民權街，湯頭熬煮12小時、不加味精，加湯加麵，小菜有名。（座標近似）",lat:24.8260,lng:121.0060},
+    {n:"Mr.Moon 早午餐",a:"竹北・近",dist:"near",occ:"平常吃",note:"竹北老字號早午餐，高鐵站附近，台式復古＋現代簡約。（座標近似）",lat:24.8080,lng:121.0400},
+    {n:"幽靈馬車小吃店",a:"竹北・近",dist:"near",occ:"平常吃",note:"竹北隱藏版宵夜，炸物、涮羊肉、當歸鴨、麻油雞，只開晚上。（座標近似）",lat:24.8280,lng:121.0120},
+    {n:"阿本家（竹北文和店）",a:"竹北・近",dist:"near",occ:"特別去吃",note:"竹北人氣燒肉，適合聚餐。（座標近似）",lat:24.8310,lng:121.0080},
+    {n:"風城之月懷舊主題餐廳",a:"竹北・近",dist:"near",occ:"特別去吃",note:"50年代懷舊佈景（理髮廳/照相館）＋客家料理，適合帶長輩聚餐，送客家麻糬。（座標近似）",lat:24.8330,lng:121.0030},
+    {n:"心丼隱食堂",a:"竹北・近",dist:"near",occ:"特別去吃",note:"竹北熱門日式，壽司丼飯鍋物碳烤，CP值高，建議預約。（座標近似）",lat:24.8290,lng:121.0120},
+    {n:"托斯卡尼尼 竹北文信店",a:"竹北・近",dist:"near",occ:"特別去吃",note:"義式料理，寵物／親子友善，環境像歐洲度假。（座標近似）",lat:24.8220,lng:121.0200}
   ]},
 
   { id:"food-salty-tw", emoji:"🍢", title:"鹹食｜全台經典小吃地圖", sub:"出遊到各地時，認明該地的代表鹹食小吃。點店名／地名開地圖。", items:[
@@ -1092,10 +1107,12 @@ function renderCard(it,curSecId,idx){
   const _cost=(COST[curSecId]!==undefined)?COST[curSecId]:1;
   const _cl=COSTLABEL[_cost]; if(_cl) badges+=badge(_cl[0],_cl[1]);
   const OCC={"food-salty-tcm":"平常吃","food-sweet-tcm":"平常吃","food-salty-tw":"順便吃","food-sweet-tw":"順便吃","food-bib":"特別去吃"};
-  if(OCC[curSecId]){cats.push(OCC[curSecId]); badges+=badge(OCC[curSecId],"b-occ");}
+  const _occ=it.occ||OCC[curSecId];
+  if(_occ){cats.push(_occ); badges+=badge(_occ,"b-occ");}
   if(curSecId==="food-bib"){cats.push("必比登"); badges+=badge("⭐必比登","b-bib");}
   if(it.lat&&it.lng){MAP_POINTS.push({pid:placeId,name:it.n,lat:+it.lat,lng:+it.lng,cats:cats.slice(),group:(secMeta[curSecId]||{}).groupId||'',cost:_cost,note:it.note||"",a:it.a||""});}
   return `<div class="card ${it.star?'star':''}" data-pid="${placeId}" data-dist="${fd}" data-cats="${cats.join(' ')}" data-group="${(secMeta[curSecId]||{}).groupId||''}" data-sec="${curSecId}" data-region="${_reg}" data-cost="${_cost}" data-hay="${hay.replace(/"/g,'')}" data-name="${it.n}">
+    <button class="del-btn" data-pid="${placeId}" title="刪除">✕</button>
     <div class="card-top"><div>
       <a class="name map-link" href="${mapsUrl}" target="_blank" rel="noopener">${it.n}${star} <span class="pin">📍</span></a>
       <div class="area">${it.a}</div>
@@ -1172,7 +1189,20 @@ groupNav.innerHTML=navHtml;
 /* ---------- Firebase：想去標註（讀取＋即時同步＋寫入） ---------- */
 let currentWho = "me"; // "me" | "wife"
 const wantState = {}; // placeId -> {me:bool, wife:bool}
+const deletedState = {}; // placeId -> bool（跨裝置同步）
+let trashMode = false;
 const syncStatus = document.getElementById("syncStatus");
+
+function renderDelUI(){
+  document.querySelectorAll(".del-btn").forEach(btn=>{
+    const del=!!deletedState[btn.dataset.pid];
+    btn.classList.toggle("restore",del);
+    btn.textContent = del ? "↩" : "✕";
+    btn.title = del ? "復原" : "刪除";
+  });
+  const tb=document.getElementById("trashToggle");
+  if(tb){const n=Object.values(deletedState).filter(Boolean).length; tb.textContent=`🗑 已刪除${n?(" ("+n+")"):""}`;}
+}
 
 function renderWantUI(){
   document.querySelectorAll(".want-btn").forEach(btn=>{
@@ -1200,8 +1230,11 @@ onSnapshot(collection(db,PLACES_COL), snap=>{
       me: !!(data.wantToGo||[]).includes("me"),
       wife: !!(data.wantToGo||[]).includes("wife")
     };
+    deletedState[docSnap.id] = !!data.deleted;
   });
   renderWantUI();
+  renderDelUI();
+  applyFilters();
   syncStatus.textContent = "☁️ 已連接，跨裝置同步中";
   syncStatus.className = "sync-status ok";
 }, err=>{
@@ -1260,6 +1293,24 @@ document.getElementById("app").addEventListener("click",e=>{
   toggleWant(btn.dataset.pid);
 });
 
+async function toggleDelete(placeId){
+  const del=!deletedState[placeId];
+  deletedState[placeId]=del; renderDelUI(); applyFilters(); // 樂觀更新
+  try{
+    await setDoc(doc(db,PLACES_COL,placeId), {deleted:del}, {merge:true});
+  }catch(e){
+    console.error("刪除寫入失敗",e);
+    syncStatus.textContent="⚠️ 刪除同步失敗，請檢查網路後再試";
+    syncStatus.className="sync-status err";
+  }
+}
+document.getElementById("app").addEventListener("click",e=>{
+  const b=e.target.closest(".del-btn");
+  if(!b) return;
+  e.preventDefault(); e.stopPropagation();
+  toggleDelete(b.dataset.pid);
+});
+
 document.getElementById("whoSwitch").addEventListener("click",e=>{
   const b=e.target.closest("button[data-who]");
   if(!b) return;
@@ -1315,10 +1366,12 @@ function applyFilters(){
     const okMreg=(curMreg==="all"||c.dataset.region===curMreg);
     const okCost=(curCost==="all"||c.dataset.cost===curCost);
     const okKid=(!curKid||cardCats.indexOf("親子")!==-1);
+    const del=!!deletedState[c.dataset.pid];
+    const okDel=(trashMode?del:!del);
     const okQ=(!q || c.dataset.hay.indexOf(q)!==-1);
     const st=wantState[c.dataset.pid]||{};
     const okWant=(!onlyWantActive || !!st[currentWho]);
-    const show=okDist&&okGroup&&okMcat&&okMreg&&okCost&&okKid&&okQ&&okWant;
+    const show=okDist&&okGroup&&okMcat&&okMreg&&okCost&&okKid&&okDel&&okQ&&okWant;
     c.style.display=show?"":"none";
     if(show)shown++;
     // 高亮店名中的關鍵字
@@ -1342,7 +1395,7 @@ function applyFilters(){
     const any=[...secs].some(s=>s.style.display!=="none");
     div.style.display=any?"":"none";
   });
-  searchCount.textContent = q ? `找到 ${shown} 個符合「${searchInput.value.trim()}」的結果` : (onlyWantActive ? `共 ${shown} 個想去的地點` : ((curGroup!=="all"||curKid) ? `共 ${shown} 個符合的景點` : ""));
+  searchCount.textContent = trashMode ? `🗑 已刪除 ${shown} 個（點卡片右上 ↩ 復原）` : (q ? `找到 ${shown} 個符合「${searchInput.value.trim()}」的結果` : (onlyWantActive ? `共 ${shown} 個想去的地點` : ((curGroup!=="all"||curKid) ? `共 ${shown} 個符合的景點` : "")));
   if(typeof syncMapMarkers==="function") syncMapMarkers();
 }
 
@@ -1379,6 +1432,12 @@ costFilter.addEventListener("click",e=>{
   if(!e.target.classList.contains("chip"))return;
   [...costFilter.children].forEach(c=>c.classList.remove("active"));
   e.target.classList.add("active"); curCost=e.target.dataset.cost; applyFilters();
+});
+const trashToggle=document.getElementById("trashToggle");
+trashToggle.addEventListener("click",()=>{
+  trashMode=!trashMode;
+  trashToggle.classList.toggle("active",trashMode);
+  applyFilters();
 });
 filterToggle.addEventListener("click",()=>{
   filterBody.classList.toggle("collapsed");

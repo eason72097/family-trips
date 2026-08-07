@@ -230,6 +230,8 @@
   .b-cost1{background:#eef1d9;color:#6b7a1c}
   .b-cost2{background:#fbe8cf;color:#a15c1e}
   .b-cost3{background:#f5d9d2;color:#a5361e}
+  .b-occ{background:#e7e0f2;color:#5b3c88}
+  .b-bib{background:#7a1f2b;color:#fff}
 </style>
 </head>
 <body>
@@ -242,7 +244,7 @@
     <span>📍 以竹南為起點</span>
     <span>🗺️ 地圖檢視上線（上方切換）</span>
     <span>📏 距離分 5 段（近→很遠）</span>
-    <span>🗺️ 477 個景點已上圖</span>
+    <span>🗺️ 510 景點・⭐必比登新竹 15 家</span>
   </div>
 </header>
 
@@ -810,7 +812,10 @@ const sections = [
     {n:"咖啡葉 Coffee Leaf",a:"台中豐原・遠",dist:"far",tags:["☕ 精品手沖","🍰 甜點讚","🌿 氛圍特別"],note:"優點：4.7 高分，單一產區豆種多、放爵士樂氛圍慵懶，千層與可麗餅甜點很受好評，有 wifi 適合待整個下午。",lat:23.712,lng:120.543},
     {n:"The Factory Mojocoffee",a:"台中西區・遠",dist:"far",tags:["☕ 精品手沖","🛋 座位舒適","🌿 氛圍特別"],note:"優點：玻璃木造綠意建築、明亮像灑滿陽光的客廳，單一產區豆多（含雲南），店員親切會解說、平日常有試飲。",lat:24.152,lng:120.665},
     {n:"森高砂咖啡 大稻埕本店",a:"台北大同・遠",dist:"far",tags:["🇹🇼 台灣咖啡","☕ 精品手沖","🏚 老屋"],note:"優點：專門主打全台各產區「台灣咖啡」，設於日治老屋、冷熱對比品飲很專業，適合久坐細品。",lat:25.056,lng:121.51},
-    {n:"鳴草咖啡自家烘焙館",a:"宜蘭市・遠",dist:"far",tags:["☕ 精品手沖","🐱 有店貓","🛋 座位舒適"],note:"優點：4.7，自家烘焙、台灣豆果香明顯，老闆 Jack 很懂咖啡可聊，小巧溫馨還有店貓。",lat:25.128,lng:121.742}
+    {n:"鳴草咖啡自家烘焙館",a:"宜蘭市・遠",dist:"far",tags:["☕ 精品手沖","🐱 有店貓","🛋 座位舒適"],note:"優點：4.7，自家烘焙、台灣豆果香明顯，老闆 Jack 很懂咖啡可聊，小巧溫馨還有店貓。",lat:25.128,lng:121.742},
+    {n:"RUFOUS Coffee",a:"台北・遠",dist:"far",note:"台北精品咖啡名店，深焙手沖與虹吸，咖啡迷朝聖。",lat:25.0270,lng:121.5435},
+    {n:"GABEE.",a:"台北・遠",dist:"far",note:"台灣咖啡師名店，創意咖啡與甜點。",lat:25.0585,lng:121.5605},
+    {n:"湛盧咖啡（南京店）",a:"台北・遠",dist:"far",note:"手沖單品專門店，安靜適合久坐。",lat:25.0520,lng:121.5450}
   ]},
 
   { id:"coffee-origin", emoji:"🌍", title:"咖啡產地・莊園（偏學習）", sub:"想了解咖啡從種植到烘焙的好選擇；建議先預約導覽。", items:[
@@ -879,6 +884,24 @@ const sections = [
     {n:"羅東・冬山",a:"宜蘭・遠",dist:"far",tags:[{t:"🏞 林業文化",q:"羅東林業文化園區"},"🍜 夜市","☕ 農場咖啡"],note:"特色：羅東林業文化園區、冬山河、田園農場。美食：羅東夜市（包心粉圓、肉羹）。甜點咖啡：周邊休閒農場與景觀咖啡。",lat:24.677,lng:121.766},
     {n:"池上",a:"台東・遠",dist:"far",tags:[{t:"🏞 稻浪",q:"伯朗大道 池上"},"🍚 池上飯包","🚴 伯朗大道"],note:"特色：伯朗大道、金城武樹、縱谷稻浪、大坡池。美食：池上飯包、米食。秋收與春耕時節風景最美。",lat:23.123,lng:121.215},
     {n:"關山",a:"台東・遠",dist:"far",tags:[{t:"🏞 環鎮單車道",q:"關山環鎮自行車道"},"🍚 便當","🌾 縱谷"],note:"特色：全台首座環鎮自行車道、親水公園、縱谷田園。美食：關山便當、池上米。很適合帶小孩騎車。",lat:23.047,lng:121.162}
+  ]},
+
+  { id:"food-bib", emoji:"⭐", title:"必比登推介・在地美食（先收錄新竹縣市，其他城市陸續補）", sub:"米其林《必比登推介》＝千元有找、物超所值的餐廳小吃。2025 首度納入新竹縣市共 15 家。點卡片名稱可開 Google 地圖導航。（其他城市：台北37/新北15/台中23/台南30/高雄24 陸續補）", items:[
+    {n:"貓的堅持",a:"新竹市・近",dist:"near",note:"店名取自母親小名，外省麵與養生蔬食，招牌酥皮豆包捲。",lat:24.8010,lng:120.9720},
+    {n:"東門米粉攤",a:"新竹市・近",dist:"near",note:"東門市場內，粗米粉配雞骨湯，招牌海鮮芋頭米粉湯。",lat:24.8040,lng:120.9680},
+    {n:"菜園（上海餐廳）",a:"新竹市・近",dist:"near",note:"20 年以上江浙合菜，烤麩、菜飯需預訂。",lat:24.8050,lng:120.9600},
+    {n:"禾日香（民族路）",a:"新竹市・近",dist:"near",note:"招牌太陽飯，手切溫體豬十小時慢熬，配半熟蛋。",lat:24.8030,lng:120.9690},
+    {n:"九添福牛肉麵館",a:"新竹市・近",dist:"near",note:"紅燒牛腩配醬油與蔬果燉煮，湯頭香甜回甘。",lat:24.8000,lng:120.9750},
+    {n:"弄味小廚",a:"新竹市・近",dist:"near",note:"巷弄創意合菜小館。",lat:24.8050,lng:120.9650},
+    {n:"原味鴨肉麵",a:"新竹市・近",dist:"near",note:"經典鴨肉麵老店，湯頭鮮美、價格親民。",lat:24.8030,lng:120.9670},
+    {n:"ㄤ咕麵",a:"關西・中",dist:"mid",note:"開店逾一甲子，扁油麵配韭菜豆芽油蔥，招牌三兄弟湯。",lat:24.7920,lng:121.1770},
+    {n:"春嬌粄條",a:"北埔・中",dist:"mid",note:"傳承三代客家味，桔醬與肉燥粄條。",lat:24.7000,lng:121.0500},
+    {n:"鴻金食堂",a:"竹東・中",dist:"mid",note:"客家菜，招牌客家小炒，鍋氣醬香十足。（座標近似）",lat:24.7350,lng:121.0850},
+    {n:"晌午粄食",a:"北埔・中",dist:"mid",note:"客家米食，在地蜜糖調味，甜粄、蘿蔔粄。（座標近似）",lat:24.7010,lng:121.0510},
+    {n:"善菓堂",a:"竹北・近",dist:"near",note:"日式原木風素食，融台川江浙技法，四季瓜仔若配牛蒡飯。（座標近似）",lat:24.8270,lng:121.0120},
+    {n:"首烏廚EAT",a:"竹北・近",dist:"near",note:"少油少鹽客家家常菜，招牌首烏帝王雞湯。（座標近似）",lat:24.8280,lng:121.0130},
+    {n:"唐草園",a:"竹北・近",dist:"near",note:"源自桃園的眷村餃子老店，招牌眷戀粉蒸排骨。（座標近似）",lat:24.8260,lng:121.0100},
+    {n:"鄒記菜包（中正路）",a:"竹北・近",dist:"near",note:"手工菜包，外皮帶艾草纖維，Q 軟彈牙。（座標近似）",lat:24.8270,lng:121.0110}
   ]},
 
   { id:"food-salty-tcm", emoji:"🍜", title:"鹹食｜桃竹苗（離家近）", sub:"米粉、潤餅、鴨香飯、麵線等正餐鹹點。已避開高人氣但評價偏低的觀光店。點店名開地圖。", items:[
@@ -1030,7 +1053,7 @@ const COST={
  "town-n":0,"town-c":0,"town-s":0,"town-e":0,"book-tcm":0,"book-north":0,"book-central":0,"book-south":0,"book-east":0,
  "museum-tcm":1,"museum-north":1,"museum-central":1,"museum-south":1,"museum-east":1,factory:1,
  "coffee-tcm":1,"coffee-spec":1,"coffee-origin":1,"coffee-view":1,"coffee-old":1,"coffee-spot":1,
- "food-salty-tcm":1,"food-salty-tw":1,"food-sweet-tcm":1,"food-sweet-tw":1,"food-other":1,
+ "food-salty-tcm":1,"food-salty-tw":1,"food-sweet-tcm":1,"food-sweet-tw":1,"food-other":1,"food-bib":1,
  "forest-n":1,"forest-c":1,"forest-s":1,"forest-e":1,flower:1,sky:1,rail:1,
  animal:2,pick:2,eco:2,forest:2, waterpark:3,indoor:3
 };
@@ -1068,6 +1091,9 @@ function renderCard(it,curSecId,idx){
   const _reg=(curSecId.indexOf("museum-")===0||curSecId.indexOf("book-")===0)?curSecId.split("-")[1]:regionOf(it.a);
   const _cost=(COST[curSecId]!==undefined)?COST[curSecId]:1;
   const _cl=COSTLABEL[_cost]; if(_cl) badges+=badge(_cl[0],_cl[1]);
+  const OCC={"food-salty-tcm":"平常吃","food-sweet-tcm":"平常吃","food-salty-tw":"順便吃","food-sweet-tw":"順便吃","food-bib":"特別去吃"};
+  if(OCC[curSecId]){cats.push(OCC[curSecId]); badges+=badge(OCC[curSecId],"b-occ");}
+  if(curSecId==="food-bib"){cats.push("必比登"); badges+=badge("⭐必比登","b-bib");}
   if(it.lat&&it.lng){MAP_POINTS.push({pid:placeId,name:it.n,lat:+it.lat,lng:+it.lng,cats:cats.slice(),group:(secMeta[curSecId]||{}).groupId||'',cost:_cost,note:it.note||"",a:it.a||""});}
   return `<div class="card ${it.star?'star':''}" data-pid="${placeId}" data-dist="${fd}" data-cats="${cats.join(' ')}" data-group="${(secMeta[curSecId]||{}).groupId||''}" data-sec="${curSecId}" data-region="${_reg}" data-cost="${_cost}" data-hay="${hay.replace(/"/g,'')}" data-name="${it.n}">
     <div class="card-top"><div>
@@ -1104,7 +1130,7 @@ const groups=[
   {id:"g-scenery",emoji:"🌅", name:"景觀・休閒", secs:["sky","flower","coast","night"]},
   {id:"g-coffee", emoji:"☕", name:"咖啡主題",  secs:["coffee-tcm","coffee-spec","coffee-origin","coffee-view","coffee-old","coffee-spot"]},
   {id:"g-town",   emoji:"🏘", name:"特色小鎮",  secs:["town-n","town-c","town-s","town-e"]},
-  {id:"g-food",   emoji:"🍴", name:"在地美食",  secs:["food-salty-tcm","food-salty-tw","food-sweet-tcm","food-sweet-tw","food-other"]},
+  {id:"g-food",   emoji:"🍴", name:"在地美食",  secs:["food-bib","food-salty-tcm","food-salty-tw","food-sweet-tcm","food-sweet-tw","food-other"]},
   {id:"g-mtn",    emoji:"⛰", name:"國森・登山",  secs:["forest-n","forest-c","forest-s","forest-e","baiyue-small","baiyue-big"]}
 ];
 
@@ -1268,6 +1294,7 @@ const gInfo={}; groups.forEach(g=>gInfo[g.id]={emoji:g.emoji,name:g.name});
 const GCOLOR={"g-nature":"#2e9e4f","g-animal":"#e67e22","g-learn":"#16a085","g-museum":"#8a5a2b","g-book":"#7d5fff","g-culture":"#c0392b","g-scenery":"#2980b9","g-coffee":"#6f4e37","g-town":"#d63384","g-food":"#e1a100","g-mtn":"#34495e"};
 const MCATS=[["all","全部型態"],["自然科學","🔬自然科學"],["歷史人文","🏛️歷史"],["藝術","🎨藝術"],["產業主題","🚂產業"],["原民客家","🪶原民客家"]];
 const MBOOK=[["all","全部型態"],["書店咖啡","☕書店咖啡"],["二手書","♻二手書"],["親子","👶兒童/親子"]];
+const MFOOD=[["all","全部"],["平常吃","🍜平常吃"],["順便吃","🚗順便吃"],["特別去吃","🎉特別去吃"],["必比登","⭐必比登"]];
 const MREGS=[["all","全區"],["tcm","桃竹苗"],["north","北北基"],["central","中彰投"],["south","南部"],["east","東部"]];
 function buildMcat(list){mcatFilter.innerHTML=list.map(([k,l],i)=>`<button class="chip${i===0?' active':''}" data-mc="${k}">${l}</button>`).join("");}
 groupFilter.innerHTML='<button class="chip active" data-g="all">全部</button>'+groups.map(g=>`<button class="chip" data-g="${g.id}">${g.emoji} ${g.name}</button>`).join("");
@@ -1284,7 +1311,7 @@ function applyFilters(){
     const cardCats=(c.dataset.cats||"").split(" ");
     const g=c.dataset.group||"";
     const okGroup=(curGroup==="all"||g===curGroup);
-    const okMcat=((curGroup!=="g-museum"&&curGroup!=="g-book")||curMcat==="all"||cardCats.indexOf(curMcat)!==-1);
+    const okMcat=((curGroup!=="g-museum"&&curGroup!=="g-book"&&curGroup!=="g-food")||curMcat==="all"||cardCats.indexOf(curMcat)!==-1);
     const okMreg=(curMreg==="all"||c.dataset.region===curMreg);
     const okCost=(curCost==="all"||c.dataset.cost===curCost);
     const okKid=(!curKid||cardCats.indexOf("親子")!==-1);
@@ -1331,9 +1358,9 @@ groupFilter.addEventListener("click",e=>{
   [...groupFilter.children].forEach(c=>c.classList.remove("active"));
   e.target.classList.add("active");
   curGroup=e.target.dataset.g;
-  const isMus=(curGroup==="g-museum"), isBook=(curGroup==="g-book");
-  if(isMus)buildMcat(MCATS); else if(isBook)buildMcat(MBOOK);
-  mcatFilter.style.display=(isMus||isBook)?"":"none";
+  const isMus=(curGroup==="g-museum"), isBook=(curGroup==="g-book"), isFood=(curGroup==="g-food");
+  if(isMus)buildMcat(MCATS); else if(isBook)buildMcat(MBOOK); else if(isFood)buildMcat(MFOOD);
+  mcatFilter.style.display=(isMus||isBook||isFood)?"":"none";
   curMcat="all";
   applyFilters();
 });

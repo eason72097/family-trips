@@ -169,7 +169,9 @@
   .b{font-size:.71rem;font-weight:700;padding:3px 9px;border-radius:7px;letter-spacing:.02em;white-space:nowrap}
   .b-near{background:#e4eed9;color:#3f6b3a}
   .b-mid{background:#fbeed6;color:#9a6a1c}
+  .b-midfar{background:#f7e4cf;color:#a15c1e}
   .b-far{background:#f3ddd2;color:var(--terra-d)}
+  .b-veryfar{background:#ecd3cc;color:#8a3a26}
   .b-free{background:#dfeeee;color:#2f6473}
   .b-rest{background:#f1e3e3;color:#a23b3b}   /* 公休 */
   /* difficulty */
@@ -221,11 +223,11 @@
 <header id="top">
   <div class="kicker">Family Summer Guide</div>
   <h1>炎夏親子<span class="accent">好去處</span><br>桃園・新竹・苗栗・台中・彰化</h1>
-  <p>從竹南出發整理的避暑收藏清單。上方選單常駐：可依距離篩選，或在七大類間快速跳轉；捲到任何位置都能用右下角「↑」回到頂端。每張卡片點店名／地名即可一鍵開 Google 地圖。</p>
+  <p>從竹南出發整理的避暑收藏清單。上方選單常駐：可依距離五段篩選（近～很遠），或在各大類間快速跳轉；捲到任何位置都能用右下角「↑」回到頂端。每張卡片點店名／地名即可一鍵開 Google 地圖。</p>
   <div class="meta">
     <span>📍 以竹南為起點</span>
-    <span>🗂️ 9 大類・37 子類別</span>
-    <span>🥾 步道分 5 級</span>
+    <span>🛝 新增公園綠地</span>
+    <span>📏 距離分 5 段（近→很遠）</span>
     <span>🔄 持續擴充中</span>
   </div>
 </header>
@@ -253,7 +255,9 @@
       <button class="chip active" data-d="all">全部</button>
       <button class="chip" data-d="near">近・30分內</button>
       <button class="chip" data-d="mid">中・30–60分</button>
-      <button class="chip" data-d="far">📍遠・1.5hr＋</button>
+      <button class="chip" data-d="midfar">稍遠・1–1.5hr</button>
+      <button class="chip" data-d="far">遠・1.5–2.5hr</button>
+      <button class="chip" data-d="veryfar">🛣 很遠・2.5hr＋</button>
     </div>
   </div>
   <div class="ctl-row">
@@ -302,6 +306,25 @@ const PLACES_COL = "places"; // 與 ppl-plan 的 workouts collection 完全獨�
 /* dist: near | mid | far    star: true 想試
    登山專用：diff(1輕鬆~5高山)、cond(0綠/1黃/2紅) */
 const sections = [
+  { id:"park", emoji:"🛝", title:"公園・綠地・特色遊戲場", sub:"帶小孩放電 CP 值最高的一類：多數免費、推車友善、有遮蔭與洗手間。標「🛝 特色遊戲場」為大型溜滑梯／沙坑等特色遊具。夏天上午或傍晚去最舒服，記得帶替換衣物。", items:[
+    {n:"新竹公園（含麗池）",a:"新竹市・近",dist:"near",tags:["🌳 大草坪","♿ 推車友善"],note:"日式庭園＋麗池，樹蔭多好推車，緊鄰動物園與玻璃工藝博物館，可一趟串起來。假日有攤位。"},
+    {n:"青青草原",a:"新竹市香山・近",dist:"near",tags:["🛝 特色遊戲場","🆓 免費"],note:"免費的超長磨石子＋滾輪溜滑梯＋大草原，親子放電第一名。上午去人少，務必帶替換衣物與紙板墊著溜。"},
+    {n:"竹科靜心湖",a:"新竹市・近",dist:"near",tags:["♿ 推車友善"],note:"科學園區裡的環湖步道，生態豐富、平緩好推車，傍晚散步很舒服，人潮不多。"},
+    {n:"港南運河風景區",a:"新竹市・近",dist:"near",tags:["🌳 大草坪"],note:"運河邊大草坪＋風車＋自行車道，看夕陽舒服、腹地開闊適合放風箏野餐。"},
+    {n:"南寮漁港・魚鱗天梯",a:"新竹市・近",dist:"near",tags:["🌳 大草坪"],note:"港邊藍白地景＋草坪看海看船，旁邊有自行車道與美食區，傍晚最佳。"},
+    {n:"新月沐風（頭前溪畔）",a:"竹北・近",dist:"near",tags:["🌳 大草坪","💦 戲水"],note:"河濱大草皮＋沙區，看飛機起降與夕陽，適合野餐、放風箏、踩水。"},
+    {n:"十興公園（233 森林公園）",a:"竹北・近",dist:"near",tags:["🛝 特色遊戲場","🌲 有遮蔭"],note:"共融式遊戲場，樹蔭密不太曬，鳥巢鞦韆與無障礙遊具，夏天首選。"},
+    {n:"竹東河濱公園",a:"竹東・近",dist:"near",tags:["🌳 大草坪"],note:"頭前溪畔大草坪與自行車道，空間開闊，放風箏、學騎車都合適。"},
+    {n:"貓裏喵親子公園",a:"苗栗市・近",dist:"near",tags:["🛝 特色遊戲場","🆓 免費"],note:"貓裏山上的免費特色公園，大型磨石子溜滑梯＋沙坑＋造型遊具，超人氣。假日早點到好停車。"},
+    {n:"獅山親子公園",a:"頭份・近",dist:"near",tags:["🛝 特色遊戲場","🆓 免費"],note:"太空主題免費公園，號稱全國最長溜滑梯之一，還有沙坑與旋轉遊具，帶小孩必衝。"},
+    {n:"竹南濱海森林遊憩區（假日之森）",a:"竹南・近",dist:"near",tags:["🌳 大草坪","💦 戲水"],note:"海邊木麻黃林＋自行車道與沙灘，夏天有海風較涼，可看夕陽，記得防曬防蚊。"},
+    {n:"崎頂子母隧道",a:"竹南崎頂・近",dist:"near",note:"日治雙隧道＋看海月台，短程好走、光影漂亮，散步兼拍照的輕鬆點（有階梯，推車較不便）。"},
+    {n:"風禾公園",a:"桃園平鎮・中",dist:"mid",tags:["🛝 特色遊戲場"],note:"以滾輪溜滑梯聞名的地景公園，長溜滑梯＋草坡，桃園人氣共融遊戲場。"},
+    {n:"八德埤塘生態公園",a:"桃園八德・中",dist:"mid",tags:["🌳 大草坪","♿ 推車友善"],note:"埤塘生態環湖＋大草坪，有落羽松與水鳥，平緩好推車，適合慢慢晃。"},
+    {n:"龍潭大池",a:"桃園龍潭・中",dist:"mid",tags:["♿ 推車友善"],note:"環湖吊橋與自行車道，可踏踏船、湖畔散步，周邊小吃多，順遊三坑老街。"},
+    {n:"鰲峰山運動公園",a:"台中清水・遠",dist:"far",tags:["🛝 特色遊戲場"],note:"巨石觀景平台＋競合體驗遊戲場（星際場景長溜滑梯），視野開闊，可串清水景點。"}
+  ]},
+
   { id:"hike", emoji:"🥾", title:"登山步道（依難度與條件分級）", sub:"難度：① 輕鬆 ② 中等 ③ 中高 ④ 進階 ⑤ 高山　｜　條件：🟢無須申請　🟡需付費／裝備／登記　🔴需入園證＋入山證", legend:true, items:[
     {n:"十八尖山",a:"新竹市・近",dist:"near",diff:1,cond:0,note:"市區森林步道，路面平整、有飲水機與廁所，約 2 小時。最適合帶小小孩入門。"},
     {n:"鳳崎落日步道",a:"竹北／新豐・近",dist:"near",diff:1,cond:0,note:"大多在樹蔭下、有看海視野，全程約 1.5 小時，終點有咖啡店和廁所。"},
@@ -650,7 +673,18 @@ const sections = [
 ];
 
 /* ---------- 渲染 ---------- */
-const distLabel={near:["近","b-near"],mid:["中","b-mid"],far:["📍遠","b-far"]};
+const distLabel={near:["近","b-near"],mid:["中","b-mid"],midfar:["稍遠","b-midfar"],far:["📍遠","b-far"],veryfar:["🛣 很遠","b-veryfar"]};
+/* 距離細分：只細分原本的 far（把桃園～台東同格的問題拆開），near/mid 保留原標記。依 a 地區關鍵字歸檔（以竹南出發估）。 */
+function fineDist(it){
+  if(it.dist==="near") return "near";
+  if(it.dist==="mid")  return "mid";
+  if(it.dist!=="far")  return it.dist;
+  const a=it.a||"";
+  if(/(高雄|屏東|台南|臺南|嘉義|花蓮|台東|臺東|澎湖|金門|馬祖|清境|仁愛|信義|魚池|日月潭)/.test(a)) return "veryfar"; // 150分＋
+  if(/(台北|臺北|新北|基隆|宜蘭|雲林|南投|武陵|梨山|合歡)/.test(a)) return "far";                                   // 90–150分
+  if(/(桃園|中壢|大溪|楊梅|龍潭|平鎮|八德|復興|台中|臺中|后里|豐原|東勢|和平|谷關|彰化|鹿港|員林|清水|沙鹿)/.test(a)) return "midfar"; // 60–90分
+  return "far";
+}
 const diffLabel={1:["① 輕鬆","b-d1"],2:["② 中等","b-d2"],3:["③ 中高","b-d3"],4:["④ 進階","b-d4"],5:["⑤ 高山","b-d5"]};
 const condLabel={0:["🟢 無須申請","b-c0"],1:["🟡 需付費／裝備／登記","b-c1"],2:["🔴 需入園證＋入山證","b-c2"]};
 const restRE=/(週[一二三四五六日]休|公休|週一休|週二三休|週一二休)/;
@@ -671,7 +705,8 @@ const secMeta={};   // secId -> {title, groupId, emoji}
 function renderCard(it,curSecId,idx){
   const placeId=curSecId+"-"+idx;
   let badges="";
-  const d=distLabel[it.dist]; if(d) badges+=badge(d[0],d[1]);
+  const fd=fineDist(it);
+  const d=distLabel[fd]; if(d) badges+=badge(d[0],d[1]);
   if(it.diff){const x=diffLabel[it.diff]; badges+=badge(x[0],x[1]);}
   if(it.cond!==undefined){const c=condLabel[it.cond]; badges+=badge(c[0],c[1]);}
   if(it.tags){it.tags.forEach(t=>{badges+=tagBadge(t)});}
@@ -692,7 +727,7 @@ function renderCard(it,curSecId,idx){
   // 可搜尋文字（去除標點利於比對）
   const tagText=(it.tags||[]).map(t=>typeof t==="string"?t:t.t).join(" ");
   const hay=(it.n+" "+(it.a||"")+" "+it.note+" "+tagText).toLowerCase();
-  return `<div class="card ${it.star?'star':''}" data-pid="${placeId}" data-dist="${it.dist}" data-hay="${hay.replace(/"/g,'')}" data-name="${it.n}">
+  return `<div class="card ${it.star?'star':''}" data-pid="${placeId}" data-dist="${fd}" data-hay="${hay.replace(/"/g,'')}" data-name="${it.n}">
     <div class="card-top"><div>
       <a class="name map-link" href="${mapsUrl}" target="_blank" rel="noopener">${it.n}${star} <span class="pin">📍</span></a>
       <div class="area">${it.a}</div>
@@ -718,7 +753,7 @@ function renderLegend(){
 }
 
 const groups=[
-  {id:"g-nature", emoji:"🌳", name:"戶外自然",  secs:["water","waterpark","forest","hike"]},
+  {id:"g-nature", emoji:"🌳", name:"戶外自然",  secs:["park","water","waterpark","forest","hike"]},
   {id:"g-animal", emoji:"🐾", name:"動物・農場", secs:["animal","pick","eco"]},
   {id:"g-learn",  emoji:"🏛", name:"室內・知識", secs:["museum","factory","indoor"]},
   {id:"g-culture",emoji:"🏮", name:"文化・懷舊", secs:["rail","street"]},

@@ -1266,6 +1266,9 @@ const COFFEE_STYLES=[
 ];
 const COFFEE_SEC_STYLE={"coffee-view":"景觀","coffee-old":"老宅古蹟","coffee-spec":"純喝咖啡","coffee-origin":"純喝咖啡","coffee-spot":"網美打卡"};
 const NSEC={park:"公園",water:"玩水",waterpark:"玩水",forest:"森林避暑",hike:"步道","forest-n":"國森","forest-c":"國森","forest-s":"國森","forest-e":"國森","baiyue-small":"登山","baiyue-big":"登山"};
+const ASEC={pick:"採果",eco:"生態農場"};
+const SSEC={sky:"天空步道",flower:"賞花",coast:"海邊",night:"夜景"};
+const LSEC={library:"圖書館",factory:"觀光工廠",indoor:"室內樂園"};
 const TRAIL_STYLES=[
   ["親子平緩",/親子|平緩|無階|好走|輕鬆|環湖|悠閒|就近|短程|不到|平穩|平坦/],
   ["森林秘境",/森林|秘境|杉林|雲海|瀑布|茄冬|綠蔭|芬多|神木|巨木|櫻/],
@@ -1336,6 +1339,10 @@ function renderCard(it,curSecId,idx){
       badges+=badge(dl[0],dl[1]);
     }
   }
+  if(ASEC[curSecId]&&cats.indexOf(ASEC[curSecId])===-1)cats.push(ASEC[curSecId]);
+  if(curSecId==="animal"){const k=/牧場|農場/.test(it.n)?"牧場":"動物園水族"; if(cats.indexOf(k)===-1)cats.push(k);}
+  if(SSEC[curSecId]&&cats.indexOf(SSEC[curSecId])===-1)cats.push(SSEC[curSecId]);
+  if(LSEC[curSecId]&&cats.indexOf(LSEC[curSecId])===-1)cats.push(LSEC[curSecId]);
   if(it.lat&&it.lng){MAP_POINTS.push({pid:placeId,name:it.n,lat:+it.lat,lng:+it.lng,cats:cats.slice(),group:(secMeta[curSecId]||{}).groupId||'',cost:_cost,note:it.note||"",a:it.a||""});}
   return `<div class="card ${it.star?'star':''}" data-pid="${placeId}" data-dist="${fd}" data-cats="${cats.join(' ')}" data-group="${(secMeta[curSecId]||{}).groupId||''}" data-sec="${curSecId}" data-region="${_reg}" data-cost="${_cost}" data-hay="${hay.replace(/"/g,'')}" data-name="${it.n}">
     <button class="del-btn" data-pid="${placeId}" title="刪除">✕</button>
@@ -1577,6 +1584,9 @@ const MCOFFEE=[["all","全部風格"],["工作久坐","💻工作久坐"],["純�
 const MNATURE=[["all","全部"],["公園","🌳公園綠地"],["玩水","🏞️玩水戲水"],["森林避暑","⛺森林避暑"],["步道","🥾步道"],["國森","🌲國家森林"],["登山","⛰登山百岳"]];
 const MTRAIL=[["all","全部步道"],["親子平緩","👣親子平緩"],["森林秘境","🌲森林秘境"],["海景草原","🌊海景草原"],["古道人文","🏯古道人文"],["進階郊山","🧗進階郊山"]];
 const MDIFF=[["all","全部難度"],["輕鬆","🟢輕鬆"],["中等","🟡中等"],["挑戰","🔴挑戰"]];
+const MANIMAL=[["all","全部"],["動物園水族","🦁動物園水族"],["牧場","🐄牧場"],["生態農場","🌱生態農場"],["採果","🍓採果"]];
+const MSCENERY=[["all","全部"],["天空步道","🌉天空步道"],["賞花","🌸賞花"],["海邊","🌊海邊"],["夜景","🌃夜景"]];
+const MLEARN=[["all","全部"],["圖書館","📖圖書館"],["觀光工廠","🏭觀光工廠"],["室內樂園","🎠室內樂園"]];
 const MREGS=[["all","全區"],["tcm","桃竹苗"],["north","北北基"],["central","中彰投"],["south","南部"],["east","東部"]];
 function buildMcat(list){mcatFilter.innerHTML=list.map(([k,l],i)=>`<button class="chip${i===0?' active':''}" data-mc="${k}">${l}</button>`).join("");}
 function buildMcat2(list){mcat2Filter.innerHTML=list.map(([k,l],i)=>`<button class="chip${i===0?' active':''}" data-mc2="${k}">${l}</button>`).join("");}
@@ -1595,7 +1605,7 @@ function applyFilters(){
     const cardCats=(c.dataset.cats||"").split(" ");
     const g=c.dataset.group||"";
     const okGroup=(curGroup==="all"||g===curGroup);
-    const okMcat=((curGroup!=="g-museum"&&curGroup!=="g-book"&&curGroup!=="g-food"&&curGroup!=="g-coffee"&&curGroup!=="g-nature")||curMcat==="all"||cardCats.indexOf(curMcat)!==-1);
+    const okMcat=((curGroup!=="g-museum"&&curGroup!=="g-book"&&curGroup!=="g-food"&&curGroup!=="g-coffee"&&curGroup!=="g-nature"&&curGroup!=="g-animal"&&curGroup!=="g-scenery"&&curGroup!=="g-learn")||curMcat==="all"||cardCats.indexOf(curMcat)!==-1);
     const okMcat2=(!(curGroup==="g-nature"&&curMcat==="步道")||curMcat2==="all"||cardCats.indexOf(curMcat2)!==-1);
     const okMcat3=(!(curGroup==="g-nature"&&curMcat==="步道")||curMcat3==="all"||cardCats.indexOf(curMcat3)!==-1);
     const okMreg=(curMreg==="all"||c.dataset.region===curMreg);
@@ -1646,9 +1656,9 @@ groupFilter.addEventListener("click",e=>{
   [...groupFilter.children].forEach(c=>c.classList.remove("active"));
   e.target.classList.add("active");
   curGroup=e.target.dataset.g;
-  const isMus=(curGroup==="g-museum"), isBook=(curGroup==="g-book"), isFood=(curGroup==="g-food"), isCoffee=(curGroup==="g-coffee"), isNature=(curGroup==="g-nature");
-  if(isMus)buildMcat(MCATS); else if(isBook)buildMcat(MBOOK); else if(isFood)buildMcat(MFOOD); else if(isCoffee)buildMcat(MCOFFEE); else if(isNature)buildMcat(MNATURE);
-  mcatFilter.style.display=(isMus||isBook||isFood||isCoffee||isNature)?"":"none";
+  const isMus=(curGroup==="g-museum"), isBook=(curGroup==="g-book"), isFood=(curGroup==="g-food"), isCoffee=(curGroup==="g-coffee"), isNature=(curGroup==="g-nature"), isAnimal=(curGroup==="g-animal"), isScenery=(curGroup==="g-scenery"), isLearn=(curGroup==="g-learn");
+  if(isMus)buildMcat(MCATS); else if(isBook)buildMcat(MBOOK); else if(isFood)buildMcat(MFOOD); else if(isCoffee)buildMcat(MCOFFEE); else if(isNature)buildMcat(MNATURE); else if(isAnimal)buildMcat(MANIMAL); else if(isScenery)buildMcat(MSCENERY); else if(isLearn)buildMcat(MLEARN);
+  mcatFilter.style.display=(isMus||isBook||isFood||isCoffee||isNature||isAnimal||isScenery||isLearn)?"":"none";
   mcat2Filter.style.display="none"; mcat3Filter.style.display="none";
   curMcat="all"; curMcat2="all"; curMcat3="all";
   applyFilters();

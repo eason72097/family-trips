@@ -297,6 +297,7 @@
     <div class="filter-label">大類別</div>
     <div class="chips" id="groupFilter"></div>
     <div class="chips" id="mcatFilter" style="display:none"></div>
+    <div class="chips" id="mcat2Filter" style="display:none"></div>
   </div>
   <div class="ctl-row">
     <div class="filter-label">區域</div>
@@ -1260,6 +1261,14 @@ const COFFEE_STYLES=[
   ["親子",/親子/]
 ];
 const COFFEE_SEC_STYLE={"coffee-view":"景觀","coffee-old":"老宅古蹟","coffee-spec":"純喝咖啡","coffee-origin":"純喝咖啡","coffee-spot":"網美打卡"};
+const NSEC={park:"公園",water:"玩水",waterpark:"玩水",forest:"森林避暑",hike:"步道","forest-n":"國森","forest-c":"國森","forest-s":"國森","forest-e":"國森","baiyue-small":"登山","baiyue-big":"登山"};
+const TRAIL_STYLES=[
+  ["親子平緩",/親子|平緩|無階|好走|輕鬆|環湖|悠閒|就近|短程|不到|平穩|平坦/],
+  ["森林秘境",/森林|秘境|杉林|雲海|瀑布|茄冬|綠蔭|芬多|神木|巨木|櫻/],
+  ["海景草原",/海景|草原|風車|看海|海線|大海|濕地|夕陽/],
+  ["古道人文",/古道|古剎|糯米橋|石板|部落|挑鹽|老街|吊橋|礦|古堡|神社/],
+  ["進階郊山",/稜線|中階|進階|聖稜|挑戰|中級|郊山|攻頂|百岳|主峰|三角點/]
+];
 
 function renderCard(it,curSecId,idx){
   const placeId=curSecId+"-"+idx;
@@ -1307,6 +1316,14 @@ function renderCard(it,curSecId,idx){
     const list=order.filter(s=>ss.has(s));
     if(list.length) badges+=badge("🎨 風格："+list.join("・"),"b-style");
   }
+  if(NSEC[curSecId]){
+    if(cats.indexOf(NSEC[curSecId])===-1)cats.push(NSEC[curSecId]);
+    if(curSecId==="hike"){
+      const tt=[]; const t=it.n+" "+(it.note||"");
+      TRAIL_STYLES.forEach(([k,re])=>{if(re.test(t)){if(cats.indexOf(k)===-1)cats.push(k); tt.push(k);}});
+      if(tt.length) badges+=badge("🥾 "+tt.join("・"),"b-style");
+    }
+  }
   if(it.lat&&it.lng){MAP_POINTS.push({pid:placeId,name:it.n,lat:+it.lat,lng:+it.lng,cats:cats.slice(),group:(secMeta[curSecId]||{}).groupId||'',cost:_cost,note:it.note||"",a:it.a||""});}
   return `<div class="card ${it.star?'star':''}" data-pid="${placeId}" data-dist="${fd}" data-cats="${cats.join(' ')}" data-group="${(secMeta[curSecId]||{}).groupId||''}" data-sec="${curSecId}" data-region="${_reg}" data-cost="${_cost}" data-hay="${hay.replace(/"/g,'')}" data-name="${it.n}">
     <button class="del-btn" data-pid="${placeId}" title="刪除">✕</button>
@@ -1335,7 +1352,7 @@ function renderLegend(){
 }
 
 const groups=[
-  {id:"g-nature", emoji:"🌳", name:"戶外自然",  secs:["park","water","waterpark","forest","hike"]},
+  {id:"g-nature", emoji:"🌳", name:"戶外自然",  secs:["park","water","waterpark","forest","hike","forest-n","forest-c","forest-s","forest-e","baiyue-small","baiyue-big"]},
   {id:"g-animal", emoji:"🐾", name:"動物・農場", secs:["animal","pick","eco"]},
   {id:"g-learn",  emoji:"🏛", name:"室內・知識", secs:["library","factory","indoor"]},
   {id:"g-museum", emoji:"🏛", name:"博物館（分區）", secs:["museum-tcm","museum-north","museum-central","museum-south","museum-east"]},
@@ -1344,8 +1361,7 @@ const groups=[
   {id:"g-scenery",emoji:"🌅", name:"景觀・休閒", secs:["sky","flower","coast","night"]},
   {id:"g-coffee", emoji:"☕", name:"咖啡主題",  secs:["coffee-explore","coffee-tcm","coffee-spec","coffee-origin","coffee-view","coffee-old","coffee-spot"]},
   {id:"g-town",   emoji:"🏘", name:"特色小鎮",  secs:["town-n","town-c","town-s","town-e"]},
-  {id:"g-food",   emoji:"🍴", name:"在地美食",  secs:["food-bib","food-explore","food-salty-tcm","food-salty-tw","food-sweet-tcm","food-sweet-tw","food-other"]},
-  {id:"g-mtn",    emoji:"⛰", name:"國森・登山",  secs:["forest-n","forest-c","forest-s","forest-e","baiyue-small","baiyue-big"]}
+  {id:"g-food",   emoji:"🍴", name:"在地美食",  secs:["food-bib","food-explore","food-salty-tcm","food-salty-tw","food-sweet-tcm","food-sweet-tw","food-other"]}
 ];
 
 const app=document.getElementById("app");
@@ -1530,8 +1546,9 @@ const searchInput=document.getElementById("search");
 const searchClear=document.getElementById("searchClear");
 const searchCount=document.getElementById("searchCount");
 let curDist="all";
-let curGroup="all", curMcat="all", curMreg="all", curKid=false, curCost="all";
+let curGroup="all", curMcat="all", curMreg="all", curKid=false, curCost="all", curMcat2="all";
 const costFilter=document.getElementById("costFilter");
+const mcat2Filter=document.getElementById("mcat2Filter");
 const groupFilter=document.getElementById("groupFilter");
 const mcatFilter=document.getElementById("mcatFilter");
 const mregFilter=document.getElementById("mregFilter");
@@ -1544,8 +1561,11 @@ const MCATS=[["all","全部型態"],["自然科學","🔬自然科學"],["歷史
 const MBOOK=[["all","全部型態"],["書店咖啡","☕書店咖啡"],["二手書","♻二手書"],["親子","👶兒童/親子"]];
 const MFOOD=[["all","全部"],["平常吃","🍜平常吃"],["順便吃","🚗順便吃"],["特別去吃","🎉特別去吃"],["必比登","⭐必比登"]];
 const MCOFFEE=[["all","全部風格"],["工作久坐","💻工作久坐"],["純喝咖啡","☕純喝咖啡"],["甜點蛋糕","🍰甜點蛋糕"],["景觀","🏞️景觀"],["老宅古蹟","🏛️老宅古蹟"],["網美打卡","📸網美打卡"],["寵物友善","🐾寵物友善"],["親子","👶親子"]];
+const MNATURE=[["all","全部"],["公園","🌳公園綠地"],["玩水","🏞️玩水戲水"],["森林避暑","⛺森林避暑"],["步道","🥾步道"],["國森","🌲國家森林"],["登山","⛰登山百岳"]];
+const MTRAIL=[["all","全部步道"],["親子平緩","👣親子平緩"],["森林秘境","🌲森林秘境"],["海景草原","🌊海景草原"],["古道人文","🏯古道人文"],["進階郊山","🧗進階郊山"]];
 const MREGS=[["all","全區"],["tcm","桃竹苗"],["north","北北基"],["central","中彰投"],["south","南部"],["east","東部"]];
 function buildMcat(list){mcatFilter.innerHTML=list.map(([k,l],i)=>`<button class="chip${i===0?' active':''}" data-mc="${k}">${l}</button>`).join("");}
+function buildMcat2(list){mcat2Filter.innerHTML=list.map(([k,l],i)=>`<button class="chip${i===0?' active':''}" data-mc2="${k}">${l}</button>`).join("");}
 groupFilter.innerHTML='<button class="chip active" data-g="all">全部</button>'+groups.map(g=>`<button class="chip" data-g="${g.id}">${g.emoji} ${g.name}</button>`).join("");
 buildMcat(MCATS);
 mregFilter.innerHTML=MREGS.map(([k,l],i)=>`<button class="chip${i===0?' active':''}" data-mr="${k}">${l}</button>`).join("");
@@ -1560,7 +1580,8 @@ function applyFilters(){
     const cardCats=(c.dataset.cats||"").split(" ");
     const g=c.dataset.group||"";
     const okGroup=(curGroup==="all"||g===curGroup);
-    const okMcat=((curGroup!=="g-museum"&&curGroup!=="g-book"&&curGroup!=="g-food"&&curGroup!=="g-coffee")||curMcat==="all"||cardCats.indexOf(curMcat)!==-1);
+    const okMcat=((curGroup!=="g-museum"&&curGroup!=="g-book"&&curGroup!=="g-food"&&curGroup!=="g-coffee"&&curGroup!=="g-nature")||curMcat==="all"||cardCats.indexOf(curMcat)!==-1);
+    const okMcat2=(!(curGroup==="g-nature"&&curMcat==="步道")||curMcat2==="all"||cardCats.indexOf(curMcat2)!==-1);
     const okMreg=(curMreg==="all"||c.dataset.region===curMreg);
     const okCost=(curCost==="all"||c.dataset.cost===curCost);
     const okKid=(!curKid||cardCats.indexOf("親子")!==-1);
@@ -1569,7 +1590,7 @@ function applyFilters(){
     const okQ=(!q || c.dataset.hay.indexOf(q)!==-1);
     const st=wantState[c.dataset.pid]||{};
     const okWant=(!onlyWantActive || !!st[currentWho]);
-    const show=okDist&&okGroup&&okMcat&&okMreg&&okCost&&okKid&&okDel&&okQ&&okWant;
+    const show=okDist&&okGroup&&okMcat&&okMcat2&&okMreg&&okCost&&okKid&&okDel&&okQ&&okWant;
     c.style.display=show?"":"none";
     if(show)shown++;
     // 高亮店名中的關鍵字
@@ -1609,16 +1630,26 @@ groupFilter.addEventListener("click",e=>{
   [...groupFilter.children].forEach(c=>c.classList.remove("active"));
   e.target.classList.add("active");
   curGroup=e.target.dataset.g;
-  const isMus=(curGroup==="g-museum"), isBook=(curGroup==="g-book"), isFood=(curGroup==="g-food"), isCoffee=(curGroup==="g-coffee");
-  if(isMus)buildMcat(MCATS); else if(isBook)buildMcat(MBOOK); else if(isFood)buildMcat(MFOOD); else if(isCoffee)buildMcat(MCOFFEE);
-  mcatFilter.style.display=(isMus||isBook||isFood||isCoffee)?"":"none";
-  curMcat="all";
+  const isMus=(curGroup==="g-museum"), isBook=(curGroup==="g-book"), isFood=(curGroup==="g-food"), isCoffee=(curGroup==="g-coffee"), isNature=(curGroup==="g-nature");
+  if(isMus)buildMcat(MCATS); else if(isBook)buildMcat(MBOOK); else if(isFood)buildMcat(MFOOD); else if(isCoffee)buildMcat(MCOFFEE); else if(isNature)buildMcat(MNATURE);
+  mcatFilter.style.display=(isMus||isBook||isFood||isCoffee||isNature)?"":"none";
+  mcat2Filter.style.display="none";
+  curMcat="all"; curMcat2="all";
   applyFilters();
 });
 mcatFilter.addEventListener("click",e=>{
   if(!e.target.classList.contains("chip"))return;
   [...mcatFilter.children].forEach(c=>c.classList.remove("active"));
-  e.target.classList.add("active"); curMcat=e.target.dataset.mc; applyFilters();
+  e.target.classList.add("active"); curMcat=e.target.dataset.mc;
+  if(curGroup==="g-nature" && curMcat==="步道"){ buildMcat2(MTRAIL); mcat2Filter.style.display=""; }
+  else { mcat2Filter.style.display="none"; }
+  curMcat2="all";
+  applyFilters();
+});
+mcat2Filter.addEventListener("click",e=>{
+  if(!e.target.classList.contains("chip"))return;
+  [...mcat2Filter.children].forEach(c=>c.classList.remove("active"));
+  e.target.classList.add("active"); curMcat2=e.target.dataset.mc2; applyFilters();
 });
 mregFilter.addEventListener("click",e=>{
   if(!e.target.classList.contains("chip"))return;

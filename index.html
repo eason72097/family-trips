@@ -237,6 +237,9 @@
   .del-btn.restore{color:#2f7a4d;border-color:#bfe0cc}
   .del-btn.restore:hover{background:#e0f2e7}
   .b-style{background:#e3ece6;color:#3a6b52}
+  .b-d1{background:#d9efe0;color:#1f7a4d}
+  .b-d2{background:#fbf0d0;color:#8a6d1a}
+  .b-d3{background:#f5d9d2;color:#a5361e}
 </style>
 </head>
 <body>
@@ -298,6 +301,7 @@
     <div class="chips" id="groupFilter"></div>
     <div class="chips" id="mcatFilter" style="display:none"></div>
     <div class="chips" id="mcat2Filter" style="display:none"></div>
+    <div class="chips" id="mcat3Filter" style="display:none"></div>
   </div>
   <div class="ctl-row">
     <div class="filter-label">區域</div>
@@ -400,12 +404,12 @@ const sections = [
     {n:"十八尖山",a:"新竹市・近",dist:"near",diff:1,cond:0,note:"市區森林步道，路面平整、有飲水機與廁所，約 2 小時。最適合帶小小孩入門。",lat:24.79,lng:120.98},
     {n:"鳳崎落日步道",a:"竹北／新豐・近",dist:"near",diff:1,cond:0,note:"大多在樹蔭下、有看海視野，全程約 1.5 小時，終點有咖啡店和廁所。",lat:24.8609,lng:120.9709},
     {n:"蓬萊溪護魚步道",a:"南庄・中",dist:"mid",diff:1,cond:0,note:"清澈溪水看魚、沿途遮蔭，坡度平緩好走，單程 2km 內，4–5 歲以上可走。",lat:24.6,lng:120.99},
-    {n:"青蛙石步道",a:"尖石・中",dist:"mid",diff:1,cond:1,note:"溪流＋巨石，30 分鐘走完，適合小小孩。需門票。",lat:24.66,lng:121.18},
+    {n:"青蛙石步道",a:"尖石・中",dist:"mid",diff:1,cond:1,note:"溪流＋巨石，平緩好走約30分鐘，適合親子小小孩。需門票。",lat:24.66,lng:121.18},
     {n:"新豐紅樹林",a:"新豐・近",dist:"near",diff:1,cond:0,note:"平緩木棧道＋遮陽涼亭，看招潮蟹與水鳥（退潮才看得到蟹）。",lat:24.89,lng:120.965},
     {n:"香山濕地賞蟹步道",a:"新竹・近",dist:"near",diff:1,cond:1,note:"海上木棧道、看招潮蟹與夕陽。週一公休，傍晚最佳。",lat:24.765,lng:120.908},
-    {n:"飛鳳山步道",a:"芎林新竹・中",dist:"mid",diff:2,cond:0,note:"新竹人氣 No.1，多在樹蔭下、有陡階段，1–2 小時，停車方便，天氣好可遠眺台灣海峽。",lat:24.75,lng:121.12},
+    {n:"飛鳳山步道",a:"芎林新竹・中",dist:"mid",diff:2,cond:0,note:"新竹人氣 No.1 郊山，多在樹蔭下、有陡階，1–2 小時，停車方便，天氣好可遠眺台灣海峽。",lat:24.75,lng:121.12},
     {n:"火炎山大拐道",a:"三義苗栗・中",dist:"mid",diff:2,cond:0,note:"環線約 3–4 小時、峽谷地貌壯觀。⚠️ 部分稜線裸露日曬，夏天偏熱，需大量水、早上去。",lat:24.34,lng:120.75},
-    {n:"馬那邦山",a:"大湖苗栗・中",dist:"mid",diff:2,cond:1,note:"約 4 小時、秋楓名所，黏土路面雨後濕滑。建議騎車到登山口；停車投幣 $100。",lat:24.42,lng:120.92},
+    {n:"馬那邦山",a:"大湖苗栗・中",dist:"mid",diff:2,cond:1,note:"中級山、約 4 小時，秋楓名所，黏土路面雨後濕滑。建議騎車到登山口；停車投幣 $100。",lat:24.42,lng:120.92},
     {n:"李棟山古堡",a:"尖石新竹・中",dist:"mid",diff:2,cond:0,note:"1.5km 緩升至日治時代山頂古堡，森林優美。尖石後山山路較遠，注意行車。",lat:24.61,lng:121.25},
     {n:"鵝公髻山（第一登山口）",a:"五峰新竹・中高",dist:"mid",diff:3,cond:1,note:"小百岳 1579m，前段產業道路頗陡、後段柳杉林，約 2 小時上。清潔費 $100、有廁所。",lat:24.59,lng:121.08},
     {n:"加里山",a:"南庄苗栗・進階",dist:"mid",diff:4,cond:1,note:"中級山經典！11km／6–7 小時，多樹根、最後一段需攀繩，途中需渡溪（多人赤腳過）。柳杉林全程遮蔭。需好鞋與體力，建議登記行程。",lat:24.46,lng:121.03},
@@ -1322,6 +1326,14 @@ function renderCard(it,curSecId,idx){
       const tt=[]; const t=it.n+" "+(it.note||"");
       TRAIL_STYLES.forEach(([k,re])=>{if(re.test(t)){if(cats.indexOf(k)===-1)cats.push(k); tt.push(k);}});
       if(tt.length) badges+=badge("🥾 "+tt.join("・"),"b-style");
+      let dv;
+      if(it.diff===1)dv="輕鬆"; else if(it.diff===3)dv="挑戰"; else if(it.diff===2)dv="中等";
+      else if(/進階|中級|中階|挑戰|聖稜|百岳|主峰|攻頂|縱走/.test(t))dv="挑戰";
+      else if(/親子|平緩|無階|好走|輕鬆|環湖|悠閒|短程|平穩|初階|羽量|不到/.test(t))dv="輕鬆";
+      else dv="中等";
+      if(cats.indexOf(dv)===-1)cats.push(dv);
+      const dl={"輕鬆":["🟢 輕鬆","b-d1"],"中等":["🟡 中等","b-d2"],"挑戰":["🔴 挑戰","b-d3"]}[dv];
+      badges+=badge(dl[0],dl[1]);
     }
   }
   if(it.lat&&it.lng){MAP_POINTS.push({pid:placeId,name:it.n,lat:+it.lat,lng:+it.lng,cats:cats.slice(),group:(secMeta[curSecId]||{}).groupId||'',cost:_cost,note:it.note||"",a:it.a||""});}
@@ -1546,9 +1558,10 @@ const searchInput=document.getElementById("search");
 const searchClear=document.getElementById("searchClear");
 const searchCount=document.getElementById("searchCount");
 let curDist="all";
-let curGroup="all", curMcat="all", curMreg="all", curKid=false, curCost="all", curMcat2="all";
+let curGroup="all", curMcat="all", curMreg="all", curKid=false, curCost="all", curMcat2="all", curMcat3="all";
 const costFilter=document.getElementById("costFilter");
 const mcat2Filter=document.getElementById("mcat2Filter");
+const mcat3Filter=document.getElementById("mcat3Filter");
 const groupFilter=document.getElementById("groupFilter");
 const mcatFilter=document.getElementById("mcatFilter");
 const mregFilter=document.getElementById("mregFilter");
@@ -1563,9 +1576,11 @@ const MFOOD=[["all","全部"],["平常吃","🍜平常吃"],["順便吃","🚗�
 const MCOFFEE=[["all","全部風格"],["工作久坐","💻工作久坐"],["純喝咖啡","☕純喝咖啡"],["甜點蛋糕","🍰甜點蛋糕"],["景觀","🏞️景觀"],["老宅古蹟","🏛️老宅古蹟"],["網美打卡","📸網美打卡"],["寵物友善","🐾寵物友善"],["親子","👶親子"]];
 const MNATURE=[["all","全部"],["公園","🌳公園綠地"],["玩水","🏞️玩水戲水"],["森林避暑","⛺森林避暑"],["步道","🥾步道"],["國森","🌲國家森林"],["登山","⛰登山百岳"]];
 const MTRAIL=[["all","全部步道"],["親子平緩","👣親子平緩"],["森林秘境","🌲森林秘境"],["海景草原","🌊海景草原"],["古道人文","🏯古道人文"],["進階郊山","🧗進階郊山"]];
+const MDIFF=[["all","全部難度"],["輕鬆","🟢輕鬆"],["中等","🟡中等"],["挑戰","🔴挑戰"]];
 const MREGS=[["all","全區"],["tcm","桃竹苗"],["north","北北基"],["central","中彰投"],["south","南部"],["east","東部"]];
 function buildMcat(list){mcatFilter.innerHTML=list.map(([k,l],i)=>`<button class="chip${i===0?' active':''}" data-mc="${k}">${l}</button>`).join("");}
 function buildMcat2(list){mcat2Filter.innerHTML=list.map(([k,l],i)=>`<button class="chip${i===0?' active':''}" data-mc2="${k}">${l}</button>`).join("");}
+function buildMcat3(list){mcat3Filter.innerHTML=list.map(([k,l],i)=>`<button class="chip${i===0?' active':''}" data-mc3="${k}">${l}</button>`).join("");}
 groupFilter.innerHTML='<button class="chip active" data-g="all">全部</button>'+groups.map(g=>`<button class="chip" data-g="${g.id}">${g.emoji} ${g.name}</button>`).join("");
 buildMcat(MCATS);
 mregFilter.innerHTML=MREGS.map(([k,l],i)=>`<button class="chip${i===0?' active':''}" data-mr="${k}">${l}</button>`).join("");
@@ -1582,6 +1597,7 @@ function applyFilters(){
     const okGroup=(curGroup==="all"||g===curGroup);
     const okMcat=((curGroup!=="g-museum"&&curGroup!=="g-book"&&curGroup!=="g-food"&&curGroup!=="g-coffee"&&curGroup!=="g-nature")||curMcat==="all"||cardCats.indexOf(curMcat)!==-1);
     const okMcat2=(!(curGroup==="g-nature"&&curMcat==="步道")||curMcat2==="all"||cardCats.indexOf(curMcat2)!==-1);
+    const okMcat3=(!(curGroup==="g-nature"&&curMcat==="步道")||curMcat3==="all"||cardCats.indexOf(curMcat3)!==-1);
     const okMreg=(curMreg==="all"||c.dataset.region===curMreg);
     const okCost=(curCost==="all"||c.dataset.cost===curCost);
     const okKid=(!curKid||cardCats.indexOf("親子")!==-1);
@@ -1590,7 +1606,7 @@ function applyFilters(){
     const okQ=(!q || c.dataset.hay.indexOf(q)!==-1);
     const st=wantState[c.dataset.pid]||{};
     const okWant=(!onlyWantActive || !!st[currentWho]);
-    const show=okDist&&okGroup&&okMcat&&okMcat2&&okMreg&&okCost&&okKid&&okDel&&okQ&&okWant;
+    const show=okDist&&okGroup&&okMcat&&okMcat2&&okMcat3&&okMreg&&okCost&&okKid&&okDel&&okQ&&okWant;
     c.style.display=show?"":"none";
     if(show)shown++;
     // 高亮店名中的關鍵字
@@ -1633,23 +1649,28 @@ groupFilter.addEventListener("click",e=>{
   const isMus=(curGroup==="g-museum"), isBook=(curGroup==="g-book"), isFood=(curGroup==="g-food"), isCoffee=(curGroup==="g-coffee"), isNature=(curGroup==="g-nature");
   if(isMus)buildMcat(MCATS); else if(isBook)buildMcat(MBOOK); else if(isFood)buildMcat(MFOOD); else if(isCoffee)buildMcat(MCOFFEE); else if(isNature)buildMcat(MNATURE);
   mcatFilter.style.display=(isMus||isBook||isFood||isCoffee||isNature)?"":"none";
-  mcat2Filter.style.display="none";
-  curMcat="all"; curMcat2="all";
+  mcat2Filter.style.display="none"; mcat3Filter.style.display="none";
+  curMcat="all"; curMcat2="all"; curMcat3="all";
   applyFilters();
 });
 mcatFilter.addEventListener("click",e=>{
   if(!e.target.classList.contains("chip"))return;
   [...mcatFilter.children].forEach(c=>c.classList.remove("active"));
   e.target.classList.add("active"); curMcat=e.target.dataset.mc;
-  if(curGroup==="g-nature" && curMcat==="步道"){ buildMcat2(MTRAIL); mcat2Filter.style.display=""; }
-  else { mcat2Filter.style.display="none"; }
-  curMcat2="all";
+  if(curGroup==="g-nature" && curMcat==="步道"){ buildMcat2(MTRAIL); buildMcat3(MDIFF); mcat2Filter.style.display=""; mcat3Filter.style.display=""; }
+  else { mcat2Filter.style.display="none"; mcat3Filter.style.display="none"; }
+  curMcat2="all"; curMcat3="all";
   applyFilters();
 });
 mcat2Filter.addEventListener("click",e=>{
   if(!e.target.classList.contains("chip"))return;
   [...mcat2Filter.children].forEach(c=>c.classList.remove("active"));
   e.target.classList.add("active"); curMcat2=e.target.dataset.mc2; applyFilters();
+});
+mcat3Filter.addEventListener("click",e=>{
+  if(!e.target.classList.contains("chip"))return;
+  [...mcat3Filter.children].forEach(c=>c.classList.remove("active"));
+  e.target.classList.add("active"); curMcat3=e.target.dataset.mc3; applyFilters();
 });
 mregFilter.addEventListener("click",e=>{
   if(!e.target.classList.contains("chip"))return;

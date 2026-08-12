@@ -1376,7 +1376,8 @@ const COFFEE_STYLES=[
   ["親子",/親子/]
 ];
 const COFFEE_SEC_STYLE={"coffee-view":"景觀","coffee-old":"老宅古蹟","coffee-spec":"純喝咖啡","coffee-origin":"純喝咖啡","coffee-spot":"網美打卡"};
-const NSEC={park:"公園",water:"玩水",waterpark:"玩水",forest:"森林避暑",hike:"步道","forest-n":"國森","forest-c":"國森","forest-s":"國森","forest-e":"國森","baiyue-small":"登山","baiyue-big":"登山",natpark:"國家公園",natscenic:"國家風景區",natgarden:"自然園區"};
+const NSEC={park:"公園",playground:"公園",water:"玩水",waterpark:"玩水",forest:"森林避暑",hike:"步道","forest-n":"國森","forest-c":"國森","forest-s":"國森","forest-e":"國森","baiyue-small":"登山","baiyue-big":"登山",natpark:"國家公園",natscenic:"國家風景區",natgarden:"自然園區"};
+const MPARK2=[["all","全部"],["特色遊戲場","🛝特色遊戲場"],["大草原湖畔","🏞️大草原湖畔"],["河濱綠地","🌊河濱綠地"],["社區公園","🏙️社區公園"]];
 const ASEC={pick:"採果",eco:"生態農場"};
 const SSEC={sky:"天空步道",flower:"賞花",coast:"海邊",night:"夜景"};
 const LSEC={library:"圖書館",factory:"觀光工廠",indoor:"室內樂園"};
@@ -1446,6 +1447,15 @@ function renderCard(it,curSecId,idx){
   }
   if(NSEC[curSecId]){
     if(cats.indexOf(NSEC[curSecId])===-1)cats.push(NSEC[curSecId]);
+    if(curSecId==="park"||curSecId==="playground"){
+      let pk;
+      if(curSecId==="playground") pk="特色遊戲場";
+      else { const t=it.n+" "+(it.note||"");
+        if(/河濱|溪畔|河畔|親水|運河|頭前溪/.test(t)) pk="河濱綠地";
+        else if(/草原|草皮|都會公園|運動公園|大湖公園|湖畔|森林公園|埤塘|生態公園|大池|花園農場|農場大草/.test(t)) pk="大草原湖畔";
+        else pk="社區公園"; }
+      if(cats.indexOf(pk)===-1)cats.push(pk);
+    }
     if(curSecId==="hike"){
       const tt=[]; const t=it.n+" "+(it.note||"");
       TRAIL_STYLES.forEach(([k,re])=>{if(re.test(t)){if(cats.indexOf(k)===-1)cats.push(k); tt.push(k);}});
@@ -1497,8 +1507,7 @@ function renderLegend(){
 }
 
 const groups=[
-  {id:"g-nature", emoji:"🌳", name:"戶外自然",  secs:["park","water","waterpark","forest","hike","forest-n","forest-c","forest-s","forest-e","natpark","natscenic","natgarden","baiyue-small","baiyue-big"]},
-  {id:"g-playground", emoji:"🛝", name:"特色遊戲場", secs:["playground"]},
+  {id:"g-nature", emoji:"🌳", name:"戶外自然",  secs:["park","playground","water","waterpark","forest","hike","forest-n","forest-c","forest-s","forest-e","natpark","natscenic","natgarden","baiyue-small","baiyue-big"]},
   {id:"g-animal", emoji:"🐾", name:"動物・農場", secs:["animal","pick","eco"]},
   {id:"g-learn",  emoji:"🏛", name:"室內・知識", secs:["library","factory","indoor"]},
   {id:"g-museum", emoji:"🏛", name:"博物館（分區）", secs:["museum-tcm","museum-north","museum-central","museum-south","museum-east"]},
@@ -1733,8 +1742,8 @@ function applyFilters(){
     const cardCats=(c.dataset.cats||"").split(" ");
     const g=c.dataset.group||"";
     const okGroup=(curGroup==="all"||g===curGroup);
-    const okMcat=((curGroup!=="g-museum"&&curGroup!=="g-book"&&curGroup!=="g-food"&&curGroup!=="g-coffee"&&curGroup!=="g-nature"&&curGroup!=="g-animal"&&curGroup!=="g-scenery"&&curGroup!=="g-learn"&&curGroup!=="g-playground")||curMcat==="all"||cardCats.indexOf(curMcat)!==-1);
-    const okMcat2=(!(curGroup==="g-nature"&&curMcat==="步道")||curMcat2==="all"||cardCats.indexOf(curMcat2)!==-1);
+    const okMcat=((curGroup!=="g-museum"&&curGroup!=="g-book"&&curGroup!=="g-food"&&curGroup!=="g-coffee"&&curGroup!=="g-nature"&&curGroup!=="g-animal"&&curGroup!=="g-scenery"&&curGroup!=="g-learn")||curMcat==="all"||cardCats.indexOf(curMcat)!==-1);
+    const okMcat2=(!(curGroup==="g-nature"&&(curMcat==="步道"||curMcat==="公園"))||curMcat2==="all"||cardCats.indexOf(curMcat2)!==-1);
     const okMcat3=(!(curGroup==="g-nature"&&curMcat==="步道")||curMcat3==="all"||cardCats.indexOf(curMcat3)!==-1);
     const okMreg=(curMreg==="all"||c.dataset.region===curMreg);
     const okCost=(curCost==="all"||c.dataset.cost===curCost);
@@ -1784,9 +1793,9 @@ groupFilter.addEventListener("click",e=>{
   [...groupFilter.children].forEach(c=>c.classList.remove("active"));
   e.target.classList.add("active");
   curGroup=e.target.dataset.g;
-  const isMus=(curGroup==="g-museum"), isBook=(curGroup==="g-book"), isFood=(curGroup==="g-food"), isCoffee=(curGroup==="g-coffee"), isNature=(curGroup==="g-nature"), isAnimal=(curGroup==="g-animal"), isScenery=(curGroup==="g-scenery"), isLearn=(curGroup==="g-learn"), isPlay=(curGroup==="g-playground");
-  if(isMus)buildMcat(MCATS); else if(isBook)buildMcat(MBOOK); else if(isFood)buildMcat(MFOOD); else if(isCoffee)buildMcat(MCOFFEE); else if(isNature)buildMcat(MNATURE); else if(isAnimal)buildMcat(MANIMAL); else if(isScenery)buildMcat(MSCENERY); else if(isLearn)buildMcat(MLEARN); else if(isPlay)buildMcat(MPLAY);
-  mcatFilter.style.display=(isMus||isBook||isFood||isCoffee||isNature||isAnimal||isScenery||isLearn||isPlay)?"":"none";
+  const isMus=(curGroup==="g-museum"), isBook=(curGroup==="g-book"), isFood=(curGroup==="g-food"), isCoffee=(curGroup==="g-coffee"), isNature=(curGroup==="g-nature"), isAnimal=(curGroup==="g-animal"), isScenery=(curGroup==="g-scenery"), isLearn=(curGroup==="g-learn");
+  if(isMus)buildMcat(MCATS); else if(isBook)buildMcat(MBOOK); else if(isFood)buildMcat(MFOOD); else if(isCoffee)buildMcat(MCOFFEE); else if(isNature)buildMcat(MNATURE); else if(isAnimal)buildMcat(MANIMAL); else if(isScenery)buildMcat(MSCENERY); else if(isLearn)buildMcat(MLEARN);
+  mcatFilter.style.display=(isMus||isBook||isFood||isCoffee||isNature||isAnimal||isScenery||isLearn)?"":"none";
   mcat2Filter.style.display="none"; mcat3Filter.style.display="none";
   curMcat="all"; curMcat2="all"; curMcat3="all";
   applyFilters();
@@ -1796,6 +1805,7 @@ mcatFilter.addEventListener("click",e=>{
   [...mcatFilter.children].forEach(c=>c.classList.remove("active"));
   e.target.classList.add("active"); curMcat=e.target.dataset.mc;
   if(curGroup==="g-nature" && curMcat==="步道"){ buildMcat2(MTRAIL); buildMcat3(MDIFF); mcat2Filter.style.display=""; mcat3Filter.style.display=""; }
+  else if(curGroup==="g-nature" && curMcat==="公園"){ buildMcat2(MPARK2); mcat2Filter.style.display=""; mcat3Filter.style.display="none"; }
   else { mcat2Filter.style.display="none"; mcat3Filter.style.display="none"; }
   curMcat2="all"; curMcat3="all";
   applyFilters();

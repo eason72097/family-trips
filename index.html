@@ -1756,7 +1756,8 @@ function applyFilters(){
     const okGroup=(curGroup==="all"||g===curGroup);
     const okMcat=((curGroup!=="g-museum"&&curGroup!=="g-book"&&curGroup!=="g-food"&&curGroup!=="g-coffee"&&curGroup!=="g-nature"&&curGroup!=="g-animal"&&curGroup!=="g-scenery"&&curGroup!=="g-learn")||curMcat==="all"||cardCats.indexOf(curMcat)!==-1);
     const okMcat2=(!(curGroup==="g-nature"&&(curMcat==="步道"||curMcat==="公園"))||curMcat2==="all"||cardCats.indexOf(curMcat2)!==-1);
-    const okMcat3=(!(curGroup==="g-nature"&&curMcat==="步道")||curMcat3==="all"||cardCats.indexOf(curMcat3)!==-1);
+    const mcat3On=(curGroup==="g-nature"&&(curMcat==="步道"||(curMcat==="公園"&&curMcat2==="特色遊戲場")));
+    const okMcat3=(!mcat3On||curMcat3==="all"||cardCats.indexOf(curMcat3)!==-1);
     const okMreg=(curMreg==="all"||c.dataset.region===curMreg);
     const okCost=(curCost==="all"||c.dataset.cost===curCost);
     const okKid=(!curKid||cardCats.indexOf("親子")!==-1);
@@ -1825,7 +1826,13 @@ mcatFilter.addEventListener("click",e=>{
 mcat2Filter.addEventListener("click",e=>{
   if(!e.target.classList.contains("chip"))return;
   [...mcat2Filter.children].forEach(c=>c.classList.remove("active"));
-  e.target.classList.add("active"); curMcat2=e.target.dataset.mc2; applyFilters();
+  e.target.classList.add("active"); curMcat2=e.target.dataset.mc2;
+  if(curGroup==="g-nature" && curMcat==="公園"){
+    if(curMcat2==="特色遊戲場"){ buildMcat3(MPLAY); mcat3Filter.style.display=""; }
+    else { mcat3Filter.style.display="none"; }
+    curMcat3="all";
+  }
+  applyFilters();
 });
 mcat3Filter.addEventListener("click",e=>{
   if(!e.target.classList.contains("chip"))return;

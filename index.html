@@ -242,6 +242,8 @@
   .b-d3{background:#f5d9d2;color:#a5361e}
   .b-hours{background:#dbe8f5;color:#2a5a86}
   .b-off{background:#f7ddd6;color:#a53a1e}
+  .b-live{background:#e5f0e8;color:#2f7a4d;text-decoration:none;font-weight:700}
+  .b-live:hover{background:#d3e8db}
 </style>
 </head>
 <body>
@@ -1460,6 +1462,7 @@ function renderCard(it,curSecId,idx){
     const order=["工作久坐","純喝咖啡","甜點蛋糕","景觀","老宅古蹟","網美打卡","寵物友善","親子"];
     const list=order.filter(s=>ss.has(s));
     if(list.length) badges+=badge("🎨 風格："+list.join("・"),"b-style");
+    badges+='<a class="b b-live" href="'+mapsUrl+'" target="_blank" rel="noopener">🕒 查即時營業時間</a>';
   }
   if(NSEC[curSecId]){
     if(cats.indexOf(NSEC[curSecId])===-1)cats.push(NSEC[curSecId]);

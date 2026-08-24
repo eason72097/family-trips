@@ -1,0 +1,608 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>英文聽力練習指南 — 一天的節奏</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=Noto+Serif+TC:wght@500;700&family=Noto+Sans+TC:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --paper:#EFF1EC;
+    --paper-raised:#E5E8E1;
+    --ink:#20241F;
+    --ink-soft:#5B6259;
+    --line:#CFD3C8;
+    --accent:#2F5D50;
+    --accent-soft:#DCE6E1;
+
+    --t-breakfast:#B08A4E;
+    --t-commute-am:#3E6B7A;
+    --t-lunch:#7C9169;
+    --t-commute-pm:#7A5F7A;
+    --t-dishes:#A16A46;
+    --t-quiet:#38425C;
+    --t-family:#8B8F86;
+
+    --serif:'Noto Serif TC', serif;
+    --sans:'Noto Sans TC', 'Inter', sans-serif;
+    --mono:'IBM Plex Mono', monospace;
+  }
+
+  *{box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{
+    margin:0;
+    background:var(--paper);
+    color:var(--ink);
+    font-family:var(--sans);
+    line-height:1.7;
+    font-size:16px;
+  }
+  a{color:var(--accent);}
+  a:focus-visible, button:focus-visible{outline:2px solid var(--accent); outline-offset:2px;}
+
+  .wrap{max-width:840px; margin:0 auto; padding:0 20px;}
+
+  /* ---------- HERO ---------- */
+  .hero{padding:48px 0 28px; border-bottom:1px solid var(--line);}
+  .eyebrow{
+    font-family:var(--mono); font-size:12px; letter-spacing:.12em;
+    color:var(--ink-soft); text-transform:uppercase; margin:0 0 10px;
+  }
+  h1{
+    font-family:var(--serif); font-weight:700; font-size:clamp(26px,5vw,38px);
+    margin:0 0 10px; line-height:1.3;
+  }
+  .hero p.lede{color:var(--ink-soft); max-width:56ch; margin:0;}
+
+  /* timeline scrubber */
+  .timeline{
+    display:flex; gap:2px; margin-top:30px; border-radius:6px; overflow:hidden;
+    border:1px solid var(--line);
+  }
+  .timeline a{
+    flex:1; min-width:0; text-decoration:none; color:var(--ink);
+    background:var(--paper-raised); padding:10px 6px; text-align:center;
+    border-left:1px solid var(--line); position:relative;
+  }
+  .timeline a:first-child{border-left:none;}
+  .timeline a::before{
+    content:""; display:block; width:8px; height:8px; border-radius:50%;
+    background:var(--dot,var(--accent)); margin:0 auto 6px;
+  }
+  .timeline a .tl-time{display:block; font-family:var(--mono); font-size:11px; color:var(--ink-soft);}
+  .timeline a .tl-label{display:block; font-size:12px; margin-top:2px; font-weight:500;}
+  .timeline a[data-c="breakfast"]{--dot:var(--t-breakfast);}
+  .timeline a[data-c="commute-am"]{--dot:var(--t-commute-am);}
+  .timeline a[data-c="lunch"]{--dot:var(--t-lunch);}
+  .timeline a[data-c="commute-pm"]{--dot:var(--t-commute-pm);}
+  .timeline a[data-c="dishes"]{--dot:var(--t-dishes);}
+  .timeline a[data-c="quiet"]{--dot:var(--t-quiet);}
+
+  /* ---------- SECTIONS ---------- */
+  section{padding:44px 0;}
+  section + section{border-top:1px solid var(--line);}
+  .section-head{margin-bottom:22px;}
+  .section-head .eyebrow{margin-bottom:6px;}
+  h2{font-family:var(--serif); font-size:24px; margin:0;}
+  .back-up{font-family:var(--mono); font-size:12px; color:var(--ink-soft); text-decoration:none;}
+
+  /* ---------- DAY BLOCKS ---------- */
+  .slot{
+    display:grid; grid-template-columns:88px 1fr; gap:16px;
+    padding:20px 0; border-top:1px dashed var(--line);
+    scroll-margin-top:16px;
+  }
+  .slot:first-of-type{border-top:none;}
+  .slot .when{font-family:var(--mono); color:var(--ink-soft); font-size:13px; padding-top:2px;}
+  .slot .when b{display:block; font-size:15px; color:var(--ink); font-family:var(--sans); font-weight:700; margin-top:4px;}
+  .slot h3{margin:0 0 6px; font-size:17px; font-family:var(--sans); font-weight:700;}
+  .slot .bar{width:36px; height:3px; border-radius:2px; margin-bottom:10px;}
+  .slot[data-c="breakfast"] .bar{background:var(--t-breakfast);}
+  .slot[data-c="commute-am"] .bar{background:var(--t-commute-am);}
+  .slot[data-c="lunch"] .bar{background:var(--t-lunch);}
+  .slot[data-c="commute-pm"] .bar{background:var(--t-commute-pm);}
+  .slot[data-c="dishes"] .bar{background:var(--t-dishes);}
+  .slot[data-c="quiet"] .bar{background:var(--t-quiet);}
+  .slot[data-c="family"] .bar{background:var(--t-family);}
+  .slot .method{color:var(--ink-soft); font-size:14.5px; margin:0 0 10px;}
+  .chips{display:flex; flex-wrap:wrap; gap:8px;}
+  .chip{
+    font-size:13px; font-family:var(--mono); background:var(--accent-soft);
+    color:var(--accent); padding:5px 10px; border-radius:20px; text-decoration:none;
+    border:1px solid transparent;
+  }
+  .chip:hover{border-color:var(--accent);}
+  .slot.protected{opacity:.75;}
+  .slot.protected .method{font-style:italic;}
+
+  /* ---------- METHODS ---------- */
+  .method-grid{display:grid; grid-template-columns:1fr; gap:14px;}
+  .method-card{
+    padding:14px 16px; background:var(--paper-raised); border-radius:8px;
+    border-left:3px solid var(--accent);
+  }
+  .method-card .m-title{font-weight:700; font-size:14.5px; margin:0 0 4px;}
+  .method-card .m-title .num{font-family:var(--mono); color:var(--accent); margin-right:8px;}
+  .method-card p{margin:0; color:var(--ink-soft); font-size:14px;}
+
+  /* ---------- FILTER ---------- */
+  .filters{display:flex; flex-wrap:wrap; gap:8px; margin-bottom:24px;}
+  .filters button{
+    font-family:var(--sans); font-size:13.5px; padding:7px 14px; border-radius:20px;
+    border:1px solid var(--line); background:var(--paper); color:var(--ink); cursor:pointer;
+  }
+  .filters button.active{background:var(--ink); color:var(--paper); border-color:var(--ink);}
+
+  /* ---------- SHOW CARDS ---------- */
+  .cat-group{margin-bottom:30px;}
+  .cat-group h3{
+    font-family:var(--mono); font-size:13px; letter-spacing:.08em; text-transform:uppercase;
+    color:var(--ink-soft); margin:0 0 14px; padding-bottom:6px; border-bottom:1px solid var(--line);
+  }
+  .show-card{
+    padding:16px 18px; background:var(--paper-raised); border-radius:8px; margin-bottom:12px;
+    scroll-margin-top:16px;
+  }
+  .show-card .row1{display:flex; align-items:baseline; gap:10px; flex-wrap:wrap;}
+  .show-card .priority{
+    font-family:var(--mono); font-size:12px; font-weight:600; color:var(--accent);
+    background:var(--accent-soft); padding:2px 8px; border-radius:10px;
+  }
+  .show-card h4{margin:0; font-size:16px; font-family:var(--sans); font-weight:700;}
+  .show-card .diff{color:var(--ink-soft); font-size:14px; margin:8px 0 12px;}
+  .plat{display:flex; gap:10px; flex-wrap:wrap; align-items:center;}
+  .plat a{
+    font-size:12.5px; font-family:var(--mono); text-decoration:none; color:var(--ink);
+    background:var(--paper); border:1px solid var(--line); padding:4px 10px; border-radius:6px;
+  }
+  .plat a:hover{border-color:var(--accent); color:var(--accent);}
+  .slot-tag{
+    font-size:11.5px; font-family:var(--mono); color:var(--ink-soft); text-decoration:none;
+    margin-left:auto; white-space:nowrap;
+  }
+  .slot-tag:hover{color:var(--accent);}
+
+  /* ---------- BOOKS ---------- */
+  .book{padding:12px 0; border-top:1px dashed var(--line);}
+  .book:first-of-type{border-top:none;}
+  .book b{font-family:var(--serif);}
+  .book span{display:block; color:var(--ink-soft); font-size:14px; margin-top:2px;}
+
+  footer{padding:30px 0 60px; color:var(--ink-soft); font-size:13px; font-family:var(--mono);}
+
+  @media (max-width:600px){
+    .timeline{flex-wrap:wrap;}
+    .timeline a{flex:1 1 30%; border-left:none; border-top:1px solid var(--line);}
+    .timeline a:nth-child(3n+1){border-left:none;}
+    .slot{grid-template-columns:1fr; gap:6px;}
+    .slot .when{display:flex; align-items:baseline; gap:8px;}
+    .slot .when b{margin-top:0;}
+  }
+</style>
+</head>
+<body>
+
+<div class="wrap">
+
+  <header class="hero">
+    <p class="eyebrow">Eason · 個人英文聽力練習索引</p>
+    <h1>一天的節奏,決定聽什麼、怎麼聽</h1>
+    <p class="lede">不同時段的專注力不同,適合的方法和節目也不同。這頁把一天切成幾個時段,每段對應方法和節目;下面的完整索引可以隨時查、隨時換聽。</p>
+
+    <nav class="timeline" aria-label="一天時間軸">
+      <a href="#slot-breakfast" data-c="breakfast"><span class="tl-time">07:00</span><span class="tl-label">早餐</span></a>
+      <a href="#slot-commute-am" data-c="commute-am"><span class="tl-time">08:00</span><span class="tl-label">通勤·早</span></a>
+      <a href="#slot-lunch" data-c="lunch"><span class="tl-time">12:00</span><span class="tl-label">午餐</span></a>
+      <a href="#slot-commute-pm" data-c="commute-pm"><span class="tl-time">18:00</span><span class="tl-label">通勤·晚</span></a>
+      <a href="#slot-dishes" data-c="dishes"><span class="tl-time">20:30</span><span class="tl-label">洗碗</span></a>
+      <a href="#slot-quiet" data-c="quiet"><span class="tl-time">22:00</span><span class="tl-label">安靜時段</span></a>
+    </nav>
+  </header>
+
+  <!-- ============ DAY PLAN ============ -->
+  <section id="day-plan">
+    <div class="section-head">
+      <p class="eyebrow">01 · 對應一天</p>
+      <h2>時段 × 方法 × 節目</h2>
+    </div>
+
+    <div class="slot" id="slot-breakfast" data-c="breakfast">
+      <div class="when">07:00<b>弄早餐</b></div>
+      <div>
+        <div class="bar"></div>
+        <h3>輕泛聽,當作一天的暖身</h3>
+        <p class="method">雙手忙、可以偶爾瞄手機。選短、慢、不用看畫面的內容。</p>
+        <div class="chips">
+          <a class="chip" href="#show-6min">BBC 6 Minute English</a>
+        </div>
+      </div>
+    </div>
+
+    <div class="slot" id="slot-commute-am" data-c="commute-am">
+      <div class="when">08:00<b>通勤(早)</b></div>
+      <div>
+        <div class="bar"></div>
+        <h3>精神最好,可以聽稍微耗腦的內容</h3>
+        <p class="method">泛聽為主。背景知識夠的主題最省力,早上腦袋清醒時聽正好。</p>
+        <div class="chips">
+          <a class="chip" href="#show-asianometry">Asianometry</a>
+          <a class="chip" href="#show-highyield">High Yield</a>
+          <a class="chip" href="#show-acquired">Acquired(分段)</a>
+        </div>
+      </div>
+    </div>
+
+    <div class="slot" id="slot-lunch" data-c="lunch">
+      <div class="when">12:00<b>午餐+散步</b></div>
+      <div>
+        <div class="bar"></div>
+        <h3>輕鬆泛聽,不用燒腦</h3>
+        <p class="method">一個人走的話適合聽短篇,一集剛好一個段落,聽完不拖泥帶水。</p>
+        <div class="chips">
+          <a class="chip" href="#show-indicator">The Indicator</a>
+          <a class="chip" href="#show-jomboy">Jomboy Media</a>
+        </div>
+      </div>
+    </div>
+
+    <div class="slot" id="slot-commute-pm" data-c="commute-pm">
+      <div class="when">18:00<b>通勤(晚)</b></div>
+      <div>
+        <div class="bar"></div>
+        <h3>比較累,換成純娛樂、抓大意就好</h3>
+        <p class="method">口語、有梗的內容,不用逼自己聽懂每個字,養成習慣比較重要。</p>
+        <div class="chips">
+          <a class="chip" href="#show-foulterritory">Foul Territory</a>
+          <a class="chip" href="#show-pmt">Pardon My Take</a>
+        </div>
+      </div>
+    </div>
+
+    <div class="slot" id="slot-dishes" data-c="dishes">
+      <div class="when">20:30<b>收碗洗碗</b></div>
+      <div>
+        <div class="bar"></div>
+        <h3>短篇、容錯率高的內容</h3>
+        <p class="method">延續通勤沒聽完的,或換短篇,被打斷也沒差。</p>
+        <div class="chips">
+          <a class="chip" href="#show-indicator">The Indicator</a>
+          <a class="chip" href="#show-6min">BBC 6 Minute English</a>
+        </div>
+      </div>
+    </div>
+
+    <div class="slot protected" data-c="family">
+      <div class="when">19:00–21:30<b>陪小孩</b></div>
+      <div>
+        <div class="bar"></div>
+        <h3>玩耍 / 洗澡 / 陪睡 — 保護時段</h3>
+        <p class="method">不勉強塞學習進去。專注力被分掉效果不好,而且這是值得完整在場的時間 — 當作一天中「不用聽英文」的休息。</p>
+      </div>
+    </div>
+
+    <div class="slot" id="slot-quiet" data-c="quiet">
+      <div class="when">22:00<b>安靜時段</b><span style="font-family:var(--mono);font-size:11px;color:var(--ink-soft);display:block;margin-top:2px;">小孩睡後 / 早起</span></div>
+      <div>
+        <div class="bar"></div>
+        <h3>全天唯一能坐下來的時間 — 留給精聽</h3>
+        <p class="method">固定切出 15–20 分鐘做「聽寫 → 對照逐字稿 → 跟述」,其餘時間再處理別的事。</p>
+        <div class="chips">
+          <a class="chip" href="#show-6min">BBC 6 Minute English</a>
+          <a class="chip" href="#show-upfirst">NPR Up First</a>
+          <a class="chip" href="#show-acquired">Acquired(精聽段落)</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ METHODS ============ -->
+  <section id="methods">
+    <div class="section-head">
+      <p class="eyebrow">02 · 方法回顧</p>
+      <h2>依內容性質切換方法</h2>
+    </div>
+    <div class="method-grid">
+      <div class="method-card">
+        <p class="m-title"><span class="num">01</span>泛聽</p>
+        <p>不求全懂,抓語氣和大意。適合通勤、閒聊型內容,養耳朵用。</p>
+      </div>
+      <div class="method-card">
+        <p class="m-title"><span class="num">02</span>精聽 + 聽寫</p>
+        <p>先聽一次抓大意,逐句聽寫,再對照逐字稿抓漏掉的地方。適合單一敘事者、語速穩定的內容。</p>
+      </div>
+      <div class="method-card">
+        <p class="m-title"><span class="num">03</span>跟述 Shadowing</p>
+        <p>邊聽邊小聲跟著唸,訓練「聽到馬上處理」的反應速度。挑短片段練,節奏規律的內容效果最好。</p>
+      </div>
+      <div class="method-card">
+        <p class="m-title"><span class="num">04</span>摘要複述</p>
+        <p>聽完一段用自己的話重新講一次。適合長篇訪談 / 深度敘事,練的是理解和產出,不是模仿。</p>
+      </div>
+      <div class="method-card">
+        <p class="m-title"><span class="num">05</span>預測法</p>
+        <p>先看標題猜內容,再聽驗證。適合新聞類,訓練用背景知識輔助理解。</p>
+      </div>
+      <div class="method-card">
+        <p class="m-title"><span class="num">06</span>字幕三次循環</p>
+        <p>不開字幕聽一次 → 開英文字幕確認漏掉的 → 關字幕再聽一次。適合有畫面輔助的影片內容。</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ INDEX ============ -->
+  <section id="index">
+    <div class="section-head">
+      <p class="eyebrow">03 · 完整索引</p>
+      <h2>依興趣分類,依優先順序排列</h2>
+    </div>
+
+    <div class="filters" role="group" aria-label="分類篩選">
+      <button class="active" data-filter="all">全部</button>
+      <button data-filter="sports">棒球/運動</button>
+      <button data-filter="tech">半導體/科技</button>
+      <button data-filter="finance">財經/投資</button>
+      <button data-filter="history">歷史/動漫</button>
+      <button data-filter="general">通用英語</button>
+    </div>
+
+    <!-- SPORTS -->
+    <div class="cat-group" data-group="sports">
+      <h3>棒球 / 運動類</h3>
+
+      <div class="show-card" id="show-foulterritory">
+        <div class="row1"><span class="priority">① 優先聽</span><h4>Foul Territory</h4></div>
+        <p class="diff">退役球員每天現場聊,口語、有情緒、有梗,像休息室閒聊,適合日常養成習慣。</p>
+        <div class="plat">
+          <a href="https://www.youtube.com/@foulterritoryshow" target="_blank" rel="noopener">YouTube</a>
+          <a href="https://podcasts.apple.com/us/podcast/foul-territory/id1674957140" target="_blank" rel="noopener">Apple</a>
+          <a href="https://open.spotify.com/show/4NCHAElLW0pR2sclRnqj0V" target="_blank" rel="noopener">Spotify</a>
+          <a class="slot-tag" href="#slot-commute-pm">→ 適合晚通勤</a>
+        </div>
+      </div>
+
+      <div class="show-card" id="show-jomboy">
+        <div class="row1"><span class="priority">① 優先看</span><h4>Jomboy Media</h4></div>
+        <p class="diff">短影片為主,唇語解讀+比賽片段拆解,語速快但有畫面輔助,適合零碎時間。</p>
+        <div class="plat">
+          <a href="https://www.youtube.com/@JomboyMedia" target="_blank" rel="noopener">YouTube</a>
+          <a class="slot-tag" href="#slot-lunch">→ 適合午餐/零碎時間</a>
+        </div>
+      </div>
+
+      <div class="show-card" id="show-pmt">
+        <div class="row1"><span class="priority">② 進階</span><h4>Pardon My Take</h4></div>
+        <p class="diff">綜合運動,語速快、大量美式俚語和梗,聽懂之後很有成就感,難度比 Foul Territory 高一階。</p>
+        <div class="plat">
+          <a href="https://podcasts.apple.com/us/podcast/pardon-my-take/id1089022756" target="_blank" rel="noopener">Apple</a>
+          <a href="https://open.spotify.com/show/5ss1pqMFqWjkOpt6Ag0fZW" target="_blank" rel="noopener">Spotify</a>
+          <a href="https://www.youtube.com/@PardonMyTakePodcast" target="_blank" rel="noopener">YouTube</a>
+          <a class="slot-tag" href="#slot-commute-pm">→ 適合晚通勤</a>
+        </div>
+      </div>
+
+      <div class="show-card" id="show-ew">
+        <div class="row1"><span class="priority">③ 選聽</span><h4>Effectively Wild</h4></div>
+        <p class="diff">數據分析派,用詞精確但語速正常,適合已經很熟悉賽事、想深入數據面的階段。</p>
+        <div class="plat">
+          <a href="https://podcasts.apple.com/us/podcast/effectively-wild-a-fangraphs-baseball-podcast/id545919715" target="_blank" rel="noopener">Apple</a>
+          <a href="https://open.spotify.com/show/18kbXy9p0jHw3o8f2cQlCj" target="_blank" rel="noopener">Spotify</a>
+        </div>
+      </div>
+    </div>
+
+    <!-- TECH -->
+    <div class="cat-group" data-group="tech">
+      <h3>半導體 / 科技 / 產業類</h3>
+
+      <div class="show-card" id="show-asianometry">
+        <div class="row1"><span class="priority">① 優先看</span><h4>Asianometry</h4></div>
+        <p class="diff">你的專業背景會讓理解特別輕鬆,語速適中、用詞精確,整份清單裡對你最「無痛」的一個。</p>
+        <div class="plat">
+          <a href="https://www.youtube.com/@Asianometry" target="_blank" rel="noopener">YouTube</a>
+          <a class="slot-tag" href="#slot-commute-am">→ 適合早通勤</a>
+        </div>
+      </div>
+
+      <div class="show-card" id="show-highyield">
+        <div class="row1"><span class="priority">① 優先看</span><h4>High Yield</h4></div>
+        <p class="diff">同類型,更聚焦晶片/硬體規格分析,適合搭配 Asianometry 輪流看。</p>
+        <div class="plat">
+          <a href="https://www.youtube.com/@HighYield" target="_blank" rel="noopener">YouTube</a>
+          <a class="slot-tag" href="#slot-commute-am">→ 適合早通勤</a>
+        </div>
+      </div>
+
+      <div class="show-card" id="show-acquired">
+        <div class="row1"><span class="priority">② 進階</span><h4>Acquired</h4></div>
+        <p class="diff">單集 2–4 小時,敘事型講一家公司的完整故事(做過 TSMC、Nvidia、ASML),資訊量大,適合通勤分段聽。</p>
+        <div class="plat">
+          <a href="https://podcasts.apple.com/us/podcast/acquired/id1050462261" target="_blank" rel="noopener">Apple</a>
+          <a href="https://open.spotify.com/show/7Fj0XEuUQLUqoMZQdsLXqp" target="_blank" rel="noopener">Spotify</a>
+          <a href="https://www.youtube.com/@AcquiredFM" target="_blank" rel="noopener">YouTube</a>
+          <a class="slot-tag" href="#slot-quiet">→ 適合安靜時段精聽</a>
+        </div>
+      </div>
+
+      <div class="show-card" id="show-bb">
+        <div class="row1"><span class="priority">② 進階</span><h4>Business Breakdowns</h4></div>
+        <p class="diff">跟 Acquired 同類型但單集短(30–40分),適合當入門版或通勤版。</p>
+        <div class="plat">
+          <a href="https://podcasts.apple.com/us/podcast/business-breakdowns/id1559120677" target="_blank" rel="noopener">Apple</a>
+          <a href="https://open.spotify.com/show/417NPBWqtMbDU0FlWZTRDC" target="_blank" rel="noopener">Spotify</a>
+        </div>
+      </div>
+    </div>
+
+    <!-- FINANCE -->
+    <div class="cat-group" data-group="finance">
+      <h3>財經 / 投資 / 經濟 / 公司產業類</h3>
+
+      <div class="show-card" id="show-indicator">
+        <div class="row1"><span class="priority">① 優先聽</span><h4>The Indicator (NPR)</h4></div>
+        <p class="diff">每集僅 10 分鐘,語速慢、用詞淺,一個事件講一個經濟概念,最適合重啟聽力習慣的第一步。</p>
+        <div class="plat">
+          <a href="https://podcasts.apple.com/us/podcast/the-indicator-from-planet-money/id1320118593" target="_blank" rel="noopener">Apple</a>
+          <a href="https://open.spotify.com/show/4X3yDKgVTWRjSd6r0vhgo4" target="_blank" rel="noopener">Spotify</a>
+          <a class="slot-tag" href="#slot-lunch">→ 適合午餐/洗碗</a>
+        </div>
+      </div>
+
+      <div class="show-card" id="show-planetmoney">
+        <div class="row1"><span class="priority">② 進階</span><h4>Planet Money</h4></div>
+        <p class="diff">The Indicator 的長版,敘事型講經濟現象背後的故事,難度略高一階。</p>
+        <div class="plat">
+          <a href="https://podcasts.apple.com/us/podcast/planet-money/id290783428" target="_blank" rel="noopener">Apple</a>
+          <a href="https://open.spotify.com/show/4FYpq3lSeQMAhqNI81O0Cn" target="_blank" rel="noopener">Spotify</a>
+          <a href="https://www.youtube.com/c/planetmoney" target="_blank" rel="noopener">YouTube</a>
+        </div>
+      </div>
+
+      <div class="show-card" id="show-iltb">
+        <div class="row1"><span class="priority">② 進階</span><h4>Invest Like the Best</h4></div>
+        <p class="diff">訪談型,每集請一位投資人/創辦人深聊,主題常涵蓋產業與公司分析,難度中高,適合你的 ETF/投資背景。</p>
+        <div class="plat">
+          <a href="https://podcasts.apple.com/us/podcast/invest-like-the-best-with-patrick-oshaughnessy/id1154105909" target="_blank" rel="noopener">Apple</a>
+          <a href="https://open.spotify.com/show/22fi0RqfoBACCuQDv97wFO" target="_blank" rel="noopener">Spotify</a>
+          <a href="https://www.youtube.com/@ILTB_Podcast" target="_blank" rel="noopener">YouTube</a>
+        </div>
+      </div>
+
+      <div class="show-card" id="show-oddlots">
+        <div class="row1"><span class="priority">③ 選聽</span><h4>Odd Lots</h4></div>
+        <p class="diff">市場/總經更深入,語速正常偏快,適合把前面幾個都聽熟之後再挑戰。</p>
+        <div class="plat">
+          <a href="https://podcasts.apple.com/us/podcast/odd-lots/id1056200096" target="_blank" rel="noopener">Apple</a>
+          <a href="https://open.spotify.com/show/1te7oSFyRVekxMBJUSethH" target="_blank" rel="noopener">Spotify</a>
+        </div>
+      </div>
+    </div>
+
+    <!-- HISTORY / ANIME -->
+    <div class="cat-group" data-group="history">
+      <h3>英文歷史 / 動漫類 <span style="font-weight:400;">(低優先度,先降低門檻)</span></h3>
+
+      <div class="show-card" id="show-oversimplified">
+        <div class="row1"><span class="priority">① 優先看</span><h4>OverSimplified</h4></div>
+        <p class="diff">動畫式歷史講解,語速快但幽默好懂,是「還沒體驗過英文歷史內容」最好的敲門磚。</p>
+        <div class="plat">
+          <a href="https://www.youtube.com/c/OverSimplified" target="_blank" rel="noopener">YouTube</a>
+        </div>
+      </div>
+
+      <div class="show-card" id="show-fallofciv">
+        <div class="row1"><span class="priority">② 進階</span><h4>Fall of Civilizations</h4></div>
+        <p class="diff">電影感紀錄片旁白,語速穩定、敘事優美,單集長(1.5–3小時),適合當泛聽的長篇背景音。</p>
+        <div class="plat">
+          <a href="https://www.youtube.com/@FallofCivilizations" target="_blank" rel="noopener">YouTube</a>
+          <a href="https://open.spotify.com/show/44DE64rRpX1cFIQUlqQtvi" target="_blank" rel="noopener">Spotify</a>
+        </div>
+      </div>
+
+      <div class="show-card" id="show-gigguk">
+        <div class="row1"><span class="priority">③ 選聽</span><h4>Gigguk</h4></div>
+        <p class="diff">動漫評論/吐槽,語速快、有英式口音和大量玩笑,單純練聽力兼興趣。</p>
+        <div class="plat">
+          <a href="https://www.youtube.com/@gigguk" target="_blank" rel="noopener">YouTube</a>
+        </div>
+      </div>
+    </div>
+
+    <!-- GENERAL -->
+    <div class="cat-group" data-group="general">
+      <h3>通用英語學習 / 科普(打底用)</h3>
+
+      <div class="show-card" id="show-6min">
+        <div class="row1"><span class="priority">① 優先聽</span><h4>BBC 6 Minute English</h4></div>
+        <p class="diff">專為英語學習者設計,語速慢、有教學重點,適合每天固定的暖身,也是精聽流程的最佳素材。</p>
+        <div class="plat">
+          <a href="https://podcasts.apple.com/us/podcast/6-minute-english/id262026947" target="_blank" rel="noopener">Apple</a>
+          <a href="https://open.spotify.com/show/3CF9ANEicXGxEROA3cOryE" target="_blank" rel="noopener">Spotify</a>
+          <a class="slot-tag" href="#slot-quiet">→ 適合早餐/安靜時段</a>
+        </div>
+      </div>
+
+      <div class="show-card" id="show-upfirst">
+        <div class="row1"><span class="priority">② 進階</span><h4>NPR Up First</h4></div>
+        <p class="diff">10 分鐘時事摘要,語速正常,適合 6 Minute English 聽熟後的下一步,也適合用預測法練習。</p>
+        <div class="plat">
+          <a href="https://podcasts.apple.com/us/podcast/up-first-from-npr/id1222114325" target="_blank" rel="noopener">Apple</a>
+          <a href="https://open.spotify.com/show/2mTUnDkuKUkhiueKcVWoP0" target="_blank" rel="noopener">Spotify</a>
+          <a class="slot-tag" href="#slot-quiet">→ 適合安靜時段</a>
+        </div>
+      </div>
+
+      <div class="show-card" id="show-realeng">
+        <div class="row1"><span class="priority">③ 選聽</span><h4>Real Engineering / Practical Engineering</h4></div>
+        <p class="diff">工程科普,語速中等、畫面輔助多,跟工程背景很搭,可穿插著聽當調劑。</p>
+        <div class="plat">
+          <a href="https://www.youtube.com/RealEngineering" target="_blank" rel="noopener">Real Engineering</a>
+          <a href="https://www.youtube.com/@PracticalEngineeringChannel" target="_blank" rel="noopener">Practical Engineering</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ AUDIOBOOKS ============ -->
+  <section id="audiobooks">
+    <div class="section-head">
+      <p class="eyebrow">04 · 有聲書重啟</p>
+      <h2>選背景知識夠的主題,重新建立聽的場景</h2>
+      <p style="color:var(--ink-soft); font-size:14.5px; max-width:60ch;">
+        沒有跑步習慣之後,最大的問題不是選書,而是找回穩定的聽的場景。可以綁定通勤、做家事、睡前這些已存在的時段,不用另闢時間。難度挑選關鍵:選背景知識已經懂的主題,讓內容脈絡幫忙補聽不懂的字。
+      </p>
+    </div>
+
+    <div class="book">
+      <b>Chip War</b> — Chris Miller
+      <span>半導體/科技。對應產業背景,理解會比想像中輕鬆。</span>
+    </div>
+    <div class="book">
+      <b>The Psychology of Money</b> — Morgan Housel
+      <span>財經/投資。用詞平易,每章獨立小故事,容易聽聽停停不斷線。</span>
+    </div>
+    <div class="book">
+      <b>Bad Blood</b> — John Carreyrou
+      <span>公司故事/產業。Theranos 真實詐騙案,敘事張力強像懸疑小說。</span>
+    </div>
+    <div class="book">
+      <b>The Big Short</b> — Michael Lewis
+      <span>公司故事/產業。有電影版可以先看過抓劇情,再聽會輕鬆很多。</span>
+    </div>
+    <div class="book">
+      <b>Moneyball</b> — Michael Lewis
+      <span>運動。棒球+數據分析,剛好貼合兩個興趣。</span>
+    </div>
+    <div class="book">
+      <b>The Boys in the Boat</b> — Daniel James Brown
+      <span>運動。近期有電影,劇情熟悉度可以先建立。</span>
+    </div>
+  </section>
+
+  <footer>
+    <p>最後更新依對話整理而成 · 個人使用索引,非公開發布內容</p>
+  </footer>
+
+</div>
+
+<script>
+  (function(){
+    var buttons = document.querySelectorAll('.filters button');
+    var groups = document.querySelectorAll('.cat-group');
+    buttons.forEach(function(btn){
+      btn.addEventListener('click', function(){
+        buttons.forEach(function(b){ b.classList.remove('active'); });
+        btn.classList.add('active');
+        var f = btn.getAttribute('data-filter');
+        groups.forEach(function(g){
+          g.style.display = (f === 'all' || g.getAttribute('data-group') === f) ? '' : 'none';
+        });
+      });
+    });
+  })();
+</script>
+
+</body>
+</html>

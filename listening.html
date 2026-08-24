@@ -192,6 +192,20 @@
   .quicknav a .qn-num{font-family:var(--mono); color:var(--ink-soft); margin-right:6px; font-size:12px;}
 
   #day-plan, #methods, #index, #audiobooks{scroll-margin-top:56px;}
+  #index-zh, #audiobooks-zh{scroll-margin-top:56px;}
+
+  /* ---------- LANGUAGE TOGGLE ---------- */
+  .langbar{
+    position:sticky; top:0; z-index:11; background:var(--ink); text-align:center;
+  }
+  .langbar .wrap{padding:0; display:flex; justify-content:center; gap:0;}
+  .langbar button{
+    flex:1; max-width:160px; padding:9px 0; border:none; background:transparent;
+    color:#B9BDB4; font-family:var(--mono); font-size:13px; letter-spacing:.04em; cursor:pointer;
+  }
+  .langbar button.active{background:var(--accent); color:#fff;}
+  body[data-lang="en"] .lang-zh{display:none !important;}
+  body[data-lang="zh"] .lang-en{display:none !important;}
 
   @media (max-width:600px){
     .timeline{flex-wrap:wrap;}
@@ -203,9 +217,16 @@
   }
 </style>
 </head>
-<body>
+<body data-lang="en">
 
-<nav class="quicknav" aria-label="快速跳轉">
+<div class="langbar">
+  <div class="wrap">
+    <button id="btn-en" class="active" onclick="setLang('en')">ENGLISH</button>
+    <button id="btn-zh" onclick="setLang('zh')">中文</button>
+  </div>
+</div>
+
+<nav class="quicknav lang-en" aria-label="快速跳轉">
   <div class="wrap">
     <a href="#day-plan"><span class="qn-num">01</span>時段對應</a>
     <a href="#methods"><span class="qn-num">02</span>方法回顧</a>
@@ -214,12 +235,19 @@
   </div>
 </nav>
 
+<nav class="quicknav lang-zh" aria-label="快速跳轉" style="display:none;">
+  <div class="wrap">
+    <a href="#index-zh"><span class="qn-num">01</span>節目索引</a>
+    <a href="#audiobooks-zh"><span class="qn-num">02</span>有聲書</a>
+  </div>
+</nav>
+
 <div class="wrap">
 
-  <header class="hero">
+  <header class="hero lang-en">
     <p class="eyebrow">Eason · 個人英文聽力練習索引</p>
     <h1>一天的節奏,決定聽什麼、怎麼聽</h1>
-    <p class="lede">不同時段的專注力不同,適合的方法和節目也不同。這頁把一天切成幾個時段,每段對應方法和節目;下面的完整索引可以隨時查、隨時換聽。</p>
+    <p class="hero-lede lede">不同時段的專注力不同,適合的方法和節目也不同。這頁把一天切成幾個時段,每段對應方法和節目;下面的完整索引可以隨時查、隨時換聽。</p>
 
     <nav class="timeline" aria-label="一天時間軸">
       <a href="#slot-breakfast" data-c="breakfast"><span class="tl-time">07:00</span><span class="tl-label">早餐</span></a>
@@ -232,7 +260,7 @@
   </header>
 
   <!-- ============ DAY PLAN ============ -->
-  <section id="day-plan">
+  <section id="day-plan" class="lang-en">
     <div class="section-head">
       <p class="eyebrow">01 · 對應一天</p>
       <h2>時段 × 方法 × 節目</h2>
@@ -335,7 +363,7 @@
   </section>
 
   <!-- ============ METHODS ============ -->
-  <section id="methods">
+  <section id="methods" class="lang-en">
     <div class="section-head">
       <p class="eyebrow">02 · 方法回顧</p>
       <h2>依內容性質切換方法</h2>
@@ -369,13 +397,13 @@
   </section>
 
   <!-- ============ INDEX ============ -->
-  <section id="index">
+  <section id="index" class="lang-en">
     <div class="section-head">
       <p class="eyebrow">03 · 完整索引</p>
       <h2>依興趣分類,依優先順序排列</h2>
     </div>
 
-    <div class="filters" role="group" aria-label="分類篩選">
+    <div class="filters" data-target="index" role="group" aria-label="分類篩選">
       <button class="active" data-filter="all">全部</button>
       <button data-filter="sports">棒球/運動</button>
       <button data-filter="tech">半導體/科技</button>
@@ -388,6 +416,7 @@
       <button data-filter="education">教育類</button>
       <button data-filter="counseling">諮商/壓力紓解</button>
       <button data-filter="books">說書類</button>
+      <button data-filter="interview">訪談/名人聊天</button>
     </div>
 
     <!-- SPORTS -->
@@ -717,10 +746,25 @@
         </div>
       </div>
     </div>
+
+    <!-- INTERVIEW / CHAT -->
+    <div class="cat-group" data-group="interview">
+      <h3>訪談 / 名人聊天類</h3>
+
+      <div class="show-card" id="show-timferriss">
+        <div class="row1"><span class="priority">① 優先聽</span><h4>The Tim Ferriss Show</h4></div>
+        <p class="diff">長篇深度訪談,來賓橫跨創業家、運動員、作家、演員,主持人問題準備充分,單集常 1-2 小時,適合分段聽。</p>
+        <div class="plat">
+          <a href="https://podcasts.apple.com/us/podcast/the-tim-ferriss-show/id863897795" target="_blank" rel="noopener">Apple</a>
+          <a href="https://open.spotify.com/show/5qSUyCrk9KR69lEiXbjwXM" target="_blank" rel="noopener">Spotify</a>
+          <a class="slot-tag" href="#slot-commute-am">→ 適合早通勤(分段)</a>
+        </div>
+      </div>
+    </div>
   </section>
 
   <!-- ============ AUDIOBOOKS ============ -->
-  <section id="audiobooks">
+  <section id="audiobooks" class="lang-en">
     <div class="section-head">
       <p class="eyebrow">04 · 有聲書重啟</p>
       <h2>選背景知識夠的主題,重新建立聽的場景</h2>
@@ -755,6 +799,136 @@
     </div>
   </section>
 
+  <!-- ============ 中文版 ============ -->
+  <header class="hero lang-zh" style="display:none; border-top:1px solid var(--line); padding-top:36px;">
+    <p class="eyebrow">Eason · 中文內容索引</p>
+    <h1>中文節目索引</h1>
+    <p class="lede">母語不需要練聽力方法,這裡純粹是興趣內容的索引,依跟英文版相同的分類整理,方便直接找節目聽。</p>
+  </header>
+
+  <section id="index-zh" class="lang-zh" style="display:none;">
+    <div class="section-head">
+      <p class="eyebrow">01 · 節目索引</p>
+      <h2>依興趣分類</h2>
+    </div>
+
+    <div class="filters" data-target="index-zh" role="group" aria-label="分類篩選">
+      <button class="active" data-filter="all">全部</button>
+      <button data-filter="finance">財經/投資</button>
+      <button data-filter="general">通用/時事</button>
+      <button data-filter="education">教育/自我提升</button>
+      <button data-filter="books">說書類</button>
+      <button data-filter="psychology">心理學</button>
+      <button data-filter="interview">訪談/名人聊天</button>
+    </div>
+
+    <div class="cat-group" data-group="finance">
+      <h3>財經 / 投資類</h3>
+      <div class="show-card">
+        <div class="row1"><span class="priority">① 優先聽</span><h4>Gooaye 股癌</h4></div>
+        <p class="diff">台灣最具代表性的財經 podcast,晦澀的投資知識講得直白,也聊國內外時事,幽默感強、聽眾黏著度高。</p>
+        <div class="plat">
+          <a href="https://podcasts.apple.com/tw/podcast/gooaye-%E8%82%A1%E7%99%8C/id1500839292" target="_blank" rel="noopener">Apple</a>
+          <a href="https://open.spotify.com/show/1zWxx5pKk0XBEzMupVC7UZ" target="_blank" rel="noopener">Spotify</a>
+        </div>
+      </div>
+    </div>
+
+    <div class="cat-group" data-group="general">
+      <h3>通用 / 時事類</h3>
+      <div class="show-card">
+        <div class="row1"><span class="priority">① 優先聽</span><h4>百靈果 News</h4></div>
+        <p class="diff">雙語國際新聞,凱莉和 Ken 用輕鬆詼諧的口吻聊嚴肅時事,是台灣最熱門的新聞類節目之一。</p>
+        <div class="plat">
+          <a href="https://podcasts.apple.com/tw/podcast/%E7%99%BE%E9%9D%88%E6%9E%9C-news/id1106847606" target="_blank" rel="noopener">Apple</a>
+        </div>
+      </div>
+    </div>
+
+    <div class="cat-group" data-group="education">
+      <h3>教育 / 自我提升類</h3>
+      <div class="show-card">
+        <div class="row1"><span class="priority">① 優先聽</span><h4>大人的 Small Talk(大人學)</h4></div>
+        <p class="diff">兩位管理顧問 Joe 和 Bryan 主持,聊職涯發展、人際溝通、個人成長,務實不說教,是台灣自我成長類的長青節目。</p>
+        <div class="plat">
+          <a href="https://podcasts.apple.com/tw/podcast/%E5%A4%A7%E4%BA%BA%E7%9A%84small-talk/id1452688611" target="_blank" rel="noopener">Apple</a>
+          <a href="https://open.spotify.com/show/6gZUHaC8fOZ7SkCniFkRrZ" target="_blank" rel="noopener">Spotify</a>
+        </div>
+      </div>
+    </div>
+
+    <div class="cat-group" data-group="books">
+      <h3>說書類</h3>
+      <div class="show-card">
+        <div class="row1"><span class="priority">① 優先聽</span><h4>下一本讀什麼?(閱讀前哨站 瓦基)</h4></div>
+        <p class="diff">前台積電工程師轉職專業說書人,每集拆解一本書的重點與心得,選書廣泛、講解清晰有條理。</p>
+        <div class="plat">
+          <a href="https://podcasts.apple.com/tw/podcast/%E4%B8%8B%E4%B8%80%E6%9C%AC%E8%AE%80%E4%BB%80%E9%BA%BC/id1532820533" target="_blank" rel="noopener">Apple</a>
+          <a href="https://open.spotify.com/show/2VnejDmgGvnaap8z2btQDF" target="_blank" rel="noopener">Spotify</a>
+        </div>
+      </div>
+    </div>
+
+    <div class="cat-group" data-group="psychology">
+      <h3>心理學類</h3>
+      <div class="show-card">
+        <div class="row1"><span class="priority">① 優先聽</span><h4>哇賽心理學</h4></div>
+        <p class="diff">用科學與研究談心理學,涵蓋生活、育兒、司法、自我成長等主題,理性中帶溫暖,不是心靈雞湯類型。</p>
+        <div class="plat">
+          <a href="https://podcasts.apple.com/tw/podcast/%E5%93%87%E8%B3%BD%E5%BF%83%E7%90%86%E5%AD%B8/id1500162537" target="_blank" rel="noopener">Apple</a>
+          <a href="https://open.spotify.com/show/7yccG9xggI4MmkYtFAZzzt" target="_blank" rel="noopener">Spotify</a>
+        </div>
+      </div>
+    </div>
+
+    <div class="cat-group" data-group="interview">
+      <h3>訪談 / 名人聊天類</h3>
+      <div class="show-card">
+        <div class="row1"><span class="priority">① 優先聽</span><h4>台灣通勤第一品牌</h4></div>
+        <p class="diff">脫口秀風格的閒聊節目,常邀請政治人物、藝人上節目聊天,是台灣長年排行榜前段班的節目。</p>
+        <div class="plat">
+          <a href="https://podcasts.apple.com/tw/podcast/%E5%8F%B0%E7%81%A3%E9%80%9A%E5%8B%A4%E7%AC%AC%E4%B8%80%E5%93%81%E7%89%8C/id1510554676" target="_blank" rel="noopener">Apple</a>
+          <a href="https://open.spotify.com/show/2Csh9YythT4tGLk0S1vehS" target="_blank" rel="noopener">Spotify</a>
+        </div>
+      </div>
+    </div>
+
+    <div class="cat-group" data-group="pending">
+      <h3>尚未整理</h3>
+      <div class="show-card">
+        <p class="diff" style="margin:0;">棒球/運動、半導體/科技、歷史、親子教養、人際關係、諮商/壓力紓解 — 這幾類還沒找到夠有把握推薦的中文節目,之後可以再補充。</p>
+      </div>
+    </div>
+  </section>
+
+  <section id="audiobooks-zh" class="lang-zh" style="display:none;">
+    <div class="section-head">
+      <p class="eyebrow">02 · 中文有聲書</p>
+      <h2>依興趣分類的推薦書單</h2>
+    </div>
+
+    <div class="book">
+      <b>致富心態</b> — 摩根．豪瑟
+      <span>財經/投資。中文版譯自 The Psychology of Money,用詞平易、章節獨立。</span>
+    </div>
+    <div class="book">
+      <b>晶片戰爭</b> — 克里斯．米勒
+      <span>半導體/科技。跟你的產業背景最相關,中文版在台灣也很暢銷。</span>
+    </div>
+    <div class="book">
+      <b>原子習慣</b> — 詹姆斯．克利爾
+      <span>自我成長。台灣讀者接受度很高,實用性強,適合搭配睡前聽。</span>
+    </div>
+    <div class="book">
+      <b>薩提爾的親子對話</b> — 李崇建
+      <span>親子教養。台灣本土作者,結合實際案例講親子溝通,跟你現在的育兒階段直接相關。</span>
+    </div>
+    <div class="book">
+      <b>被討厭的勇氣</b> — 岸見一郎、古賀史健
+      <span>人生哲學/人際關係。阿德勒心理學對話體,台灣長年暢銷書。</span>
+    </div>
+  </section>
+
   <footer>
     <p>最後更新依對話整理而成 · 個人使用索引,非公開發布內容</p>
   </footer>
@@ -763,19 +937,34 @@
 
 <script>
   (function(){
-    var buttons = document.querySelectorAll('.filters button');
-    var groups = document.querySelectorAll('.cat-group');
-    buttons.forEach(function(btn){
-      btn.addEventListener('click', function(){
-        buttons.forEach(function(b){ b.classList.remove('active'); });
-        btn.classList.add('active');
-        var f = btn.getAttribute('data-filter');
-        groups.forEach(function(g){
-          g.style.display = (f === 'all' || g.getAttribute('data-group') === f) ? '' : 'none';
+    var filterBars = document.querySelectorAll('.filters');
+    filterBars.forEach(function(bar){
+      var target = bar.getAttribute('data-target');
+      var container = document.getElementById(target);
+      if(!container) return;
+      var buttons = bar.querySelectorAll('button');
+      var groups = container.querySelectorAll('.cat-group');
+      buttons.forEach(function(btn){
+        btn.addEventListener('click', function(){
+          buttons.forEach(function(b){ b.classList.remove('active'); });
+          btn.classList.add('active');
+          var f = btn.getAttribute('data-filter');
+          groups.forEach(function(g){
+            g.style.display = (f === 'all' || g.getAttribute('data-group') === f) ? '' : 'none';
+          });
         });
       });
     });
   })();
+
+  function setLang(lang){
+    document.body.setAttribute('data-lang', lang);
+    document.getElementById('btn-en').classList.toggle('active', lang === 'en');
+    document.getElementById('btn-zh').classList.toggle('active', lang === 'zh');
+    document.querySelectorAll('.lang-en').forEach(function(el){ el.style.display = (lang === 'en') ? '' : 'none'; });
+    document.querySelectorAll('.lang-zh').forEach(function(el){ el.style.display = (lang === 'zh') ? '' : 'none'; });
+    window.scrollTo({top:0, behavior:'instant'});
+  }
 </script>
 
 </body>

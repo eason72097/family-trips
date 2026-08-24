@@ -340,7 +340,7 @@
   <div id="leafMap"></div>
   <div class="map-edit-bar">
     <button class="chip" id="editCoordBtn">✏️ 修正座標</button>
-    <button class="chip" id="autoGeoBtn">🎯 自動校正(OSM)</button>
+    <button class="chip" id="autoGeoBtn">🎯 自動校正</button>
     <span id="editCoordHint" class="edit-hint"></span>
   </div>
   <p class="map-hint">🏠 紅點是竹北家（出發點）。點多時會自動聚合成數字圈，放大會散開。座標多為街區級精度——若哪個點（含你家）不準，按「✏️ 修正座標」→ 點該地點的標記 → 再點地圖上正確位置，就會存起來並跨裝置同步。</p>
@@ -1995,25 +1995,39 @@ function toggleEditMode(){
     if(leafMap)leafMap.getContainer().style.cursor="";
   }
 }
+function getOcKey(){
+  let k=null;
+  try{ k=localStorage.getItem("ocKey"); }catch(e){}
+  if(!k){
+    k=prompt("貼上你的 OpenCage API key\n（只存在這台裝置的瀏覽器，不會寫進網站原始碼）：");
+    if(k){ k=k.trim(); try{localStorage.setItem("ocKey",k);}catch(e){} }
+  }
+  return k;
+}
 async function geocodeVisible(){
   const pts=MAP_POINTS.filter(p=>{const c=document.querySelector('.card[data-pid="'+p.pid+'"]');return c&&c.style.display!=="none";});
   const hint=document.getElementById("editCoordHint");
   if(!pts.length){alert("目前地圖上沒有可校正的點。先用上方篩選（大類別／區域）選出一批，再校正。");return;}
-  if(!confirm("將用 OpenStreetMap 依『名稱＋地區』重新定位目前地圖上的 "+pts.length+" 個點。\n約需 "+Math.ceil(pts.length*1.2)+" 秒，期間請保持此頁開啟。\n查得到的會更新並同步，查不到的維持原座標。\n\n建議先用篩選縮小到一批（例如某區某類）再校正。要繼續嗎？")) return;
-  let ok=0,miss=0;
-  for(let i=0;i<pts.length;i++){
+  const key=getOcKey(); if(!key){return;}
+  if(!confirm("將用 OpenCage 依『名稱＋地區』重新定位目前地圖上的 "+pts.length+" 個點。\n約需 "+Math.ceil(pts.length*1.1)+" 秒，期間請保持此頁開啟。\n只採用信心足夠且位於台灣的結果，其餘維持原座標。\n\n建議先用篩選縮小到一批再校正。要繼續嗎？")) return;
+  let ok=0,low=0,miss=0,stop=false;
+  for(let i=0;i<pts.length&&!stop;i++){
     const p=pts[i];
-    if(hint)hint.textContent="🎯 校正中 "+(i+1)+"/"+pts.length+"…（更新 "+ok+"，查無 "+miss+"）";
+    if(hint)hint.textContent="🎯 校正中 "+(i+1)+"/"+pts.length+"…（更新 "+ok+"、低信心跳過 "+low+"、查無 "+miss+"）";
     try{
-      const q=encodeURIComponent(p.name+" "+((p.a||"").split("・")[0])+" 台灣");
-      const r=await fetch("https://nominatim.openstreetmap.org/search?format=json&limit=1&countrycodes=tw&q="+q);
+      const q=encodeURIComponent(p.name+", "+((p.a||"").split("・")[0])+", 台灣");
+      const r=await fetch("https://api.opencagedata.com/geocode/v1/json?key="+key+"&countrycode=tw&limit=1&no_annotations=1&language=zh-TW&q="+q);
       const j=await r.json();
-      if(j&&j[0]&&+j[0].lat>21.5&&+j[0].lat<25.5&&+j[0].lon>119.5&&+j[0].lon<122.5){ await saveCoord(p.pid,+j[0].lat,+j[0].lon); ok++; }
+      if(j.status&&(j.status.code===401||j.status.code===403)){ if(hint)hint.textContent="⚠️ 金鑰無效或被拒，已清除。請重新整理再貼一次正確金鑰。"; try{localStorage.removeItem("ocKey");}catch(e){} stop=true; break; }
+      if(j.status&&j.status.code===402){ if(hint)hint.textContent="⚠️ 今日 OpenCage 免費額度(2500)已用完，明天(UTC 0時)重置後可再繼續。目前已更新 "+ok+" 個。"; stop=true; break; }
+      const res=j.results&&j.results[0];
+      if(res&&res.geometry&&res.confidence>=6&&res.geometry.lat>21.5&&res.geometry.lat<25.5&&res.geometry.lng>119.5&&res.geometry.lng<122.5){ await saveCoord(p.pid,res.geometry.lat,res.geometry.lng); ok++; }
+      else if(res){ low++; }
       else miss++;
     }catch(e){ miss++; }
-    await new Promise(res=>setTimeout(res,1200));
+    await new Promise(res=>setTimeout(res,1100));
   }
-  if(hint)hint.textContent="✅ 完成：更新 "+ok+" 個、查無 "+miss+" 個（維持原座標）。請在地圖上檢查，個別跑掉的可用「修正座標」手動修回。";
+  if(!stop&&hint)hint.textContent="✅ 完成：更新 "+ok+" 個、低信心跳過 "+low+" 個、查無 "+miss+" 個。請在地圖上檢查，個別跑掉的用「修正座標」手動修回。";
 }
 (function(){
   const b=document.getElementById("editCoordBtn"); if(b)b.addEventListener("click",toggleEditMode);

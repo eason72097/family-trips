@@ -247,6 +247,9 @@
   .b-off{background:#f7ddd6;color:#a53a1e}
   .b-live{background:#e5f0e8;color:#2f7a4d;text-decoration:none;font-weight:700}
   .b-live:hover{background:#d3e8db}
+  .map-edit-bar{display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin:8px 0}
+  .edit-hint{font-size:13px;color:#666;line-height:1.4}
+  .chip.editing{background:#e67e22;color:#fff;border-color:#e67e22}
 </style>
 </head>
 <body>
@@ -335,7 +338,11 @@
 
 <div id="mapPanel" style="display:none">
   <div id="leafMap"></div>
-  <p class="map-hint">🏠 紅點是竹北家（出發點）。全站 492 個景點已有 477 個上圖（各大類都涵蓋了）。先選「大類別」，再（博物館/書店）選型態或區域，地圖會同步只亮符合的點。座標為知識填入的鄉鎮/街區級精度，若有明顯歪掉的點跟我說。</p>
+  <div class="map-edit-bar">
+    <button class="chip" id="editCoordBtn">✏️ 修正座標</button>
+    <span id="editCoordHint" class="edit-hint"></span>
+  </div>
+  <p class="map-hint">🏠 紅點是竹北家（出發點）。點多時會自動聚合成數字圈，放大會散開。座標多為街區級精度——若哪個點（含你家）不準，按「✏️ 修正座標」→ 點該地點的標記 → 再點地圖上正確位置，就會存起來並跨裝置同步。</p>
 </div>
 
 <div class="wrap">
@@ -1634,12 +1641,15 @@ function renderWantUI(){
 onSnapshot(collection(db,PLACES_COL), snap=>{
   snap.forEach(docSnap=>{
     const data=docSnap.data();
+    if(data.coord&&typeof data.coord.lat==="number"&&typeof data.coord.lng==="number"){ coordOverride[docSnap.id]=data.coord; }
+    if(docSnap.id==="__home__") return;
     wantState[docSnap.id] = {
       me: !!(data.wantToGo||[]).includes("me"),
       wife: !!(data.wantToGo||[]).includes("wife")
     };
     deletedState[docSnap.id] = !!data.deleted;
   });
+  applyCoordOverrides();
   renderWantUI();
   renderDelUI();
   applyFilters();
@@ -1893,22 +1903,27 @@ searchClear.addEventListener("click",()=>{searchInput.value="";searchInput.focus
 
 /* ---------- Round 1：互動地圖 ---------- */
 function colorOf(group){return GCOLOR[group]||"#888";}
-let leafMap=null, markerMap={}, mapReady=false, clusterGroup=null;
+let leafMap=null, markerMap={}, mapReady=false, clusterGroup=null, homeMarker=null, coordOverride={}, editMode=false, editSelected=null;
 function initMap(){
   if(mapReady||typeof L==="undefined")return;
-  leafMap=L.map("leafMap",{zoomControl:true}).setView([HOME.lat,HOME.lng],9);
+  const h0=coordOverride["__home__"]||HOME;
+  leafMap=L.map("leafMap",{zoomControl:true}).setView([h0.lat,h0.lng],9);
   L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",{maxZoom:19,attribution:"© OpenStreetMap"}).addTo(leafMap);
-  L.marker([HOME.lat,HOME.lng],{title:HOME.name,zIndexOffset:1000}).addTo(leafMap).bindPopup("🏠 "+HOME.name+"（出發點）");
+  homeMarker=L.marker([h0.lat,h0.lng],{title:HOME.name,zIndexOffset:1000}).addTo(leafMap).bindPopup("🏠 "+HOME.name+"（出發點）");
+  homeMarker.on("click",()=>{ if(editMode)selectForEdit("__home__",HOME.name); });
   clusterGroup=(typeof L.markerClusterGroup==="function")?L.markerClusterGroup({chunkedLoading:true,maxClusterRadius:50,disableClusteringAtZoom:16,spiderfyOnMaxZoom:true,showCoverageOnHover:false}):null;
   if(clusterGroup)clusterGroup.addTo(leafMap);
   const pts=[];
   MAP_POINTS.forEach(p=>{
+    const ov=coordOverride[p.pid]; if(ov){p.lat=ov.lat;p.lng=ov.lng;}
     const m=L.circleMarker([p.lat,p.lng],{radius:6,color:"#fff",weight:1.5,fillColor:colorOf(p.group),fillOpacity:.9});
     const g="https://www.google.com/maps/search/?api=1&query="+encodeURIComponent(p.name+" "+(p.a||"").split("・")[0]);
     m.bindPopup(`<b>${p.name}</b> <span style="font-size:12px">${["🆓免費","💲$","💲$$","💲$$$"][p.cost]||""}</span><br><span style="font-size:12px;color:#555">${(p.note||"").slice(0,60)}</span><br><a href="${g}" target="_blank" rel="noopener">📍 開 Google 地圖</a>`);
+    m.on("click",()=>{ if(editMode)selectForEdit(p.pid,p.name); });
     if(clusterGroup)clusterGroup.addLayer(m); else m.addTo(leafMap);
     markerMap[p.pid]=m; pts.push([p.lat,p.lng]);
   });
+  leafMap.on("click",onMapClickEdit);
   if(pts.length){try{leafMap.fitBounds(pts,{padding:[30,30],maxZoom:11});}catch(e){}}
   const lg=L.control({position:"bottomright"});
   lg.onAdd=function(){const d=L.DomUtil.create("div","map-legend");
@@ -1937,6 +1952,51 @@ function syncMapMarkers(){
   });
   const mc=document.getElementById("mapCount"); if(mc)mc.textContent=`🗺️ 地圖顯示 ${n} 個（有座標者，共 ${MAP_POINTS.length} 個）`;
 }
+function selectForEdit(pid,name){
+  editSelected=pid;
+  const hint=document.getElementById("editCoordHint");
+  if(hint)hint.textContent="已選「"+name+"」→ 現在點地圖上正確的位置（可先放大再點準）";
+}
+function onMapClickEdit(e){
+  if(!editMode||!editSelected)return;
+  saveCoord(editSelected,e.latlng.lat,e.latlng.lng);
+  editSelected=null;
+}
+function applyCoordOverrides(){
+  const ho=coordOverride["__home__"];
+  if(ho){HOME.lat=ho.lat;HOME.lng=ho.lng;if(homeMarker)homeMarker.setLatLng([ho.lat,ho.lng]);}
+  Object.keys(coordOverride).forEach(pid=>{
+    if(pid==="__home__")return;
+    const ov=coordOverride[pid];
+    const p=MAP_POINTS.find(x=>x.pid===pid); if(p){p.lat=ov.lat;p.lng=ov.lng;}
+    const m=markerMap[pid]; if(!m)return;
+    if(clusterGroup&&clusterGroup.hasLayer(m)){clusterGroup.removeLayer(m);m.setLatLng([ov.lat,ov.lng]);clusterGroup.addLayer(m);}
+    else m.setLatLng([ov.lat,ov.lng]);
+  });
+}
+async function saveCoord(pid,lat,lng){
+  lat=+(+lat).toFixed(6); lng=+(+lng).toFixed(6);
+  coordOverride[pid]={lat,lng};
+  applyCoordOverrides();
+  const hint=document.getElementById("editCoordHint");
+  if(hint)hint.textContent="✅ 已更新並同步。可再點下一個地點修正，或按「完成修正」離開。";
+  try{ await setDoc(doc(db,PLACES_COL,pid),{coord:{lat,lng}},{merge:true}); }
+  catch(err){ console.error("座標寫入失敗",err); if(hint)hint.textContent="⚠️ 座標同步失敗，請檢查網路後再試"; }
+}
+function toggleEditMode(){
+  editMode=!editMode;
+  const btn=document.getElementById("editCoordBtn"), hint=document.getElementById("editCoordHint");
+  if(editMode){
+    btn.textContent="✅ 完成修正"; btn.classList.add("editing");
+    hint.textContent="修正模式：先點一個地點的標記，再點地圖上正確的位置。點多時先放大讓標記散開。";
+    if(leafMap)leafMap.getContainer().style.cursor="crosshair";
+  }else{
+    btn.textContent="✏️ 修正座標"; btn.classList.remove("editing");
+    hint.textContent=""; editSelected=null;
+    if(leafMap)leafMap.getContainer().style.cursor="";
+  }
+}
+(function(){const b=document.getElementById("editCoordBtn"); if(b)b.addEventListener("click",toggleEditMode);})();
 const viewList=document.getElementById("viewList"), viewMap=document.getElementById("viewMap");
 const listWrap=document.querySelector(".wrap"), mapPanel=document.getElementById("mapPanel");
 function showView(v){

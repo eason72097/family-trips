@@ -9,6 +9,9 @@
 <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@500;700;900&family=Noto+Sans+TC:wght@400;500;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.5.3/dist/MarkerCluster.css"/>
+<link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.5.3/dist/MarkerCluster.Default.css"/>
+<script src="https://unpkg.com/leaflet.markercluster@1.5.3/dist/leaflet.markercluster.js"></script>
 <style>
   :root{
     --bg:#f4efe4;        /* warm cream */
@@ -1890,18 +1893,21 @@ searchClear.addEventListener("click",()=>{searchInput.value="";searchInput.focus
 
 /* ---------- Round 1：互動地圖 ---------- */
 function colorOf(group){return GCOLOR[group]||"#888";}
-let leafMap=null, markerMap={}, mapReady=false;
+let leafMap=null, markerMap={}, mapReady=false, clusterGroup=null;
 function initMap(){
   if(mapReady||typeof L==="undefined")return;
   leafMap=L.map("leafMap",{zoomControl:true}).setView([HOME.lat,HOME.lng],9);
   L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",{maxZoom:19,attribution:"© OpenStreetMap"}).addTo(leafMap);
   L.marker([HOME.lat,HOME.lng],{title:HOME.name,zIndexOffset:1000}).addTo(leafMap).bindPopup("🏠 "+HOME.name+"（出發點）");
+  clusterGroup=(typeof L.markerClusterGroup==="function")?L.markerClusterGroup({chunkedLoading:true,maxClusterRadius:50,disableClusteringAtZoom:16,spiderfyOnMaxZoom:true,showCoverageOnHover:false}):null;
+  if(clusterGroup)clusterGroup.addTo(leafMap);
   const pts=[];
   MAP_POINTS.forEach(p=>{
     const m=L.circleMarker([p.lat,p.lng],{radius:6,color:"#fff",weight:1.5,fillColor:colorOf(p.group),fillOpacity:.9});
     const g="https://www.google.com/maps/search/?api=1&query="+encodeURIComponent(p.name+" "+(p.a||"").split("・")[0]);
     m.bindPopup(`<b>${p.name}</b> <span style="font-size:12px">${["🆓免費","💲$","💲$$","💲$$$"][p.cost]||""}</span><br><span style="font-size:12px;color:#555">${(p.note||"").slice(0,60)}</span><br><a href="${g}" target="_blank" rel="noopener">📍 開 Google 地圖</a>`);
-    m.addTo(leafMap); markerMap[p.pid]=m; pts.push([p.lat,p.lng]);
+    if(clusterGroup)clusterGroup.addLayer(m); else m.addTo(leafMap);
+    markerMap[p.pid]=m; pts.push([p.lat,p.lng]);
   });
   if(pts.length){try{leafMap.fitBounds(pts,{padding:[30,30],maxZoom:11});}catch(e){}}
   const lg=L.control({position:"bottomright"});
@@ -1921,8 +1927,13 @@ function syncMapMarkers(){
     const card=document.querySelector('.card[data-pid="'+p.pid+'"]');
     const vis=card&&card.style.display!=="none";
     const m=markerMap[p.pid]; if(!m)return;
-    if(vis){if(!leafMap.hasLayer(m))m.addTo(leafMap);n++;}
-    else{if(leafMap.hasLayer(m))leafMap.removeLayer(m);}
+    if(clusterGroup){
+      if(vis){if(!clusterGroup.hasLayer(m))clusterGroup.addLayer(m);n++;}
+      else{if(clusterGroup.hasLayer(m))clusterGroup.removeLayer(m);}
+    }else{
+      if(vis){if(!leafMap.hasLayer(m))m.addTo(leafMap);n++;}
+      else{if(leafMap.hasLayer(m))leafMap.removeLayer(m);}
+    }
   });
   const mc=document.getElementById("mapCount"); if(mc)mc.textContent=`🗺️ 地圖顯示 ${n} 個（有座標者，共 ${MAP_POINTS.length} 個）`;
 }

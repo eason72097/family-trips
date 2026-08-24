@@ -228,6 +228,9 @@
   .leaflet-popup-content{font-family:inherit;margin:10px 12px}
   .leaflet-popup-content a{color:#b5651d;font-weight:700;text-decoration:none}
   #filterBody.collapsed{display:none}
+  #moreFilters.collapsed{display:none}
+  #moreFilters .ctl-row:first-child{margin-top:0}
+  .more-toggle{background:none;border:none;color:var(--moss);font-weight:700;font-size:.8rem;letter-spacing:.03em;padding:4px 2px;cursor:pointer;text-decoration:underline;text-underline-offset:3px}
   #mcatFilter,#mregFilter{margin-top:6px}
   .b-cost0{background:#d9efe0;color:#1f7a4d}
   .b-cost1{background:#eef1d9;color:#6b7a1c}
@@ -286,14 +289,15 @@
   </div>
   <div id="filterBody">
   <div class="ctl-row">
-    <div class="filter-label">我是誰（標註想去用）</div>
-    <div class="chips" id="whoSwitch">
-      <button class="chip active" data-who="me">🙋 我</button>
-      <button class="chip" data-who="wife">💛 老婆</button>
-    </div>
-    <button id="onlyWant" class="chip" style="margin-left:8px">⭐ 只看想去的</button>
-    <button id="kidOnly" class="chip" style="margin-left:8px">👶 只看親子友善</button>
-    <button id="trashToggle" class="chip" style="margin-left:8px">🗑 已刪除</button>
+    <div class="filter-label">大類別</div>
+    <div class="chips" id="groupFilter"></div>
+    <div class="chips" id="mcatFilter" style="display:none"></div>
+    <div class="chips" id="mcat2Filter" style="display:none"></div>
+    <div class="chips" id="mcat3Filter" style="display:none"></div>
+  </div>
+  <div class="ctl-row">
+    <div class="filter-label">區域</div>
+    <div class="chips" id="mregFilter"></div>
   </div>
   <div class="ctl-row">
     <div class="filter-label">依距離篩選</div>
@@ -306,16 +310,19 @@
       <button class="chip" data-d="veryfar">🛣 很遠・2.5hr＋</button>
     </div>
   </div>
-  <div class="ctl-row">
-    <div class="filter-label">大類別</div>
-    <div class="chips" id="groupFilter"></div>
-    <div class="chips" id="mcatFilter" style="display:none"></div>
-    <div class="chips" id="mcat2Filter" style="display:none"></div>
-    <div class="chips" id="mcat3Filter" style="display:none"></div>
+  <div class="ctl-row" style="margin-top:12px">
+    <button id="moreToggle" class="more-toggle">⋯ 更多篩選（想去／親子／費用）▾</button>
   </div>
+  <div id="moreFilters" class="collapsed">
   <div class="ctl-row">
-    <div class="filter-label">區域</div>
-    <div class="chips" id="mregFilter"></div>
+    <div class="filter-label">我是誰（標註想去用）</div>
+    <div class="chips" id="whoSwitch">
+      <button class="chip active" data-who="me">🙋 我</button>
+      <button class="chip" data-who="wife">💛 老婆</button>
+    </div>
+    <button id="onlyWant" class="chip" style="margin-left:8px">⭐ 只看想去的</button>
+    <button id="kidOnly" class="chip" style="margin-left:8px">👶 只看親子友善</button>
+    <button id="trashToggle" class="chip" style="margin-left:8px">🗑 已刪除</button>
   </div>
   <div class="ctl-row">
     <div class="filter-label">費用（分類預設，約略）</div>
@@ -330,6 +337,7 @@
   <div class="ctl-row">
     <div class="filter-label">快速跳到大類（清單用）</div>
     <div class="chips" id="groupNav"></div>
+  </div>
   </div>
   </div>
 </div>
@@ -2005,6 +2013,12 @@ trashToggle.addEventListener("click",()=>{
 filterToggle.addEventListener("click",()=>{
   filterBody.classList.toggle("collapsed");
   filterToggle.textContent=filterBody.classList.contains("collapsed")?"🎛️ 篩選 ▸":"🎛️ 篩選 ▾";
+});
+const moreToggle=document.getElementById("moreToggle");
+const moreFilters=document.getElementById("moreFilters");
+moreToggle.addEventListener("click",()=>{
+  moreFilters.classList.toggle("collapsed");
+  moreToggle.textContent=moreFilters.classList.contains("collapsed")?"⋯ 更多篩選（想去／親子／費用）▾":"⋯ 收起更多篩選 ▴";
 });
 searchInput.addEventListener("input",applyFilters);
 searchClear.addEventListener("click",()=>{searchInput.value="";searchInput.focus();applyFilters();});

@@ -340,6 +340,7 @@
   <div id="leafMap"></div>
   <div class="map-edit-bar">
     <button class="chip" id="editCoordBtn">✏️ 修正座標</button>
+    <button class="chip" id="autoGeoBtn">🎯 自動校正(OSM)</button>
     <span id="editCoordHint" class="edit-hint"></span>
   </div>
   <p class="map-hint">🏠 紅點是竹北家（出發點）。點多時會自動聚合成數字圈，放大會散開。座標多為街區級精度——若哪個點（含你家）不準，按「✏️ 修正座標」→ 點該地點的標記 → 再點地圖上正確位置，就會存起來並跨裝置同步。</p>
@@ -1960,28 +1961,26 @@ function selectForEdit(pid,name){
 function onMapClickEdit(e){
   if(!editMode||!editSelected)return;
   saveCoord(editSelected,e.latlng.lat,e.latlng.lng);
+  const hint=document.getElementById("editCoordHint");
+  if(hint)hint.textContent="✅ 已更新並同步。可再點下一個地點修正，或按「完成修正」離開。";
   editSelected=null;
 }
+function moveOne(pid,lat,lng){
+  if(pid==="__home__"){HOME.lat=lat;HOME.lng=lng;if(homeMarker)homeMarker.setLatLng([lat,lng]);return;}
+  const p=MAP_POINTS.find(x=>x.pid===pid); if(p){p.lat=lat;p.lng=lng;}
+  const m=markerMap[pid]; if(!m)return;
+  if(clusterGroup&&clusterGroup.hasLayer(m)){clusterGroup.removeLayer(m);m.setLatLng([lat,lng]);clusterGroup.addLayer(m);}
+  else m.setLatLng([lat,lng]);
+}
 function applyCoordOverrides(){
-  const ho=coordOverride["__home__"];
-  if(ho){HOME.lat=ho.lat;HOME.lng=ho.lng;if(homeMarker)homeMarker.setLatLng([ho.lat,ho.lng]);}
-  Object.keys(coordOverride).forEach(pid=>{
-    if(pid==="__home__")return;
-    const ov=coordOverride[pid];
-    const p=MAP_POINTS.find(x=>x.pid===pid); if(p){p.lat=ov.lat;p.lng=ov.lng;}
-    const m=markerMap[pid]; if(!m)return;
-    if(clusterGroup&&clusterGroup.hasLayer(m)){clusterGroup.removeLayer(m);m.setLatLng([ov.lat,ov.lng]);clusterGroup.addLayer(m);}
-    else m.setLatLng([ov.lat,ov.lng]);
-  });
+  Object.keys(coordOverride).forEach(pid=>{const ov=coordOverride[pid];moveOne(pid,ov.lat,ov.lng);});
 }
 async function saveCoord(pid,lat,lng){
   lat=+(+lat).toFixed(6); lng=+(+lng).toFixed(6);
   coordOverride[pid]={lat,lng};
-  applyCoordOverrides();
-  const hint=document.getElementById("editCoordHint");
-  if(hint)hint.textContent="✅ 已更新並同步。可再點下一個地點修正，或按「完成修正」離開。";
+  moveOne(pid,lat,lng);
   try{ await setDoc(doc(db,PLACES_COL,pid),{coord:{lat,lng}},{merge:true}); }
-  catch(err){ console.error("座標寫入失敗",err); if(hint)hint.textContent="⚠️ 座標同步失敗，請檢查網路後再試"; }
+  catch(err){ console.error("座標寫入失敗",err); const hint=document.getElementById("editCoordHint"); if(hint)hint.textContent="⚠️ 座標同步失敗，請檢查網路後再試"; }
 }
 function toggleEditMode(){
   editMode=!editMode;
@@ -1996,7 +1995,30 @@ function toggleEditMode(){
     if(leafMap)leafMap.getContainer().style.cursor="";
   }
 }
-(function(){const b=document.getElementById("editCoordBtn"); if(b)b.addEventListener("click",toggleEditMode);})();
+async function geocodeVisible(){
+  const pts=MAP_POINTS.filter(p=>{const c=document.querySelector('.card[data-pid="'+p.pid+'"]');return c&&c.style.display!=="none";});
+  const hint=document.getElementById("editCoordHint");
+  if(!pts.length){alert("目前地圖上沒有可校正的點。先用上方篩選（大類別／區域）選出一批，再校正。");return;}
+  if(!confirm("將用 OpenStreetMap 依『名稱＋地區』重新定位目前地圖上的 "+pts.length+" 個點。\n約需 "+Math.ceil(pts.length*1.2)+" 秒，期間請保持此頁開啟。\n查得到的會更新並同步，查不到的維持原座標。\n\n建議先用篩選縮小到一批（例如某區某類）再校正。要繼續嗎？")) return;
+  let ok=0,miss=0;
+  for(let i=0;i<pts.length;i++){
+    const p=pts[i];
+    if(hint)hint.textContent="🎯 校正中 "+(i+1)+"/"+pts.length+"…（更新 "+ok+"，查無 "+miss+"）";
+    try{
+      const q=encodeURIComponent(p.name+" "+((p.a||"").split("・")[0])+" 台灣");
+      const r=await fetch("https://nominatim.openstreetmap.org/search?format=json&limit=1&countrycodes=tw&q="+q);
+      const j=await r.json();
+      if(j&&j[0]&&+j[0].lat>21.5&&+j[0].lat<25.5&&+j[0].lon>119.5&&+j[0].lon<122.5){ await saveCoord(p.pid,+j[0].lat,+j[0].lon); ok++; }
+      else miss++;
+    }catch(e){ miss++; }
+    await new Promise(res=>setTimeout(res,1200));
+  }
+  if(hint)hint.textContent="✅ 完成：更新 "+ok+" 個、查無 "+miss+" 個（維持原座標）。請在地圖上檢查，個別跑掉的可用「修正座標」手動修回。";
+}
+(function(){
+  const b=document.getElementById("editCoordBtn"); if(b)b.addEventListener("click",toggleEditMode);
+  const g=document.getElementById("autoGeoBtn"); if(g)g.addEventListener("click",geocodeVisible);
+})();
 const viewList=document.getElementById("viewList"), viewMap=document.getElementById("viewMap");
 const listWrap=document.querySelector(".wrap"), mapPanel=document.getElementById("mapPanel");
 function showView(v){

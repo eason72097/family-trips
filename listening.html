@@ -174,6 +174,15 @@
   .book b{font-family:var(--serif);}
   .book span{display:block; color:var(--ink-soft); font-size:14px; margin-top:2px;}
 
+  /* ---------- SUBSCRIPTION NOTES ---------- */
+  .sub-note{
+    margin-top:8px; padding:8px 10px; border-radius:6px; font-size:13px;
+    display:flex; gap:8px; align-items:flex-start;
+  }
+  .sub-note.paid{background:#F3E9DC; color:#7A4E23;}
+  .sub-note.free{background:var(--accent-soft); color:var(--accent);}
+  .sub-note b{white-space:nowrap;}
+
   footer{padding:30px 0 60px; color:var(--ink-soft); font-size:13px; font-family:var(--mono);}
 
   /* ---------- QUICK NAV ---------- */
@@ -404,6 +413,7 @@
     <div class="section-head">
       <p class="eyebrow">03 · 完整索引</p>
       <h2>依興趣分類,依優先順序排列</h2>
+      <p style="color:var(--ink-soft); font-size:13px; margin-top:8px;">🎧 你常聽 = 從你的 Spotify 紀錄找到的 · 🔒 = 部分內容需訂閱(會註明免費替代管道) · ✓ = 確認完全免費</p>
     </div>
 
     <div class="filters" data-target="index" role="group" aria-label="分類篩選">
@@ -475,8 +485,12 @@
         <div class="row1"><span class="priority">① 優先看</span><h4>Asianometry</h4></div>
         <p class="diff">你的專業背景會讓理解特別輕鬆,語速適中、用詞精確,整份清單裡對你最「無痛」的一個。</p>
         <div class="plat">
-          <a href="https://www.youtube.com/@Asianometry" target="_blank" rel="noopener">YouTube</a>
+          <a href="https://www.youtube.com/@Asianometry" target="_blank" rel="noopener">YouTube(免費)</a>
           <a class="slot-tag" href="#slot-commute-am">→ 適合早通勤</a>
+        </div>
+        <div class="sub-note paid">
+          <span>🔒</span>
+          <span><b>Podcast 音檔版需訂閱</b> — 已併入 <a href="https://stratechery.com/plus/" target="_blank" rel="noopener">Stratechery Plus</a>($15/月或$150/年,包含 Sharp Tech、Sharp China、Dithering 等)。YouTube 影片作者保證永久免費,繼續用 YouTube 看不影響。</span>
         </div>
       </div>
 
@@ -484,7 +498,7 @@
         <div class="row1"><span class="priority">① 優先看</span><h4>High Yield</h4></div>
         <p class="diff">同類型,更聚焦晶片/硬體規格分析,適合搭配 Asianometry 輪流看。</p>
         <div class="plat">
-          <a href="https://www.youtube.com/@HighYield" target="_blank" rel="noopener">YouTube</a>
+          <a href="https://www.youtube.com/@HighYield" target="_blank" rel="noopener">YouTube(免費)</a>
           <a class="slot-tag" href="#slot-commute-am">→ 適合早通勤</a>
         </div>
       </div>
@@ -497,6 +511,10 @@
           <a href="https://open.spotify.com/show/7Fj0XEuUQLUqoMZQdsLXqp" target="_blank" rel="noopener">Spotify</a>
           <a href="https://www.youtube.com/@AcquiredFM" target="_blank" rel="noopener">YouTube</a>
           <a class="slot-tag" href="#slot-quiet">→ 適合安靜時段精聽</a>
+        </div>
+        <div class="sub-note free">
+          <span>✓</span>
+          <span><b>完全免費</b> — 曾經有付費限定的 LP Show,2022 年起改名 ACQ2 並全面開放,現在所有節目都不用訂閱。</span>
         </div>
       </div>
 
@@ -735,6 +753,10 @@
           <a href="https://podcasts.apple.com/us/podcast/founders/id1141877104" target="_blank" rel="noopener">Apple</a>
           <a href="https://open.spotify.com/show/7txiovdzPARhjm18NwMUYj" target="_blank" rel="noopener">Spotify</a>
           <a class="slot-tag" href="#slot-commute-am">→ 適合早通勤</a>
+        </div>
+        <div class="sub-note free">
+          <span>✓</span>
+          <span><b>完全免費</b> — 早期曾是前30分鐘免費、付費才能聽完整集,幾年前已改為全面免費+廣告模式。</span>
         </div>
       </div>
 

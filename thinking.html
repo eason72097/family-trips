@@ -87,6 +87,16 @@
   }
   .callout .k{font-family:var(--mono);font-size:11px;color:var(--caution);text-transform:uppercase;letter-spacing:.05em;display:block;margin-bottom:4px;}
 
+  h3.sub-title{font-family:var(--serif);font-size:16.5px;margin:28px 0 6px;color:var(--ink);}
+  table.mech-table{width:100%;border-collapse:collapse;margin:12px 0 20px;font-size:13.5px;}
+  table.mech-table td{padding:8px 10px;border-bottom:1px solid var(--line);vertical-align:top;}
+  table.mech-table tr:last-child td{border-bottom:none;}
+  table.mech-table .mt-arrow{font-family:var(--mono);color:var(--ink-soft);white-space:nowrap;width:50px;}
+  table.mech-table .mt-verb{font-family:var(--serif);font-weight:600;white-space:nowrap;color:var(--accent);width:70px;}
+  .worked{display:flex;flex-direction:column;gap:8px;}
+  .worked div{font-size:13.5px;}
+  .worked .wn{font-family:var(--mono);color:var(--accent);margin-right:6px;}
+
   /* context grid */
   .ctx-grid{display:grid;grid-template-columns:1fr;gap:12px;margin:18px 0;}
   .ctx-card{background:var(--card);border:1px solid var(--line);border-radius:8px;padding:14px 16px;}
@@ -211,6 +221,66 @@
     <div class="callout">
       <span class="k">關鍵</span>
       多數人從第 4、5 層直接開口,把中間的篩選跟詮釋都跳過去了。好的 review,常常是先問「你觀察到什麼」而不是「你覺得怎麼樣」。
+    </div>
+
+    <h3 class="sub-title">每一層在做什麼</h3>
+    <p class="s-intro" style="margin-top:0">每往上一層,都是對前一層做了一個特定的加工動作——不是換句話說,是真的加了新東西進去,失真會一路累積。</p>
+    <table class="mech-table">
+      <tbody>
+        <tr><td class="mt-arrow">1→2</td><td class="mt-verb">篩選</td><td>加上「什麼算重要」的隱藏標準——通常來自本來就在乎或害怕的東西</td></tr>
+        <tr><td class="mt-arrow">2→3</td><td class="mt-verb">賦義</td><td>加上一個參照框架——這種事「通常」代表什麼(來自過去經驗、文化背景)</td></tr>
+        <tr><td class="mt-arrow">3→4</td><td class="mt-verb">填空</td><td>加上沒被觀察到的東西,當作已知——對方的意圖、原因、內心狀態</td></tr>
+        <tr><td class="mt-arrow">4→5</td><td class="mt-verb">收斂</td><td>加上「所以......」——把幾個假設打包壓成一句判斷,做出「不再往下想」的關閉動作</td></tr>
+        <tr><td class="mt-arrow">5→6</td><td class="mt-verb">概化</td><td>加上「這不只是這一次」——從單一事件推廣成更普遍的看法</td></tr>
+        <tr><td class="mt-arrow">6→7</td><td class="mt-verb">對齊行為</td><td>加上跟信念一致的做法——開始這樣選、這樣做事</td></tr>
+        <tr><td class="mt-arrow">7→2</td><td class="mt-verb">確認迴路</td><td>加上偏斜的注意力——之後更容易注意到支持信念的資料,更不容易注意到不支持的</td></tr>
+      </tbody>
+    </table>
+
+    <details class="more"><summary>完整例子:同一件事,一路爬七層</summary>
+      <div class="more-body worked">
+        <div>以「主管說報告很詳細」為例:</div>
+        <div><span class="wn">1</span>主管說了「這份報告寫得很詳細」,當下沒有追問。</div>
+        <div><span class="wn">2</span>篩選——注意到的是「詳細」這個詞、還有「沒追問」,可能沒特別注意主管當時的表情或花了多久看。</div>
+        <div><span class="wn">3</span>賦義——「詳細」可能代表「準備充分、值得肯定」,也可能是「話講太多、抓不到重點」的委婉說法,這時候還是多個候選項並存。</div>
+        <div><span class="wn">4</span>填空——把某個意義具體化,補上沒被說出來的細節:「他八成覺得我抓不到重點,只是不好意思直說」。</div>
+        <div><span class="wn">5</span>收斂——打包成一句判斷:「所以這是委婉的批評。」</div>
+        <div><span class="wn">6</span>概化——如果重複出現,推廣成「我大概不太會抓報告重點」,已經不只是這一次,是對自己能力更普遍的看法。</div>
+        <div><span class="wn">7</span>對齊行為——下次報告刻意講短一點、反覆修改到焦慮,甚至不敢主動發言。</div>
+        <div><span class="wn">→</span>一旦形成這個信念,下次開會更容易注意到「主管好像不太滿意」的蛛絲馬跡(回到第 2 層),卻不會特別注意主管其實常常稱讚細節——迴路接回去了。</div>
+      </div>
+    </details>
+
+    <div class="callout">
+      <span class="k">為什麼會卡住</span>
+      一旦形成信念,注意力會偏向支持它的資料,不容易再看到反例——這是為什麼爬到梯子頂端很難退下來。越早在第 3、4 層(填空、收斂)抓到自己,離自我強化迴路越遠。
+    </div>
+
+    <h3 class="sub-title">跟興趣、能力信念的關聯</h3>
+    <p class="s-intro" style="margin-top:0">這個機制跟 Bandura 的「自我效能」理論結構幾乎一樣,而且方向常被誤解。</p>
+    <p style="font-size:14.5px;margin:0 0 14px">
+      一般直覺是「有興趣 → 努力 → 變厲害」。但照這個迴路看,常見的實際順序常常是反過來:<b>早期一次(可能只是運氣好、遇到好老師)的成功經驗 → 注意力偏向這個領域的正面回饋 → 形成「我擅長這個」的信念 → 因此投入更多時間 → 技能真的變強,興趣在這個過程裡長出來</b>——興趣常常是迴路的下游產物,不一定是起因。
+    </p>
+    <details class="more"><summary>小孩學數學,走一次同樣的七層</summary>
+      <div class="more-body worked">
+        <div><span class="wn">1</span>小孩考了一次不錯的分數(或一次很糗的挫折)。</div>
+        <div><span class="wn">2</span>篩選——注意到的是「這次考很好」,而不是同一週其他更多、更中性的細節。</div>
+        <div><span class="wn">3→4</span>填空——補上一個內在原因:「我大概對數字有一種天分」,這其實是假設,不是觀察到的。</div>
+        <div><span class="wn">5→6</span>概化——從「這次考得好」變成「我是一個數學好的小孩」,不再是一次事件,是一個身分。</div>
+        <div><span class="wn">7→2</span>因為相信自己「數學好」,更願意花時間練、更容易注意到自己數學表現好的地方,忽略普通表現——迴路開始自我強化。反過來,一次不好的經驗形成「我不是數學腦」,會開始迴避、練習變少,連帶讓「不擅長」變成自我實現的預言——不是能力真的不夠,是新的資料再也進不來反駁早期形成的信念。</div>
+      </div>
+    </details>
+
+    <div class="ctx-grid" style="margin-top:14px">
+      <div class="ctx-card">
+        <h4>對小孩</h4>
+        <ul><li>比起問「他對什麼有興趣」,更值得留意他在哪個領域早期偶然得到過正面回饋——那裡最容易被鎖進迴路,不論往好或往壞的方向</li>
+        <li>第 3、4 層(填空、收斂)是最後還能介入的地方,一旦走到第 6、7 層,身分已經定型</li></ul>
+      </div>
+      <div class="ctx-card">
+        <h4>對自己</h4>
+        <ul><li>任何現在覺得「沒興趣/不擅長」的領域,問一句:這是真的試過很多次確認的,還是當年一次不大的樣本就被鎖進信念,之後再也沒有新資料檢驗過?</li></ul>
+      </div>
     </div>
   </section>
 

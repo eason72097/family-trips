@@ -1,0 +1,465 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>思考校準案例集 — 20 個情境實戰</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=Noto+Serif+TC:wght@500;700&family=Noto+Sans+TC:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --paper:#EFF1EC;
+    --paper-raised:#E5E8E1;
+    --card:#F8F9F6;
+    --ink:#20241F;
+    --ink-soft:#5B6259;
+    --line:#CFD3C8;
+    --accent:#2F5D50;
+    --accent-soft:#DCE6E1;
+    --caution:#B08A4E;
+    --caution-soft:#F1E7D3;
+    --d-work:#3E6B7A;
+    --d-life:#7C9169;
+    --d-rel:#7A5F7A;
+    --d-meta:#8B8F86;
+    --serif:'Noto Serif TC', serif;
+    --sans:'Noto Sans TC', 'Inter', sans-serif;
+    --mono:'IBM Plex Mono', monospace;
+  }
+  *{box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{margin:0;background:var(--paper);color:var(--ink);font-family:var(--sans);line-height:1.75;font-size:16px;}
+  a{color:var(--accent);}
+  a:focus-visible, summary:focus-visible, button:focus-visible{outline:2px solid var(--accent); outline-offset:2px;}
+  .wrap{max-width:760px;margin:0 auto;padding:0 20px;}
+
+  .hero{padding:44px 0 24px;border-bottom:1px solid var(--line);}
+  .eyebrow{font-family:var(--mono);font-size:12px;letter-spacing:.12em;color:var(--ink-soft);text-transform:uppercase;margin:0 0 10px;}
+  h1{font-family:var(--serif);font-weight:700;font-size:clamp(26px,5.5vw,36px);margin:0 0 12px;line-height:1.3;}
+  .hero p.lede{color:var(--ink-soft);max-width:58ch;margin:0 0 16px;}
+  .hero a.backlink{font-family:var(--mono);font-size:12px;}
+
+  .howto{
+    background:var(--caution-soft);border-left:3px solid var(--caution);border-radius:3px;
+    padding:14px 16px;font-size:14px;margin:18px 0 0;
+  }
+  .howto .k{font-family:var(--mono);font-size:11px;color:var(--caution);text-transform:uppercase;letter-spacing:.05em;display:block;margin-bottom:6px;}
+  .howto ul{margin:6px 0 0;padding-left:18px;}
+  .howto li{margin-bottom:5px;}
+
+  .filterbar{
+    position:sticky;top:0;z-index:5;background:var(--paper);
+    padding:12px 0;border-bottom:1px solid var(--line);
+    display:flex;gap:8px;flex-wrap:wrap;
+  }
+  .filterbar button{
+    font-family:var(--mono);font-size:12.5px;cursor:pointer;
+    background:var(--paper-raised);color:var(--ink);
+    border:1px solid var(--line);border-radius:999px;padding:6px 14px;
+  }
+  .filterbar button.active{background:var(--accent);color:#fff;border-color:var(--accent);}
+
+  main{padding:24px 0 40px;}
+  .case{
+    background:var(--card);border:1px solid var(--line);border-radius:8px;
+    padding:16px 18px;margin-bottom:14px;
+  }
+  .case-head{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-bottom:8px;}
+  .cn{font-family:var(--mono);font-size:12px;color:var(--ink-soft);}
+  .chip{
+    font-family:var(--mono);font-size:10.5px;letter-spacing:.04em;
+    border-radius:3px;padding:2px 7px;color:#fff;
+  }
+  .chip.work{background:var(--d-work);}
+  .chip.life{background:var(--d-life);}
+  .chip.rel{background:var(--d-rel);}
+  .chip.meta{background:var(--d-meta);}
+  .tool{
+    font-family:var(--mono);font-size:10.5px;
+    border:1px solid var(--line);border-radius:3px;padding:1px 6px;color:var(--ink-soft);background:var(--paper);
+  }
+  .case h3{font-family:var(--serif);font-size:16.5px;margin:0 0 8px;}
+  .case .setup{font-size:14.5px;margin:0 0 10px;}
+  .pause{
+    font-family:var(--mono);font-size:12.5px;color:var(--accent);
+    border-top:1px dashed var(--line);padding-top:10px;margin-top:4px;
+  }
+  details.walk{margin-top:8px;}
+  details.walk summary{cursor:pointer;font-family:var(--mono);font-size:12.5px;color:var(--accent);}
+  details.walk .walk-body{margin-top:10px;padding:12px 14px;background:var(--accent-soft);border-left:3px solid var(--accent);border-radius:3px;font-size:14px;}
+  .walk-body p{margin:0 0 9px;}
+  .walk-body p:last-child{margin-bottom:0;}
+  .walk-body b.lab{font-family:var(--serif);color:var(--accent);}
+  .walk-body .good{background:var(--card);border-radius:4px;padding:9px 11px;margin-top:10px;font-size:13.5px;}
+  .walk-body .good b{font-family:var(--serif);}
+
+  footer{padding:28px 20px 60px;text-align:center;font-family:var(--mono);font-size:12px;color:var(--ink-soft);}
+</style>
+</head>
+<body>
+
+<header class="hero">
+  <div class="wrap">
+    <p class="eyebrow">思考校準案例集</p>
+    <h1>20 個情境實戰</h1>
+    <p class="lede">工具說明在<a href="thinking.html">思考校準筆記</a>。這頁是拿來練的:四步迴路、推論階梯、兩個檢查、非暴力溝通,放進真實生活的情境裡一步一步拆。</p>
+    <div class="howto">
+      <span class="k">使用方式(很重要)</span>
+      <ul>
+        <li><b>先想再看</b>:每個案例先只讀情境,停三十秒想「如果是我,會怎麼拆」,想完才點開拆解。直接看答案只會覺得熟悉,不會長出反射。</li>
+        <li><b>結局故意不都是圓滿的</b>:有些案例負面解讀才是對的、有些不該問、有些整套都不用跑——如果每題都是誤會一場,學到的會是錯的東西。</li>
+        <li>人物身份都是虛構的,別硬套到身邊特定的人身上——要練的是拆解動作,不是替真實的誰下診斷。</li>
+      </ul>
+    </div>
+  </div>
+</header>
+
+<div class="wrap">
+  <div class="filterbar" id="filterbar">
+    <button data-f="all" class="active">全部 20</button>
+    <button data-f="work">工作 7</button>
+    <button data-f="life">生活 5</button>
+    <button data-f="rel">關係 6</button>
+    <button data-f="meta">通用 2</button>
+  </div>
+</div>
+
+<main class="wrap" id="cases">
+
+  <!-- ============ 工作 ============ -->
+
+  <div class="case" data-d="work">
+    <div class="case-head"><span class="cn">01</span><span class="chip work">工作</span><span class="tool">拆開</span><span class="tool">第二解釋</span><span class="tool">階梯</span><span class="tool">直接問</span></div>
+    <h3>報告被說「很詳細」</h3>
+    <p class="setup">你是資深工程師,部門會議上向高兩層的主管報告技術評估。結束時他說:「寫得很詳細。」沒有追問,就換下一位。你回座位後開始不安。</p>
+    <p class="pause">先停三十秒——如果是你,會怎麼拆?</p>
+    <details class="walk"><summary>拆解</summary>
+      <div class="walk-body">
+        <p><b class="lab">拆開</b>——事實:他說了「很詳細」四個字,沒追問。「他嫌我抓不到重點」是階梯第 4 層的填空(補上他心裡怎麼想)。</p>
+        <p><b class="lab">第二解釋</b>——「詳細」也可能就是字面上的肯定;沒追問可能代表沒有疑問,不是沒興趣。可查的旁證:他對其他報告人有追問習慣嗎?他後續有給你可執行的下一步嗎?有的話偏正面。</p>
+        <p><b class="lab">直接問</b>——存在一個中性、零風險的問法:「想跟您確認,這樣的深度適合這個會議嗎?還是您希望我抓更精簡的重點?」——問的是格式偏好,不是「你是不是嫌我」。</p>
+        <div class="good"><b>做得好的樣子</b>:事後不再反覆咀嚼——要嘛拿到答案,要嘛已列出可觀察的旁證清單。<br><b>常見錯誤</b>:拿第 4 層的填空當事實,回家繼續加工到第 6 層(「我不會抓重點」)。</div>
+      </div>
+    </details>
+  </div>
+
+  <div class="case" data-d="work">
+    <div class="case-head"><span class="cn">02</span><span class="chip work">工作</span><span class="tool">動詞檢查</span><span class="tool">歸因</span><span class="tool">直接問</span><span class="tool">NVC</span></div>
+    <h3>下屬連續遲交</h3>
+    <p class="setup">你帶一個小組,組員連續兩次比說好的時間晚一天交付。你發現自己心裡冒出:「他就是散漫。」</p>
+    <p class="pause">先停三十秒——如果是你,會怎麼拆?</p>
+    <details class="walk"><summary>拆解</summary>
+      <div class="walk-body">
+        <p><b class="lab">動詞檢查</b>——「散漫」是性格判斷,不是觀察。事實:兩次各晚一天。兩次有事先說嗎?去查紀錄,不要用印象。</p>
+        <p><b class="lab">歸因檢查</b>——「他散漫」是個性歸因。情境歸因的候選:同時被別的案子插件?工項估計本來就太緊?你交辦時的完成定義模糊?</p>
+        <p><b class="lab">直接問</b>(工作情境,值得問)——「這兩次時程都超過了,想了解是估的時候太緊,還是中間有插單?」問的是機制,不是人格。</p>
+        <p><b class="lab">NVC</b>(如果要給回饋)——觀察(兩次各晚一天)+ 影響(下游測試排程順延)+ 請求(時程有風險時提前一天說)。</p>
+        <div class="good"><b>做得好的樣子</b>:談完你知道的是「流程哪裡壞掉」,不只是「他態度好不好」。<br><b>常見錯誤</b>:憋著不談,用「散漫」默默打分,三個月後考核才爆發——那時他完全不知道發生過什麼。</div>
+      </div>
+    </details>
+  </div>
+
+  <div class="case" data-d="work">
+    <div class="case-head"><span class="cn">03</span><span class="chip work">工作</span><span class="tool">拆開</span><span class="tool">第二解釋</span><span class="tool">直接問</span></div>
+    <h3>群組已讀不回</h3>
+    <p class="setup">你在跨部門群組問了一個規格問題,對口的同事已讀兩天沒回。腦中冒出:「他不想理我」「上次的事他還在介意」。</p>
+    <p class="pause">先停三十秒——如果是你,會怎麼拆?</p>
+    <details class="walk"><summary>拆解</summary>
+      <div class="walk-body">
+        <p><b class="lab">拆開</b>——事實:已讀、兩天未回。「不想理我」是第 4 層填空。</p>
+        <p><b class="lab">第二解釋</b>——出差、在忙結案、想查清楚再回、單純漏掉(群組已讀常常只是掃過)。</p>
+        <p><b class="lab">直接問</b>——換個管道、低成本重問:「不好意思再打擾,這題有機會這週回我嗎?下週評審前要用。」附期限讓對方好排序。</p>
+        <div class="good"><b>做得好的樣子</b>:第二次詢問的語氣跟第一次一樣中性——代表你沒把填空當真。<br><b>常見錯誤</b>:憋到第三天直接向他主管反映——用第 4 層的猜測發動了第 7 層的行動。</div>
+      </div>
+    </details>
+  </div>
+
+  <div class="case" data-d="work">
+    <div class="case-head"><span class="cn">04</span><span class="chip work">工作</span><span class="tool">第二解釋</span><span class="tool">不問</span><span class="tool">對答案</span></div>
+    <h3>新高階主管打斷你</h3>
+    <p class="setup">新上任的處長開會時打斷你兩次。你不熟他的風格,心裡開始緊:「他是不是對我有意見?」</p>
+    <p class="pause">先停三十秒——如果是你,會怎麼拆?</p>
+    <details class="walk"><summary>拆解</summary>
+      <div class="walk-body">
+        <p><b class="lab">拆開+第二解釋</b>——事實:被打斷兩次。候選:他對所有人都這樣(風格)、時間壓力、只想先聽結論的習慣、真的對內容不滿。</p>
+        <p><b class="lab">這是低信任+權力落差象限</b>——不建議直接問「您是不是對我有意見」:資訊增益低(他多半不會直說),成本高(顯得不安)。</p>
+        <p><b class="lab">替代做法</b>——收集更多第 2 層資料:觀察他打斷別人的頻率。或問中性的格式問題:「處長習慣先聽結論再聽依據嗎?我下次照這個順序準備。」</p>
+        <p><b class="lab">對答案</b>——寫下:「我判斷這是他的通用風格,信心 60%,一個月後看。」</p>
+        <div class="good"><b>做得好的樣子</b>:一個月後回頭對照,你的人際判斷多了一筆校準資料。<br><b>常見錯誤</b>:第一次會議就下結論「他針對我」,之後每次開會都只注意到支持這個信念的細節(7→2 確認迴路)。</div>
+      </div>
+    </details>
+  </div>
+
+  <div class="case" data-d="work">
+    <div class="case-head"><span class="cn">05</span><span class="chip work">工作</span><span class="tool">第二解釋</span><span class="tool">對答案</span></div>
+    <h3>技術方向被否決</h3>
+    <p class="setup">你評估了幾個月的技術方向,在評審會被否決,理由是「時機不成熟」。你的第一反應:「他們不懂。」</p>
+    <p class="pause">先停三十秒——如果是你,會怎麼拆?</p>
+    <details class="walk"><summary>拆解</summary>
+      <div class="walk-body">
+        <p><b class="lab">先抓自己的立場</b>——「他們不懂」是防衛。先承認自己現在是士兵心態,在保護結論。</p>
+        <p><b class="lab">鋼人(第二解釋的進階)</b>——認真寫下反方最強版本:如果否決是對的,最可能對在哪?資源排擠?供應鏈沒到位?你的成本估計太樂觀?</p>
+        <p><b class="lab">這題的重點</b>——負面結論可能是對的。工具不是用來證明你沒錯,是用來弄清楚哪部分你錯、哪部分你對。</p>
+        <p><b class="lab">對答案</b>——寫下可驗證的預測:「若半年內競品量產同類方案,證明時機其實成熟,信心 70%。」設半年後回頭看。</p>
+        <div class="good"><b>做得好的樣子</b>:半年後不論結果,你都拿到一筆高價值校準——比當下爭贏更有用。</div>
+      </div>
+    </details>
+  </div>
+
+  <div class="case" data-d="work">
+    <div class="case-head"><span class="cn">06</span><span class="chip work">工作</span><span class="tool">拆開</span><span class="tool">直接問</span><span class="tool">對答案</span></div>
+    <h3>廠商說「沒問題」</h3>
+    <p class="setup">廠商業務拍胸脯:「這規格沒問題。」你有點不安,但也不想顯得不信任對方。</p>
+    <p class="pause">先停三十秒——如果是你,會怎麼拆?</p>
+    <details class="walk"><summary>拆解</summary>
+      <div class="walk-body">
+        <p><b class="lab">拆開(方向朝外)</b>——「沒問題」是他的結論(第 5 層),不是資料(第 1 層)。你收到的其實是一個空箱子。</p>
+        <p><b class="lab">直接問(把對方請下階梯)</b>——「想確認一下,『沒問題』是指在哪個測試條件下驗過?有報告可以看嗎?」把他的結論退回可觀察的資料。</p>
+        <p><b class="lab">對答案</b>——記下:「我預測首批來料通過率 &gt;95%,信心 65%。」到貨後對照。</p>
+        <div class="good"><b>做得好的樣子</b>:你把「聽起來安心的話」和「可驗證的證據」分開了——跟拆自己的解讀是同一個動作,只是方向朝外。</div>
+      </div>
+    </details>
+  </div>
+
+  <div class="case" data-d="work">
+    <div class="case-head"><span class="cn">07</span><span class="chip work">工作</span><span class="tool">動詞檢查</span><span class="tool">第二解釋</span><span class="tool">不問</span></div>
+    <h3>同事在你報告後補充很多</h3>
+    <p class="setup">你報告完,同事接著補充了很多內容,其中兩點你確實沒講到。你有點不舒服:「他在搶著表現?」</p>
+    <p class="pause">先停三十秒——如果是你,會怎麼拆?</p>
+    <details class="walk"><summary>拆解</summary>
+      <div class="walk-body">
+        <p><b class="lab">動詞檢查</b>——「搶著表現」帶意圖判斷。事實:他補充了三點,其中兩點你沒講到。</p>
+        <p><b class="lab">第二解釋</b>——他在幫你補強?他對這題本來就熟?他在對主管表現,而且跟你無關?</p>
+        <p><b class="lab">該問嗎?</b>——資訊增益低:就算問也很難拿到真話。而且不管動機是哪個,你的最佳下一步都一樣(把那兩點納入下版)。增益低 + 行動不變 → 不問,放掉。</p>
+        <div class="good"><b>做得好的樣子</b>:你能接受「不知道他的動機」而不難受,因為這個答案根本不影響你的行動。<br><b>這題的重點</b>:「判斷出不需要問」也是把第三步做好。</div>
+      </div>
+    </details>
+  </div>
+
+  <!-- ============ 生活 ============ -->
+
+  <div class="case" data-d="life">
+    <div class="case-head"><span class="cn">08</span><span class="chip life">生活</span><span class="tool">不用跑</span></div>
+    <h3>鄰居的回收物</h3>
+    <p class="setup">電梯口你家門邊多了一袋鄰居的回收物,放了一晚。</p>
+    <p class="pause">先停三十秒——這題該跑流程嗎?</p>
+    <details class="walk"><summary>拆解</summary>
+      <div class="walk-body">
+        <p><b class="lab">象限判斷</b>——一次性 + 低風險:整套都不用跑。去講一聲或等一天看看,選一個做了就結束。</p>
+        <p><b class="lab">唯一要抓的</b>——如果發現自己開始鋪故事(「這家人就是自私」——已經爬到第 6 層),才需要煞車。</p>
+        <div class="good"><b>做得好的樣子</b>:三十秒內處理完,沒有後續心理活動。<br><b>這題的重點</b>:知道「什麼不值得想」跟知道「怎麼想」一樣重要。</div>
+      </div>
+    </details>
+  </div>
+
+  <div class="case" data-d="life">
+    <div class="case-head"><span class="cn">09</span><span class="chip life">生活</span><span class="tool">拆開</span><span class="tool">階梯</span><span class="tool">直接問</span></div>
+    <h3>老師說小孩「今天比較安靜」</h3>
+    <p class="setup">接小孩時,老師說:「他今天比較安靜喔。」你回家路上開始想:是不是被排擠?是不是社交有問題?</p>
+    <p class="pause">先停三十秒——如果是你,會怎麼拆?</p>
+    <details class="walk"><summary>拆解</summary>
+      <div class="walk-body">
+        <p><b class="lab">拆開</b>——事實:老師說了一句「今天比較安靜」。注意「今天」——老師給的是單日觀察,你卻正要把它概化成第 6 層(「我小孩社交有問題」)。</p>
+        <p><b class="lab">第二解釋</b>——想睡、跟好朋友吵架(單一事件)、活動不是他喜歡的類型、單純安靜的一天。</p>
+        <p><b class="lab">直接問(對老師,成本低)</b>——「謝謝老師注意到,他平常都怎麼樣?今天有什麼不一樣的活動嗎?」先拿基準線,再判斷今天是不是異常。</p>
+        <p><b class="lab">連到興趣養成那節</b>——小孩自己也在爬階梯。你的反應如果過大(緊張追問「是不是被欺負」),等於幫他把單日事件加工成故事。</p>
+        <div class="good"><b>做得好的樣子</b>:多拿兩層資料(基準線 + 當天脈絡)才決定要不要在意。<br><b>常見錯誤</b>:用一句話蓋一個「我小孩有問題」的信念,之後只注意到支持它的跡象。</div>
+      </div>
+    </details>
+  </div>
+
+  <div class="case" data-d="life">
+    <div class="case-head"><span class="cn">10</span><span class="chip life">生活</span><span class="tool">第二解釋</span><span class="tool">煞車</span><span class="tool">直接問</span></div>
+    <h3>聚會沒揪你</h3>
+    <p class="setup">你從別人的限時動態發現朋友群聚會沒揪你。</p>
+    <p class="pause">先停三十秒——第一次發生,跟第三次發生,拆法一樣嗎?</p>
+    <details class="walk"><summary>拆解</summary>
+      <div class="walk-body">
+        <p><b class="lab">第一次發生</b>——第二解釋很多:臨時起意、以為你沒空、主揪跟你不熟。增益低就先放掉,或下次主動揪一次看反應。</p>
+        <p><b class="lab">已經第三次</b>——這就是停損條件:證據一致重複時,繼續生產善意解釋不是謙虛,是逃避。此時做得好的是接受結論並決定行動(關係降級?或問一次?),不是找第四個解釋。</p>
+        <p><b class="lab">如果選擇問</b>——只問最熟的一位,不在群組問:「最近幾次聚會都沒揪我,想知道是不是我哪次讓大家不舒服?」</p>
+        <div class="good"><b>這題的重點</b>:第二步有煞車。做得好 = 分得出自己現在是在「除偏」還是在「逃避下判斷」。</div>
+      </div>
+    </details>
+  </div>
+
+  <div class="case" data-d="life">
+    <div class="case-head"><span class="cn">11</span><span class="chip life">生活</span><span class="tool">歸因</span><span class="tool">不用跑</span></div>
+    <h3>看到立場相反的留言</h3>
+    <p class="setup">你在網路上看到一則跟你立場完全相反、講得很武斷的留言,手很癢想回。</p>
+    <p class="pause">先停三十秒——回覆的資訊增益是多少?</p>
+    <details class="walk"><summary>拆解</summary>
+      <div class="walk-body">
+        <p><b class="lab">歸因檢查</b>——「這人是白痴」是性格歸因。情境版:他看到的資訊源跟你不同、他的處境讓那個立場對他有利。</p>
+        <p><b class="lab">免費的鋼人練習</b>——花一分鐘想「這個立場最強的版本」——不是為了回他,是為了練。</p>
+        <p><b class="lab">成本/增益</b>——回覆的增益幾乎是零(你說服不了武斷的陌生人),成本是你的注意力和情緒。不回。</p>
+        <div class="good"><b>做得好的樣子</b>:把它當免費的鋼人練習題,練完就滑走。</div>
+      </div>
+    </details>
+  </div>
+
+  <div class="case" data-d="life">
+    <div class="case-head"><span class="cn">12</span><span class="chip life">生活</span><span class="tool">拆開</span><span class="tool">第二解釋</span></div>
+    <h3>朋友說「你買這個喔?」</h3>
+    <p class="setup">你買了個新東西,朋友看到說:「你買這個喔?」語氣你聽不出來是驚訝還是嫌棄。</p>
+    <p class="pause">先停三十秒——如果是你,會怎麼拆?</p>
+    <details class="walk"><summary>拆解</summary>
+      <div class="walk-body">
+        <p><b class="lab">拆開</b>——事實:五個字 + 一個你無法確定的語氣。「他嫌棄」是你的填空。</p>
+        <p><b class="lab">第二解釋</b>——單純驚訝、他自己也想買、隨口一句沒有意思。</p>
+        <p><b class="lab">該問嗎</b>——低風險關係 + 低重要性:可以輕鬆地問(「怎麼,你覺得雷喔?」),也可以直接放掉。兩個都對,選省力的。</p>
+        <div class="good"><b>做得好的樣子</b>:十秒內處理完。這種微情境強度低、頻率高,是練第一步反射的最佳素材。</div>
+      </div>
+    </details>
+  </div>
+
+  <!-- ============ 關係 ============ -->
+
+  <div class="case" data-d="rel">
+    <div class="case-head"><span class="cn">13</span><span class="chip rel">關係</span><span class="tool">拆開</span><span class="tool">第二解釋</span><span class="tool">直接問</span></div>
+    <h3>另一半話很少</h3>
+    <p class="setup">另一半回家後明顯話比平常少。你問「怎麼了」,得到「沒事」。</p>
+    <p class="pause">先停三十秒——「沒事」該怎麼收?</p>
+    <details class="walk"><summary>拆解</summary>
+      <div class="walk-body">
+        <p><b class="lab">拆開</b>——事實:話少 + 說「沒事」。「他對我不滿」是填空;「沒事 = 真的沒事」也是填空,只是方向相反。</p>
+        <p><b class="lab">第二解釋</b>——工作的事還在腦中、單純累、有事但還沒整理好怎麼講。</p>
+        <p><b class="lab">直接問(親近關係,值得,但方式重要)</b>——不逼問「你到底怎麼了」,改成開一扇門:「你看起來累累的,想聊的時候跟我說,我先去弄小孩。」</p>
+        <div class="good"><b>做得好的樣子</b>:不把「他還不想講」自動翻譯成「他在生我的氣」。<br><b>常見錯誤</b>:連續追問三次「是不是我做錯什麼」——這是把自己的焦慮丟給對方處理。</div>
+      </div>
+    </details>
+  </div>
+
+  <div class="case" data-d="rel">
+    <div class="case-head"><span class="cn">14</span><span class="chip rel">關係</span><span class="tool">階梯</span><span class="tool">NVC</span></div>
+    <h3>「你都不幫忙家裡的事」</h3>
+    <p class="setup">忙亂的晚上,另一半說:「你都不幫忙家裡的事。」你第一反應是想列舉自己做過的事反駁。</p>
+    <p class="pause">先停三十秒——這句話該當第幾層的話來聽?</p>
+    <details class="walk"><summary>拆解</summary>
+      <div class="walk-body">
+        <p><b class="lab">先抓自己的階梯</b>——你聽到「都」就想反駁,是因為你把這句話收進第 1 層當「事實陳述」在審核真偽。但它更可能是第 3 層的表達:她在講此刻的感受,不是在做統計。</p>
+        <p><b class="lab">翻譯對方的話</b>——她的觀察可能是:今晚她連做三件事、而你看起來在滑手機。她的「都」=「我現在覺得孤軍奮戰」。</p>
+        <p><b class="lab">NVC 回應</b>——「你這樣說我有點難過(感受),不過我猜你現在是覺得都你在扛(翻譯對方的需要)。我現在接手洗碗跟哄睡(具體行動),之後我們找時間把平常的分工談一下好嗎(請求)?」</p>
+        <p><b class="lab">不做的事</b>——當場列舉功勞清單:那是在跟第 3 層的情緒表達進行第 1 層的事實辯論,必輸。</p>
+        <div class="good"><b>做得好的樣子</b>:十分鐘後你們在分工,不是在對帳。</div>
+      </div>
+    </details>
+  </div>
+
+  <div class="case" data-d="rel">
+    <div class="case-head"><span class="cn">15</span><span class="chip rel">關係</span><span class="tool">拆開</span><span class="tool">不問</span><span class="tool">NVC</span></div>
+    <h3>長輩評論教養方式</h3>
+    <p class="setup">家族聚餐,長輩當眾說:「小孩這樣寵不行啦,我們以前都......」你和另一半的做法被當面否定。</p>
+    <p class="pause">先停三十秒——NVC 的對象該是誰?</p>
+    <details class="walk"><summary>拆解</summary>
+      <div class="walk-body">
+        <p><b class="lab">拆開</b>——事實:長輩表達了不同的教養觀。「他在否定我們/挑釁」是填空;「他關心孫子」也是一個候選。</p>
+        <p><b class="lab">象限判斷</b>——關係重要 + 輩分落差:當場直問或辯論,成本高增益低。當場的動作是接住不接戰:「謝謝關心,我們有在注意。」</p>
+        <p><b class="lab">NVC 的對象是另一半,不是長輩</b>——事後:「剛剛那樣講我有點悶(感受),我需要知道我們倆的做法是一致的(需要),下次遇到可以由你回應嗎(請求)?」</p>
+        <div class="good"><b>做得好的樣子</b>:分清楚哪段關係才是主戰場——是隊友,不是長輩的認同。</div>
+      </div>
+    </details>
+  </div>
+
+  <div class="case" data-d="rel">
+    <div class="case-head"><span class="cn">16</span><span class="chip rel">關係</span><span class="tool">階梯</span></div>
+    <h3>小孩說「我最討厭數學了」</h3>
+    <p class="setup">小孩寫作業寫到生氣:「我最討厭數學了,我就是笨!」</p>
+    <p class="pause">先停三十秒——他這句話爬了幾層?你要在哪一層接住他?</p>
+    <details class="walk"><summary>拆解</summary>
+      <div class="walk-body">
+        <p><b class="lab">他正在爬梯子</b>——「這題不會」(第 1 層)→「我數學爛」(第 6 層)→「我笨」(身分)。一句話爬了五層。</p>
+        <p><b class="lab">介入點在第 3、4 層</b>——幫他把梯子拆回去:「你是討厭數學,還是討厭『這一題卡住的感覺』?」「上禮拜那題你不是自己解出來了?」把概化拆回單一事件,把「我笨」拆回「這題難」。</p>
+        <p><b class="lab">不做的事</b>——直接說「你不笨你很聰明」:這是用一個概化去蓋另一個概化,他不會信,而且你也在教他用第 6 層講話。</p>
+        <div class="good"><b>做得好的樣子</b>:對話結束時,他的句子從「我笨」變回「這題很難」——梯子降了五層,比這題有沒有解出來重要。</div>
+      </div>
+    </details>
+  </div>
+
+  <div class="case" data-d="rel">
+    <div class="case-head"><span class="cn">17</span><span class="chip rel">關係</span><span class="tool">歸因</span><span class="tool">拆開</span></div>
+    <h3>自己一直拖著不回朋友訊息</h3>
+    <p class="setup">你發現某個朋友的訊息你已經拖一週沒回,每次想到都說「我最近太忙」。</p>
+    <p class="pause">先停三十秒——把工具轉向自己,會看到什麼?</p>
+    <details class="walk"><summary>拆解</summary>
+      <div class="walk-body">
+        <p><b class="lab">歸因反轉</b>——對自己我們習慣情境歸因(我忙)。刻意試一次相反方向:「我是不是其實在迴避這段關係?每次跟他聊完,是不是都有點累?」</p>
+        <p><b class="lab">拆開</b>——事實:其他訊息你都當天回,只有他的拖一週。「我忙」解釋不了這個差異。</p>
+        <p><b class="lab">這題不用問別人,要問自己</b>——答案通常你其實知道,只是沒讓它浮上來。</p>
+        <div class="good"><b>做得好的樣子</b>:誠實承認之後才有真正的選項——調整相處方式、降低頻率,或發現其實是某次談話卡住了,講開。<br><b>這題的重點</b>:歸因謬誤是雙向的——對別人太嚴,對自己太鬆。工具要能兩邊用。</div>
+      </div>
+    </details>
+  </div>
+
+  <div class="case" data-d="rel">
+    <div class="case-head"><span class="cn">18</span><span class="chip rel">關係</span><span class="tool">對答案</span><span class="tool">階梯</span></div>
+    <h3>三個月前的判斷,現在對答案</h3>
+    <p class="setup">三個月前你判斷「同事B不適合獨立帶案子」,當時信心 80%,你有記下來。現在案子結了:有延遲,但主因是客戶改需求,B 的協調其實做得不錯。</p>
+    <p class="pause">先停三十秒——這筆校準要怎麼收,才不只是「我錯了」?</p>
+    <details class="walk"><summary>拆解</summary>
+      <div class="walk-body">
+        <p><b class="lab">對照</b>——判斷:部分錯。但校準的重點不是「我錯了真丟臉」,是找出當初的判斷用了什麼證據。</p>
+        <p><b class="lab">回溯證據鏈</b>——回看發現:你當時的主要證據是「他開會不太發言」。這是第 2 層的篩選(把安靜篩成重點)加第 3 層的賦義(安靜 = 沒主見)。</p>
+        <p><b class="lab">更新</b>——「開會安靜」對「能不能帶案子」的預測力,在你這裡要降權。這才是一筆完整的校準:不只知道錯,還知道哪個環節造成的。</p>
+        <div class="good"><b>做得好的樣子</b>:下次遇到安靜的同事,你的自動判斷會慢半拍——那半拍就是這三個月的紀錄買來的。</div>
+      </div>
+    </details>
+  </div>
+
+  <!-- ============ 通用 ============ -->
+
+  <div class="case" data-d="meta">
+    <div class="case-head"><span class="cn">19</span><span class="chip meta">通用</span><span class="tool">煞車</span></div>
+    <h3>工具用過頭</h3>
+    <p class="setup">你開始每件小事都跑四步:買哪家便當在拆事實解讀,同事一個表情要想三個解釋,睡前還在檢討今天有沒有「做到位」。</p>
+    <p class="pause">先停三十秒——這是進步,還是警訊?</p>
+    <details class="walk"><summary>拆解</summary>
+      <div class="walk-body">
+        <p><b class="lab">健康指標亮燈</b>——工具的目的是省力(減少內耗與誤判),現在它本身變成新的耗損。</p>
+        <p><b class="lab">診斷</b>——你把「有沒有執行流程」當成了新的績效指標——這是思考完美主義換了一件衣服。</p>
+        <p><b class="lab">做法</b>——退回只剩一條規則:「只有出現真實情緒反應或重要決定時,才跑第一步。」其他一律放行。</p>
+        <div class="good"><b>做得好的樣子</b>:一週後跑流程的次數大幅下降,但抓到的都是真的重要的時刻。<br><b>這題的重點</b>:用的次數不是指標,命中率才是。</div>
+      </div>
+    </details>
+  </div>
+
+  <div class="case" data-d="meta">
+    <div class="case-head"><span class="cn">20</span><span class="chip meta">通用</span><span class="tool">拆開</span><span class="tool">對答案</span></div>
+    <h3>事後才想到「我又沒拆」</h3>
+    <p class="setup">開會時被一句話刺到,當下腦充血照舊反應了。回家才想到:「啊,我又沒拆。」</p>
+    <p class="pause">先停三十秒——這算失敗嗎?</p>
+    <details class="walk"><summary>拆解</summary>
+      <div class="walk-body">
+        <p><b class="lab">這是常態,不是失敗</b>——反射的養成順序本來就是:事後想到 → 事後半小時想到 → 當下結束前想到 → 當下就想到。每個人都從第一階開始。</p>
+        <p><b class="lab">事後補跑有真實價值</b>——現在把當時的事實/解讀補拆一次,寫下來。這次的補拆,就是在幫下一次的「當下」鋪路。</p>
+        <p><b class="lab">順便收一筆資料</b>——記下觸發你的是哪類話(被質疑專業?被打斷?被比較?)。幾筆之後你會看到自己的觸發模式——那是你的思考弱點地圖。</p>
+        <div class="good"><b>做得好的樣子</b>:不苛責當下沒做到,但不放過事後的複盤。</div>
+      </div>
+    </details>
+  </div>
+
+</main>
+
+<footer>思考校準案例集 ・ <a href="thinking.html">回到工具筆記</a></footer>
+
+<script>
+(function(){
+  var bar = document.getElementById("filterbar");
+  var cases = document.querySelectorAll(".case");
+  bar.addEventListener("click", function(e){
+    var btn = e.target.closest("button");
+    if(!btn) return;
+    var f = btn.getAttribute("data-f");
+    var buttons = bar.querySelectorAll("button");
+    for(var i=0;i<buttons.length;i++){ buttons[i].classList.remove("active"); }
+    btn.classList.add("active");
+    for(var j=0;j<cases.length;j++){
+      var d = cases[j].getAttribute("data-d");
+      cases[j].style.display = (f === "all" || d === f) ? "" : "none";
+    }
+  });
+})();
+</script>
+</body>
+</html>

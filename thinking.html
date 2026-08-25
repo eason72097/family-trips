@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>思考校準筆記 — 事實、解讀、迴路</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=Noto+Serif+TC:wght@500;700&family=Noto+Sans+TC:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --paper:#EFF1EC;
+    --paper-raised:#E5E8E1;
+    --card:#F8F9F6;
+    --ink:#20241F;
+    --ink-soft:#5B6259;
+    --line:#CFD3C8;
+    --accent:#2F5D50;
+    --accent-soft:#DCE6E1;
+    --caution:#B08A4E;
+    --caution-soft:#F1E7D3;
+    --serif:'Noto Serif TC', serif;
+    --sans:'Noto Sans TC', 'Inter', sans-serif;
+    --mono:'IBM Plex Mono', monospace;
+  }
+  *{box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{margin:0;background:var(--paper);color:var(--ink);font-family:var(--sans);line-height:1.75;font-size:16px;}
+  a{color:var(--accent);}
+  a:focus-visible, summary:focus-visible{outline:2px solid var(--accent); outline-offset:2px;}
+  .wrap{max-width:760px;margin:0 auto;padding:0 20px;}
+
+  /* hero */
+  .hero{padding:44px 0 26px;border-bottom:1px solid var(--line);}
+  .eyebrow{font-family:var(--mono);font-size:12px;letter-spacing:.12em;color:var(--ink-soft);text-transform:uppercase;margin:0 0 10px;}
+  h1{font-family:var(--serif);font-weight:700;font-size:clamp(26px,5.5vw,36px);margin:0 0 12px;line-height:1.3;}
+  .hero p.lede{color:var(--ink-soft);max-width:58ch;margin:0 0 22px;}
+  .hero p.lede strong{color:var(--ink);}
+  nav.pills{display:flex;flex-wrap:wrap;gap:8px;}
+  nav.pills a{
+    font-family:var(--mono);font-size:12px;text-decoration:none;color:var(--ink);
+    background:var(--paper-raised);border:1px solid var(--line);border-radius:999px;
+    padding:6px 12px;
+  }
+
+  /* quick ref card */
+  .quickref{
+    margin:26px 0 0;background:var(--accent);color:#fff;border-radius:8px;
+    padding:20px 20px 16px;
+  }
+  .quickref h2{font-family:var(--mono);font-size:12px;letter-spacing:.1em;text-transform:uppercase;margin:0 0 14px;opacity:.85;font-weight:500;}
+  .quickref ol{margin:0;padding-left:20px;}
+  .quickref li{margin-bottom:9px;font-size:14.5px;}
+  .quickref li b{font-family:var(--serif);}
+  .quickref .checks{margin-top:14px;padding-top:14px;border-top:1px solid rgba(255,255,255,.25);font-size:13px;opacity:.9;}
+
+  /* sections */
+  section{padding:42px 0 6px;scroll-margin-top:14px;border-top:1px solid var(--line);}
+  section:first-of-type{border-top:none;}
+  .s-head{display:flex;align-items:baseline;gap:10px;margin-bottom:6px;}
+  .s-num{font-family:var(--mono);font-size:12px;color:var(--caution);border:1px solid var(--caution);border-radius:3px;padding:1px 6px;}
+  h2.s-title{font-family:var(--serif);font-size:21px;margin:0;}
+  .s-intro{color:var(--ink-soft);font-size:14.5px;max-width:60ch;margin:10px 0 22px;}
+
+  /* loop steps */
+  .step{background:var(--card);border:1px solid var(--line);border-radius:8px;padding:16px 18px;margin-bottom:12px;}
+  .step .step-head{display:flex;align-items:center;gap:10px;margin-bottom:8px;}
+  .step-badge{font-family:var(--mono);font-size:12px;color:var(--accent);background:var(--accent-soft);border-radius:3px;padding:2px 8px;}
+  .step h3{font-family:var(--serif);font-size:16.5px;margin:0;}
+  .step p{margin:6px 0;font-size:14.5px;}
+  .step .k{font-family:var(--mono);font-size:11px;color:var(--ink-soft);text-transform:uppercase;letter-spacing:.05em;}
+  details.more{margin-top:10px;}
+  details.more summary{cursor:pointer;font-family:var(--mono);font-size:12px;color:var(--accent);}
+  details.more .more-body{margin-top:8px;padding:12px 14px;background:var(--caution-soft);border-left:3px solid var(--caution);border-radius:3px;font-size:14px;}
+
+  /* ladder */
+  .ladder{list-style:none;margin:18px 0;padding:0;display:flex;flex-direction:column-reverse;gap:6px;}
+  .ladder li{
+    background:var(--card);border:1px solid var(--line);border-radius:6px;
+    padding:10px 12px;font-size:13.5px;display:flex;gap:10px;align-items:baseline;
+  }
+  .ladder li:last-child{background:var(--accent-soft);border-color:var(--accent);font-weight:600;}
+  .ladder .rn{font-family:var(--mono);color:var(--ink-soft);min-width:16px;}
+  .callout{
+    background:var(--caution-soft);border-left:3px solid var(--caution);border-radius:3px;
+    padding:12px 14px;font-size:14px;margin:16px 0;
+  }
+  .callout .k{font-family:var(--mono);font-size:11px;color:var(--caution);text-transform:uppercase;letter-spacing:.05em;display:block;margin-bottom:4px;}
+
+  /* context grid */
+  .ctx-grid{display:grid;grid-template-columns:1fr;gap:12px;margin:18px 0;}
+  .ctx-card{background:var(--card);border:1px solid var(--line);border-radius:8px;padding:14px 16px;}
+  .ctx-card h4{font-family:var(--serif);font-size:15.5px;margin:0 0 8px;}
+  .ctx-card ul{margin:0;padding-left:18px;font-size:13.5px;}
+  .ctx-card li{margin-bottom:4px;}
+
+  /* nvc */
+  .nvc-steps{display:flex;flex-direction:column;gap:8px;margin:16px 0;}
+  .nvc-steps div{background:var(--card);border:1px solid var(--line);border-radius:6px;padding:10px 12px;font-size:14px;}
+  .nvc-steps b{font-family:var(--serif);}
+  .example{
+    background:var(--paper-raised);border-radius:6px;padding:14px 16px;font-size:13.5px;
+    margin-top:14px;color:var(--ink-soft);
+  }
+  .example b{color:var(--ink);}
+
+  footer{padding:32px 20px 60px;text-align:center;font-family:var(--mono);font-size:12px;color:var(--ink-soft);}
+</style>
+</head>
+<body>
+
+<header class="hero">
+  <div class="wrap">
+    <p class="eyebrow">思考校準筆記</p>
+    <h1>事實、解讀、迴路</h1>
+    <p class="lede">
+      不是要「想更多」,而是校準思考投入——真正卡住的地方是<strong>即時、社交性、沒有緩衝時間</strong>的情境
+      (聽別人報告、跟人相處時判斷語氣),不是有時間慢慢分析的深度工作。這頁整理那次討論整套下來的迴路與工具,
+      平常想到就翻幾眼。
+    </p>
+    <nav class="pills">
+      <a href="#loop">核心迴路</a>
+      <a href="#ladder">推論階梯</a>
+      <a href="#checks">兩個檢查</a>
+      <a href="#context">情境對照</a>
+      <a href="#nvc">非暴力溝通</a>
+      <a href="#next">延伸</a>
+    </nav>
+
+    <div class="quickref">
+      <h2>速查卡</h2>
+      <ol>
+        <li><b>拆開</b> — 「他做了什麼」跟「我解讀成什麼」分兩句講,注意帶判斷的動詞(忽略/敷衍/不尊重)</li>
+        <li><b>再想一個</b> — 只求一個替代解釋,不是窮舉;目的是打斷自動偏負面,不是找真相</li>
+        <li><b>該問就問</b> — 真的不確定 + 成本低 → 直接問;證據已經一致 → 不用再猜,行動就好</li>
+        <li><b>對答案</b> — 重要判斷寫下信心度 + 檢查時間點,回頭看準不準</li>
+      </ol>
+      <div class="checks">兩個檢查:找帶判斷的動詞 ・ 留意「別人＝個性、自己＝情境」的歸因偏斜</div>
+    </div>
+  </div>
+</header>
+
+<main class="wrap">
+
+  <section id="loop">
+    <div class="s-head"><span class="s-num">01</span><h2 class="s-title">核心迴路</h2></div>
+    <p class="s-intro">四步,不用四個一起上——先從第一步開始,它是其他三步的基礎,成本也最低。</p>
+
+    <div class="step">
+      <div class="step-head"><span class="step-badge">STEP 1</span><h3>事實與解讀分開</h3></div>
+      <p>當下分兩句講:「發生的是___」「我解讀成___」。</p>
+      <p class="k">強化</p>
+      <p>把猜測跟事實分開的反射速度——同時處理「太快下結論」和「事後反覆咀嚼」,因為兩者的根源都是把解讀當事實。</p>
+      <details class="more"><summary>但這不是乾淨的二分法</summary>
+        <div class="more-body">
+          「事實」跟「解讀」比較像階梯,不是兩個桶子——連「注意到什麼」本身都已經是篩選。目標不是找到絕對客觀的事實(通常到不了),
+          而是盡量往下退幾階,退到大部分人看了都會同意的描述。詳見下方「推論階梯」。
+        </div>
+      </details>
+    </div>
+
+    <div class="step">
+      <div class="step-head"><span class="step-badge">STEP 2</span><h3>逼自己想第二個解釋</h3></div>
+      <p>只要一個,不用窮舉:「還有沒有別的可能?」</p>
+      <p class="k">強化</p>
+      <p>打斷自動偏負面解讀的傾向。</p>
+      <details class="more"><summary>這不是找真相,是除偏</summary>
+        <div class="more-body">
+          就算想完之後還是覺得原本的解讀比較合理,那也是好結果——因為那時候是權衡過後選的,不是自動彈出來的。
+          也不是無限次的除偏機制:如果同一種模式已經跑過好幾次「找另一個解釋 → 還是不對」,繼續找下一個解釋就不再是謙虛,
+          是逃避一個已經確認過的結論。這迴路是用來防止太快下結論,不是用來防止你終於下對結論。
+        </div>
+      </details>
+    </div>
+
+    <div class="step">
+      <div class="step-head"><span class="step-badge">STEP 3</span><h3>直接問,不要只在心裡猜</h3></div>
+      <p>模糊到自己判斷不出來時,用中性的話直接確認:「我想確認一下,您這句話的意思是___嗎?」</p>
+      <p class="k">強化</p>
+      <p>把內部猜測換成外部驗證,直接切斷內耗迴路——答案來自對方,不是反覆推演。</p>
+      <details class="more"><summary>判斷該不該問:資訊增益 vs 成本</summary>
+        <div class="more-body">
+          值得問:真的不確定(不是不舒服,是沒把握)+ 問的成本低。<br>
+          不值得問:證據已經一致指向某個結論(不只一次、有其他線索佐證)——這時候問出口的資訊價值很低,
+          可能只是想從對方嘴裡再拿一次安慰性的解釋,那是逃避,不是釐清。跟評估技術方向一樣:先問「這個動作的資訊增益,
+          相對於它的成本」。
+        </div>
+      </details>
+    </div>
+
+    <div class="step">
+      <div class="step-head"><span class="step-badge">STEP 4</span><h3>對答案</h3></div>
+      <p>重要判斷寫下當時的信心度和一個檢查時間點,到了就回頭看準不準。</p>
+      <p class="k">強化</p>
+      <p>把原本就紮實的分析(像技術方向評估)升級成有回饋的校準能力——長期會知道自己在哪類判斷上準、哪類容易高估。</p>
+    </div>
+  </section>
+
+  <section id="ladder">
+    <div class="s-head"><span class="s-num">02</span><h2 class="s-title">推論階梯</h2></div>
+    <p class="s-intro">Chris Argyris 提出的 Ladder of Inference。「事實 vs 解讀」的完整版,從下到上七層。</p>
+    <ol class="ladder">
+      <li><span class="rn">7</span>行動 — 根據信念採取的下一步</li>
+      <li><span class="rn">6</span>信念 — 變成對這個人、這件事更一般性的看法</li>
+      <li><span class="rn">5</span>結論</li>
+      <li><span class="rn">4</span>假設</li>
+      <li><span class="rn">3</span>意義詮釋 — 加上自己的經驗、文化背景</li>
+      <li><span class="rn">2</span>選擇注意到的資料 — 同一件事發生一百件細節,只記住某幾件</li>
+      <li><span class="rn">1</span>可觀察的資料 — 攝影機會錄到的東西</li>
+    </ol>
+    <div class="callout">
+      <span class="k">關鍵</span>
+      多數人從第 4、5 層直接開口,把中間的篩選跟詮釋都跳過去了。好的 review,常常是先問「你觀察到什麼」而不是「你覺得怎麼樣」。
+    </div>
+  </section>
+
+  <section id="checks">
+    <div class="s-head"><span class="s-num">03</span><h2 class="s-title">兩個檢查工具</h2></div>
+    <p class="s-intro">管的是不同的破洞,搭配用才完整。</p>
+    <div class="step">
+      <h3>找帶判斷的動詞</h3>
+      <p>「他<b>忽略</b>我」— 忽略已經包含「他有選擇、而且是故意的」這個推論。改成「他沒有回我的訊息」,才接近攝影機錄到的東西。
+      凡是動詞帶意圖或態度判斷的(忽略、無視、敷衍、不尊重、故意),都是解讀混進事實的訊號。</p>
+    </div>
+    <div class="step">
+      <h3>基本歸因謬誤</h3>
+      <p>判斷別人的行為,傾向歸因給「他的個性/動機」(他就是很自私);判斷自己的行為,卻傾向歸因給「情境」(我今天是因為太累了)。
+      拆解事實與解讀時,對別人的解讀通常會系統性偏向「這是他這個人的問題」,而不是「這是他當下的處境」。</p>
+    </div>
+  </section>
+
+  <section id="context">
+    <div class="s-head"><span class="s-num">04</span><h2 class="s-title">情境對照</h2></div>
+    <p class="s-intro">分界線不是工作 vs 家庭,是「只需要自己想清楚」還是「需要真的開口講、而且情緒有風險」。</p>
+    <div class="ctx-grid">
+      <div class="ctx-card">
+        <h4>工作 ・ 中性關係</h4>
+        <ul><li>拆開、再想一個 — 都適用</li><li>直接問 — 成本低,通常適用,還會被當成專業</li><li>NVC — 較少需要,除非有衝突</li></ul>
+      </div>
+      <div class="ctx-card">
+        <h4>親近關係(家人、伴侶)</h4>
+        <ul><li>拆開、再想一個 — 適用</li><li>直接問 — 更值得做,長期價值通常高於面子成本</li><li>NVC — 特別適用</li></ul>
+      </div>
+      <div class="ctx-card">
+        <h4>低信任 ・ 權力落差(新主管等)</h4>
+        <ul><li>拆開、再想一個 — 安全,在心裡做</li><li>直接問 — 小心,對方不一定給真話</li><li>NVC — 少用</li></ul>
+      </div>
+      <div class="ctx-card">
+        <h4>陌生人 ・ 一次性互動</h4>
+        <ul><li>整套都不用跑 — 不是每件事都值得想</li></ul>
+      </div>
+    </div>
+  </section>
+
+  <section id="nvc">
+    <div class="s-head"><span class="s-num">05</span><h2 class="s-title">非暴力溝通 NVC</h2></div>
+    <p class="s-intro">Marshall Rosenberg 提出。推論階梯是幫你在心裡想清楚,講不講出來是另一回事;NVC 是設計給「要開口跟對方講」的時候用,目的是把話講出去又不引發防衛心。</p>
+    <div class="nvc-steps">
+      <div><b>1. 觀察</b> — 不帶評價地講發生了什麼</div>
+      <div><b>2. 感受</b> — 講自己的情緒</div>
+      <div><b>3. 需要</b> — 講背後沒被滿足的需求</div>
+      <div><b>4. 請求</b> — 具體、可執行,不是抱怨</div>
+    </div>
+    <div class="example">
+      不是「你每次都遲到,很不尊重人」,而是<br>
+      <b>「我發現你這週有三天晚了 15 分鐘到(觀察),我因此有點焦慮(感受),因為我很在意大家對彼此時間的重視(需要),
+      下次如果會晚,可以先傳訊息跟我說一聲嗎?(請求)」</b>
+    </div>
+    <div class="callout">
+      <span class="k">跟推論階梯的分工</span>
+      關鍵不是關係親疏,是任務類型:只是自己要想清楚 → 推論階梯,哪個場合都用得上;需要真的開口講、又怕講出來引發反彈 → NVC。
+    </div>
+  </section>
+
+  <section id="next">
+    <div class="s-head"><span class="s-num">06</span><h2 class="s-title">之後可以延伸</h2></div>
+    <p class="s-intro">左手欄(Left-hand column)——把當下真正在想但沒說出口的話,和實際說出口的話,分兩欄並排寫下來,對照心口不一的地方。
+    之後遇到一次「講出口的和心裡想的差很多」的情境,再認識這個工具。</p>
+  </section>
+
+</main>
+
+<footer>整理自一次思考校準討論 ・ family-trips</footer>
+
+</body>
+</html>

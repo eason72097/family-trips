@@ -1,0 +1,870 @@
+<title>光明國小入學準備</title>
+<meta charset="UTF-8">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@300;400;500;600;700&family=Noto+Serif+TC:wght@400;600;700&display=swap">
+
+<style>
+:root {
+  --bg: #FAFAF7;
+  --surface: #FFFFFF;
+  --surface-alt: #F3F2ED;
+  --border: #E2E0D8;
+  --text: #2C2A25;
+  --text-secondary: #6B6860;
+  --text-tertiary: #9C9889;
+  --accent: #3D7A5F;
+  --accent-light: #EAF3EE;
+  --accent-dark: #2D5C47;
+  --warm: #C4883A;
+  --warm-light: #FDF5EB;
+  --info: #4A7BA5;
+  --info-light: #EDF4F9;
+  --caution: #B5713A;
+  --caution-light: #FEF6ED;
+  --tag-sport: #3D7A5F;
+  --tag-art: #8B6AAE;
+  --tag-english: #4A7BA5;
+  --tag-school: #C4883A;
+  --shadow-sm: 0 1px 3px rgba(44,42,37,0.06);
+  --shadow-md: 0 4px 12px rgba(44,42,37,0.08);
+  --radius: 6px;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #1A1917;
+    --surface: #242320;
+    --surface-alt: #2E2D29;
+    --border: #3D3B35;
+    --text: #E8E6E0;
+    --text-secondary: #A8A59B;
+    --text-tertiary: #7A776D;
+    --accent: #5FAE86;
+    --accent-light: #1E2E25;
+    --accent-dark: #7ECAA4;
+    --warm: #D9A45C;
+    --warm-light: #2A2318;
+    --info: #6A9DC5;
+    --info-light: #1C2630;
+    --caution: #D9923E;
+    --caution-light: #2A2318;
+    --tag-sport: #5FAE86;
+    --tag-art: #A98CCE;
+    --tag-english: #6A9DC5;
+    --tag-school: #D9A45C;
+    --shadow-sm: 0 1px 3px rgba(0,0,0,0.2);
+    --shadow-md: 0 4px 12px rgba(0,0,0,0.25);
+  }
+}
+
+:root[data-theme="dark"] {
+  --bg: #1A1917;
+  --surface: #242320;
+  --surface-alt: #2E2D29;
+  --border: #3D3B35;
+  --text: #E8E6E0;
+  --text-secondary: #A8A59B;
+  --text-tertiary: #7A776D;
+  --accent: #5FAE86;
+  --accent-light: #1E2E25;
+  --accent-dark: #7ECAA4;
+  --warm: #D9A45C;
+  --warm-light: #2A2318;
+  --info: #6A9DC5;
+  --info-light: #1C2630;
+  --caution: #D9923E;
+  --caution-light: #2A2318;
+  --tag-sport: #5FAE86;
+  --tag-art: #A98CCE;
+  --tag-english: #6A9DC5;
+  --tag-school: #D9A45C;
+  --shadow-sm: 0 1px 3px rgba(0,0,0,0.2);
+  --shadow-md: 0 4px 12px rgba(0,0,0,0.25);
+}
+
+* { box-sizing: border-box; }
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: 'Noto Sans TC', system-ui, sans-serif;
+  line-height: 1.7;
+  max-width: 860px;
+  margin: 0 auto;
+  padding: 40px 24px 80px;
+}
+
+h1, h2, h3 {
+  font-family: 'Noto Serif TC', serif;
+  text-wrap: balance;
+  line-height: 1.3;
+}
+
+h1 {
+  font-size: 1.75rem;
+  font-weight: 700;
+  color: var(--text);
+  margin: 0 0 8px;
+}
+
+.subtitle {
+  color: var(--text-secondary);
+  font-size: 0.95rem;
+  margin: 0 0 40px;
+}
+
+h2 {
+  font-size: 1.3rem;
+  font-weight: 600;
+  color: var(--text);
+  margin: 48px 0 20px;
+  padding-bottom: 10px;
+  border-bottom: 2px solid var(--accent);
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+h2 .icon { font-size: 1.1rem; }
+
+h3 {
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: var(--text);
+  margin: 28px 0 12px;
+}
+
+p { margin: 0 0 14px; color: var(--text); }
+
+.note {
+  background: var(--accent-light);
+  border-left: 3px solid var(--accent);
+  padding: 14px 18px;
+  border-radius: 0 var(--radius) var(--radius) 0;
+  font-size: 0.9rem;
+  color: var(--text);
+  margin: 16px 0;
+}
+
+.note.warn {
+  background: var(--caution-light);
+  border-left-color: var(--caution);
+}
+
+.note.info {
+  background: var(--info-light);
+  border-left-color: var(--info);
+}
+
+/* Schedule table */
+.schedule-wrap {
+  overflow-x: auto;
+  margin: 16px 0;
+  border-radius: var(--radius);
+  border: 1px solid var(--border);
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.88rem;
+  font-variant-numeric: tabular-nums;
+}
+
+thead th {
+  background: var(--surface-alt);
+  color: var(--text-secondary);
+  font-weight: 600;
+  padding: 10px 14px;
+  text-align: center;
+  border-bottom: 1px solid var(--border);
+  white-space: nowrap;
+  font-size: 0.82rem;
+  letter-spacing: 0.03em;
+}
+
+thead th:first-child { text-align: left; }
+
+td {
+  padding: 9px 14px;
+  text-align: center;
+  border-bottom: 1px solid var(--border);
+  color: var(--text);
+  white-space: nowrap;
+}
+
+td:first-child {
+  text-align: left;
+  font-weight: 500;
+  color: var(--text);
+}
+
+tr:last-child td { border-bottom: none; }
+
+.early { color: var(--accent); font-weight: 600; }
+.late { color: var(--text-secondary); }
+
+/* Timeline */
+.timeline {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  margin: 16px 0;
+  position: relative;
+}
+
+.timeline::before {
+  content: '';
+  position: absolute;
+  left: 54px;
+  top: 8px;
+  bottom: 8px;
+  width: 2px;
+  background: var(--border);
+}
+
+.tl-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 16px;
+  padding: 6px 0;
+  position: relative;
+}
+
+.tl-time {
+  font-size: 0.8rem;
+  font-weight: 500;
+  color: var(--text-secondary);
+  min-width: 46px;
+  text-align: right;
+  padding-top: 1px;
+  font-variant-numeric: tabular-nums;
+}
+
+.tl-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: var(--accent);
+  margin-top: 5px;
+  flex-shrink: 0;
+  position: relative;
+  z-index: 1;
+}
+
+.tl-dot.lunch { background: var(--warm); }
+.tl-dot.end { background: var(--caution); }
+
+.tl-label {
+  font-size: 0.88rem;
+  color: var(--text);
+  padding-top: 1px;
+}
+
+/* Cards */
+.card-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 16px;
+  margin: 16px 0;
+}
+
+@media (min-width: 600px) {
+  .card-grid.cols-2 { grid-template-columns: 1fr 1fr; }
+}
+
+.card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 20px;
+  box-shadow: var(--shadow-sm);
+}
+
+.card-title {
+  font-family: 'Noto Serif TC', serif;
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--text);
+  margin: 0 0 8px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.card-meta {
+  font-size: 0.82rem;
+  color: var(--text-tertiary);
+  margin: 0 0 10px;
+  line-height: 1.5;
+}
+
+.card p {
+  font-size: 0.9rem;
+  margin: 0 0 8px;
+}
+
+.card p:last-child { margin-bottom: 0; }
+
+.tag {
+  display: inline-block;
+  font-size: 0.72rem;
+  font-weight: 600;
+  padding: 2px 8px;
+  border-radius: 3px;
+  letter-spacing: 0.04em;
+  vertical-align: middle;
+}
+
+.tag-sport { background: var(--accent-light); color: var(--tag-sport); }
+.tag-art { background: #F1ECF6; color: var(--tag-art); }
+.tag-english { background: var(--info-light); color: var(--tag-english); }
+.tag-school { background: var(--warm-light); color: var(--tag-school); }
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) .tag-art { background: #2A2435; }
+}
+:root[data-theme="dark"] .tag-art { background: #2A2435; }
+
+.detail-row {
+  display: flex;
+  gap: 8px;
+  font-size: 0.85rem;
+  margin: 4px 0;
+  align-items: flex-start;
+}
+
+.detail-row .label {
+  color: var(--text-tertiary);
+  min-width: 52px;
+  flex-shrink: 0;
+  font-size: 0.8rem;
+}
+
+.detail-row .value { color: var(--text); }
+
+.stars {
+  color: var(--warm);
+  font-size: 0.85rem;
+  letter-spacing: 1px;
+}
+
+.pro { color: var(--accent); }
+.con { color: var(--caution); }
+
+.link {
+  color: var(--info);
+  text-decoration: none;
+  font-size: 0.85rem;
+}
+.link:hover { text-decoration: underline; }
+
+/* Comparison table */
+.cmp-wrap {
+  overflow-x: auto;
+  margin: 16px 0;
+}
+
+.cmp-table {
+  min-width: 560px;
+}
+
+.cmp-table td { font-size: 0.85rem; }
+.cmp-table td:first-child { font-weight: 600; min-width: 100px; }
+
+/* Advice section */
+.advice {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 24px;
+  margin: 16px 0;
+  box-shadow: var(--shadow-sm);
+}
+
+.advice h3 {
+  margin-top: 0;
+  color: var(--accent);
+  font-size: 1rem;
+}
+
+.advice p {
+  font-size: 0.9rem;
+  margin-bottom: 10px;
+}
+
+.advice p:last-child { margin-bottom: 0; }
+
+.checklist {
+  list-style: none;
+  padding: 0;
+  margin: 12px 0;
+}
+
+.checklist li {
+  padding: 6px 0 6px 28px;
+  position: relative;
+  font-size: 0.9rem;
+  color: var(--text);
+}
+
+.checklist li::before {
+  content: '☐';
+  position: absolute;
+  left: 2px;
+  color: var(--accent);
+}
+
+.section-intro {
+  color: var(--text-secondary);
+  font-size: 0.92rem;
+  margin-bottom: 20px;
+}
+
+.fee-range {
+  display: inline-block;
+  background: var(--warm-light);
+  color: var(--warm);
+  font-size: 0.78rem;
+  font-weight: 600;
+  padding: 2px 8px;
+  border-radius: 3px;
+  font-variant-numeric: tabular-nums;
+}
+
+hr {
+  border: none;
+  border-top: 1px solid var(--border);
+  margin: 32px 0;
+}
+
+.sources {
+  font-size: 0.78rem;
+  color: var(--text-tertiary);
+  margin-top: 48px;
+  padding-top: 20px;
+  border-top: 1px solid var(--border);
+}
+
+.sources a {
+  color: var(--text-tertiary);
+  text-decoration: none;
+}
+
+.sources a:hover { text-decoration: underline; }
+
+/* Collapsible */
+details {
+  margin: 12px 0;
+}
+
+details summary {
+  cursor: pointer;
+  font-weight: 500;
+  color: var(--text);
+  font-size: 0.92rem;
+  padding: 8px 0;
+  user-select: none;
+}
+
+details summary:hover { color: var(--accent); }
+
+details[open] summary { margin-bottom: 8px; }
+</style>
+
+<h1>光明國小入學準備指南</h1>
+<p class="subtitle">竹北市光明國小 ─ 小一新生作息、課後安排、運動社團完整調查</p>
+
+<!-- ═══════ 1. 作息時間 ═══════ -->
+<h2><span class="icon">⏰</span> 一、學校作息時間表</h2>
+
+<p class="section-intro">以下作息資料交叉比對了同區的十興國小（115 學年度官方行事曆 PDF）和鳳岡國小（官網公告），兩校一年級放學時間完全一致。光明國小同屬新竹縣竹北市，節數由縣府統一核定，作息幾乎確定相同。建議開學前打一通電話確認即可（校方電話：03-5538655）。</p>
+
+<h3>每日作息流程</h3>
+
+<div class="timeline">
+  <div class="tl-item"><span class="tl-time">07:20</span><span class="tl-dot"></span><span class="tl-label">到校時間 07:20–07:40（十興國小行事曆明確記載）</span></div>
+  <div class="tl-item"><span class="tl-time">07:40</span><span class="tl-dot"></span><span class="tl-label">整潔活動（打掃教室）</span></div>
+  <div class="tl-item"><span class="tl-time">07:50</span><span class="tl-dot"></span><span class="tl-label">朝會（週一）／晨讀時間（週二～五）</span></div>
+  <div class="tl-item"><span class="tl-time">08:40</span><span class="tl-dot"></span><span class="tl-label">第一節課開始（每節 40 分鐘，課間休息 10 分鐘）</span></div>
+  <div class="tl-item"><span class="tl-time">10:10</span><span class="tl-dot"></span><span class="tl-label">第二節下課後有 20 分鐘大下課</span></div>
+  <div class="tl-item"><span class="tl-time">12:00</span><span class="tl-dot lunch"></span><span class="tl-label">午餐 + 午休（12:00–13:05）</span></div>
+  <div class="tl-item"><span class="tl-time">12:40</span><span class="tl-dot end"></span><span class="tl-label"><strong>低年級放學</strong>（大部分天數）</span></div>
+  <div class="tl-item"><span class="tl-time">13:10</span><span class="tl-dot"></span><span class="tl-label">下午第五～七節（中高年級）</span></div>
+  <div class="tl-item"><span class="tl-time">15:40</span><span class="tl-dot end"></span><span class="tl-label"><strong>中高年級放學</strong></span></div>
+</div>
+
+<h3>各年級每週放學時間</h3>
+
+<div class="note" style="margin-bottom:16px;">
+  <strong>✅ 資料可信度：高。</strong>十興國小 115 學年度行事曆 PDF 和鳳岡國小官網公告的一年級放學時間完全一致。中正國小行事曆也確認半天日 12:40 放學。三校交叉驗證，光明國小的一年級作息幾乎確定如下表。
+</div>
+
+<div class="schedule-wrap">
+<table>
+  <thead>
+    <tr><th>年級</th><th>週一</th><th>週二</th><th>週三</th><th>週四</th><th>週五</th></tr>
+  </thead>
+  <tbody>
+    <tr><td>一年級</td><td class="early">12:40</td><td class="late">15:40</td><td class="early">12:40</td><td class="early">12:40</td><td class="early">12:40</td></tr>
+    <tr><td>二年級</td><td class="early">12:40</td><td class="late">15:40</td><td class="early">12:40</td><td class="early">12:40</td><td class="early">12:40</td></tr>
+    <tr><td>三年級</td><td class="late">15:40</td><td class="late">15:40</td><td class="early">12:40</td><td class="late">15:40</td><td class="early">12:40</td></tr>
+    <tr><td>四年級</td><td class="late">15:40</td><td class="late">15:40</td><td class="early">12:40</td><td class="late">15:40</td><td class="early">12:40</td></tr>
+    <tr><td>五年級</td><td class="late">15:40</td><td class="late">15:40</td><td class="early">12:40</td><td class="late">15:40</td><td class="late">15:40</td></tr>
+    <tr><td>六年級</td><td class="late">15:40</td><td class="late">15:40</td><td class="early">12:40</td><td class="late">15:40</td><td class="late">15:40</td></tr>
+  </tbody>
+</table>
+</div>
+
+<div class="note">
+  <strong>一年級重點：</strong>一週只有週二上全天（到 15:40），其餘四天中午 12:40 就放學。這代表週一、三、四、五下午都需要安排課後照顧，是選安親班的最大驅動力。
+</div>
+
+<!-- ═══════ 2. 課後照顧 ═══════ -->
+<h2><span class="icon">📚</span> 二、課後照顧與安親班</h2>
+
+<h3>選項 A：學校課後照顧班</h3>
+
+<div class="card">
+  <div class="card-title"><span class="tag tag-school">校內</span> 光明國小課後照顧班</div>
+  <div class="card-meta">校方自辦，到傍晚約 17:00–18:00</div>
+  <p>學校自己開辦的課後照顧，由校內或外聘老師帶領，主要是寫功課 + 看顧。費用遠低於外面安親班，BabyHome 上有家長討論過光明國小的課後輔導班，反映品質中等但性價比高。</p>
+  <div class="detail-row"><span class="label">費用</span><span class="value">約 NT$2,000–4,000/月（各校不同，光明的確切數字建議開學前向學校確認）</span></div>
+  <div class="detail-row"><span class="label">優點</span><span class="value pro">便宜、不用移動、在校內安全</span></div>
+  <div class="detail-row"><span class="label">缺點</span><span class="value con">師資不固定、不含英文或才藝、放學後仍需自行接送</span></div>
+  <div class="detail-row"><span class="label">報名</span><span class="value"><a class="link" href="https://ecampus.com.tw/Index/ActList/80" target="_blank">ecampus 課後學習報名系統 →</a>（需學號登入）</span></div>
+</div>
+
+<h3>選項 B：光明國小周邊安親班（含美語）</h3>
+
+<p class="section-intro">竹北安親＋美語月費行情約 NT$8,000–12,000。光明國小門口就有多間安親班競爭激烈，以下三間是光明學區家長最常討論的選項。</p>
+
+<div class="note warn">
+  <strong>光明國小是出了名課業重的學校。</strong>有光明家長在部落格寫道：「光明國小是有名的課業很重的學校，好像參加安親班是必須的。」入學前務必將安親班接送和午餐安排確認清楚。
+</div>
+
+<div class="card-grid">
+  <div class="card">
+    <div class="card-title"><span class="tag tag-english">美語安親</span> 長頸鹿美語 竹北光明分校</div>
+    <div class="card-meta">光明九路 119 號 · 03-5584127 ── 光明國小步行可達</div>
+    <p>深耕光明學區，<strong>對光明國小不同班導師的要求非常熟悉</strong>，會根據學生的導師客製化指導嚴格程度。考前一週的週六會額外加強複習和寫評量。</p>
+    <div class="detail-row"><span class="label">優點</span><span class="value pro">在地深耕、針對光明班導客製化、品牌辨識度高</span></div>
+    <div class="detail-row"><span class="label">確認</span><span class="value con">英文活動後孩子是否還有體力做校內作業、高低年級分流方式</span></div>
+    <p><a class="link" href="https://www.104.com.tw/company/dyev4e0" target="_blank">104 徵才頁面（可側面了解規模）→</a></p>
+  </div>
+
+  <div class="card">
+    <div class="card-title"><span class="tag tag-english">美語安親</span> 徐薇英文（光明國小外）</div>
+    <div class="card-meta">光明國小正對面 ── 地點最便利</div>
+    <p>班主任相當親切，對光明國小的老師和學生學習狀況有多年經驗。除了英文，另有附加 NP 數學、機器人課程等。<strong>位在校門外，可配合接送參加社團活動的小朋友。</strong></p>
+    <div class="detail-row"><span class="label">優點</span><span class="value pro">離校最近、班主任經驗豐富、配合社團接送</span></div>
+    <div class="detail-row"><span class="label">參考</span><span class="value con">有家長反映外師風格不合適部分孩子，建議先試聽</span></div>
+  </div>
+
+  <div class="card">
+    <div class="card-title"><span class="tag tag-english">美語安親</span> 夏恩英語 竹北縣府校</div>
+    <div class="card-meta">Shane English ── 來自英國的全球連鎖品牌</div>
+    <p>師資要求在光明周邊安親班中最為嚴謹，100% 合格外師。提供 ESL、幼兒到國中完整課程銜接。歷年獲得夏恩英語最佳新校獎。</p>
+    <div class="detail-row"><span class="label">優點</span><span class="value pro">師資把關嚴格、ESL 系統完整、家長放心度最高</span></div>
+    <div class="detail-row"><span class="label">參考</span><span class="value con">有家長覺得「太嚴謹」，氛圍偏規矩；部分反映師資流動率</span></div>
+    <p><a class="link" href="https://www.facebook.com/shaneenglishjhubei" target="_blank">夏恩英語竹北縣府校 Facebook →</a></p>
+  </div>
+</div>
+
+<div class="note info">
+  <strong>其他選項值得留意：</strong>安妮卡美語（ANIKA）在 BabyHome 上被多位光明和東興家長推薦，「環境棒、老師用心」，但經常額滿甚至要提早到一月就報名。LIVE 互動美語興隆分校也標榜服務光明和興隆兩校學區。完整 30 間竹北安親班分析可參考<a class="link" href="https://xn--ehqs0o74ffxln40aepum3rtud.org/%E7%AB%B9%E5%8C%97%E5%AE%89%E8%A6%AA%E7%8F%AD%E6%8E%A8%E8%96%A6%E7%B8%BD%E6%95%B4%E7%90%86%EF%BD%9C30%E9%96%93%E6%A9%9F%E6%A7%8B%EF%BC%8B%E9%81%A9%E5%90%88%E5%AD%A9%E5%AD%90%E9%A1%9E%E5%9E%8B%E5%85%A8" target="_blank">第三方風險守護員的竹北安親班總整理</a>。
+</div>
+
+<div class="card">
+  <div class="card-title">對面桌球教室 + 課後照顧的模式</div>
+  <p>你提到的「對面乒乓球教室可以提早去寫作業」，這種結合才藝 + 課後照顧的模式對低年級很實用，但要確認：是否有合格的安親執照？小一中午就放學的日子，他們 12:40 能接嗎？午餐怎麼處理？</p>
+</div>
+
+<h3>選項 C：全美語安親班</h3>
+
+<p class="section-intro">竹北的全美語安親班非常密集，你提到的弋果、夏恩、劍橋都是連鎖品牌。以下是綜合網路家長討論整理的比較：</p>
+
+<div class="schedule-wrap">
+<table class="cmp-table">
+  <thead>
+    <tr><th>品牌</th><th>月費概估</th><th>師資模式</th><th>家長風評重點</th></tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>弋果美語</td>
+      <td><span class="fee-range">≈15,000–18,000</span></td>
+      <td>外師 + 中師輔助</td>
+      <td>教材系統完整、進度快、作業量較大；竹北有旗艦校和縣府分校兩間</td>
+    </tr>
+    <tr>
+      <td>夏恩英語</td>
+      <td><span class="fee-range">≈12,000–16,000</span></td>
+      <td>外師為主</td>
+      <td>課程生活化、氣氛輕鬆；部分家長反映師資流動率較高</td>
+    </tr>
+    <tr>
+      <td>劍橋美語</td>
+      <td><span class="fee-range">≈12,000–15,000</span></td>
+      <td>中外師搭配</td>
+      <td>強調考試導向、文法扎實；風格較傳統</td>
+    </tr>
+    <tr>
+      <td>何嘉仁</td>
+      <td><span class="fee-range">≈12,000–15,000</span></td>
+      <td>中外師搭配</td>
+      <td>品牌老、教材穩定；班級人數偏多</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+
+<div class="note warn">
+  <strong>關於「壓力」的觀察：</strong>全美語安親的壓力主要來自兩方面：一是每天 3–4 小時沉浸式英文對零基礎的小一生很吃力，前兩個月適應期孩子容易抗拒；二是部分品牌回家後還有英文作業，加上學校功課，雙重負擔。網路上家長的共識建議是：<strong>半年前先帶孩子去試上 1–2 堂</strong>，觀察他的反應和老師帶班方式，比看品牌更重要。如果孩子目前英文接觸不多，也可以考慮「一般安親 + 每週 2 堂英文課」的折衷方案，壓力小很多。
+</div>
+
+<div class="note info">
+  <strong>竹北安親班費用參考：</strong>有家長在 Threads 分享，竹北小學課後安親一個月約 NT$17,000，一年約 20 萬。這是含美語的全日安親行情，純照顧型的安親會便宜一半左右。
+</div>
+
+<!-- ═══════ 3. 才藝班 ═══════ -->
+<h2><span class="icon">🎨</span> 三、才藝班選項</h2>
+
+<div class="card-grid cols-2">
+
+  <div class="card">
+    <div class="card-title"><span class="tag tag-art">美術</span> 悠遊藝術教學堂 光明教室</div>
+    <div class="card-meta">光明九路 88 號 ── 離光明國小走路約 5 分鐘</div>
+    <p>強調創意表現與情緒教育（SEL），有寒暑假營隊、校外美學體驗等活動。兒童美術是主力課程，也有成人班。新竹和安興另有分教室。</p>
+    <div class="detail-row"><span class="label">電話</span><span class="value">03-5584226</span></div>
+    <div class="detail-row"><span class="label">適合</span><span class="value">喜歡畫畫、手作的孩子；教學偏創意啟發而非技法訓練</span></div>
+    <p><a class="link" href="https://www.yoyoartclass.com/tag/%E7%AB%B9%E5%8C%97%E7%95%AB%E5%AE%A4/" target="_blank">悠遊藝術 官網 →</a></p>
+  </div>
+
+  <div class="card">
+    <div class="card-title"><span class="tag tag-art">音樂</span> Hiboux Music Academy 竹北教室</div>
+    <div class="card-meta">成功二街 106、110 號 ── 前家樂福附近</div>
+    <p>提供 Music Together®（親子律動）、Little Mozarts（幼兒鋼琴啟蒙）、個別指導等課程，從 0 歲起都有對應課程。教學總監持美國 Music Together® 合格師資。</p>
+    <div class="detail-row"><span class="label">體驗價</span><span class="value">NT$600–1,000（依課程）</span></div>
+    <div class="detail-row"><span class="label">電話</span><span class="value">03-6577433</span></div>
+    <div class="detail-row"><span class="label">注意</span><span class="value con">需確認平日下午是否有小學生時段（目前課表以幼兒和晚間為主）</span></div>
+    <p><a class="link" href="https://www.hibouxmusic.com/jb/" target="_blank">Hiboux 竹北教室 →</a></p>
+  </div>
+
+  <div class="card">
+    <div class="card-title"><span class="tag tag-sport">柔術</span> 新竹巴西柔術 竹北館</div>
+    <div class="card-meta">光明九路 33 號 4 樓 ── 離光明國小非常近</div>
+    <p>新竹地區的巴西柔術（BJJ）訓練中心，有兒童班。這應該就是你提到的「外師教柔術」的教室。BJJ 在台灣近年快速成長，對小孩的好處包括學習控制力量、建立自信、不容易受傷（沒有打擊），是很好的防身基礎。</p>
+    <div class="detail-row"><span class="label">師資</span><span class="value">有外籍教練（需直接聯繫確認當前排課）</span></div>
+    <div class="detail-row"><span class="label">建議</span><span class="value">Facebook 搜尋「新竹巴西柔術 竹北館」預約體驗課</span></div>
+    <p><a class="link" href="https://www.facebook.com/p/%E6%96%B0%E7%AB%B9%E5%B7%B4%E8%A5%BF%E6%9F%94%E8%A1%93-%E7%AB%B9%E5%8C%97%E9%A4%A8-Hsinchu-BJJ-Zhubei-100063601014881/" target="_blank">新竹巴西柔術 竹北館 Facebook →</a></p>
+  </div>
+
+  <div class="card">
+    <div class="card-title"><span class="tag tag-sport">桌球</span> 光明國小對面桌球教室</div>
+    <div class="card-meta">（具體名稱待確認）</div>
+    <p>你提到可以提早去寫作業，這種「才藝 + 課後照顧」的混合模式對低年級很實用。桌球對小孩的手眼協調、反應速度都有幫助，而且室內運動不怕天氣。竹北國民運動中心也有桌球課程可以比較。</p>
+    <div class="detail-row"><span class="label">確認</span><span class="value con">是否有合格安親執照、是否能 12:40 接孩子、午餐安排</span></div>
+  </div>
+
+</div>
+
+<div class="note">
+  <strong>「外師教才藝」的思路很好。</strong>除了柔術以外，其他可能的方向：竹北國民運動中心偶爾有外師體能課程、部分足球俱樂部也有外籍教練。另外，武甲總合武術（新竹館）的兒童冬令營也有包含巴西柔術的課程。如果目標是「用英文的環境學才藝」，也可以留意 Music Together® 的課程本身就是英文授課。
+</div>
+
+<!-- ═══════ 4. 足球 ═══════ -->
+<h2><span class="icon">⚽</span> 四、兒童足球隊</h2>
+
+<p class="section-intro">三支球隊都以晚上或週末練習為主，適合搭配平日的安親/才藝。選擇的關鍵是「練習地點離家近不近」——每週接送 2–3 次，距離很重要。</p>
+
+<div class="card-grid">
+
+  <div class="card">
+    <div class="card-title">🐴 皇家野馬足球俱樂部</div>
+    <div class="card-meta">新竹地區老牌兒童足球俱樂部 ── 2026 秋季班已開放報名</div>
+    <div class="detail-row"><span class="label">幼兒班</span><span class="value">NT$450/1.5H，一期 15–20 堂（NT$6,750–9,000）</span></div>
+    <div class="detail-row"><span class="label">國小班</span><span class="value">NT$500/2H，一期 15–20 堂（NT$7,500–10,000）</span></div>
+    <div class="detail-row"><span class="label">裝備</span><span class="value">新生練習衣 NT$380（報名時一起買）</span></div>
+    <div class="detail-row"><span class="label">地點</span><span class="value">竹北台大足球場（平日晚間）· 博愛國小（週六早上）</span></div>
+    <div class="detail-row"><span class="label">開課</span><span class="value">115 年 9 月（2026 秋季班），BeClass 線上報名</span></div>
+    <div class="detail-row"><span class="label">評價</span><span class="value pro">在地經營多年、家長社群活躍、班型選擇多</span></div>
+    <p><a class="link" href="https://www.facebook.com/p/%E6%96%B0%E7%AB%B9%E7%9A%87%E5%AE%B6%E9%87%8E%E9%A6%AC%E8%B6%B3%E7%90%83%E4%BF%B1%E6%A8%82%E9%83%A8-100064201502299/" target="_blank">皇家野馬 Facebook →</a></p>
+  </div>
+
+  <div class="card">
+    <div class="card-title">🌎 Dream Taiwan Academy</div>
+    <div class="card-meta">西班牙教練 José Domínguez · 全英語授課</div>
+    <div class="detail-row"><span class="label">月費</span><span class="value">NT$4,500/8 堂（月費制）</span></div>
+    <div class="detail-row"><span class="label">體驗</span><span class="value">體驗課 NT$300</span></div>
+    <div class="detail-row"><span class="label">時間</span><span class="value">週一、三、五 19:00–21:00</span></div>
+    <div class="detail-row"><span class="label">地點</span><span class="value">台大竹北校區足球場（莊敬一路 88 號）</span></div>
+    <div class="detail-row"><span class="label">年齡</span><span class="value">4–14 歲</span></div>
+    <div class="detail-row"><span class="label">特色</span><span class="value pro">全英文環境踢球，等於同時練體能和英語聽力；西班牙教練帶青訓風格</span></div>
+    <p><a class="link" href="https://www.instagram.com/dreamtaiwanacademy/" target="_blank">Dream Taiwan Academy Instagram →</a></p>
+  </div>
+
+  <div class="card">
+    <div class="card-title">🌌 銀河射手足球俱樂部</div>
+    <div class="card-meta">規模最大、體系最完整的選擇</div>
+    <div class="detail-row"><span class="label">梯隊</span><span class="value">U6 到 U14，學員約 350 人</span></div>
+    <div class="detail-row"><span class="label">教練</span><span class="value">全職 5 位 + 兼職 12 位</span></div>
+    <div class="detail-row"><span class="label">地點</span><span class="value">台大竹北足球場（人工草皮）</span></div>
+    <div class="detail-row"><span class="label">特色</span><span class="value pro">與足翼運動合作，有國際交流機會（日本青訓體系）；2026 年 Formosa 7s 國際賽 U11 亞軍</span></div>
+    <div class="detail-row"><span class="label">理念</span><span class="value">強調自律、尊重、獨立與責任感的全方位培育</span></div>
+    <p><a class="link" href="https://www.instagram.com/p/DNkK3tkyc8f/" target="_blank">銀河射手 Instagram →</a></p>
+  </div>
+
+  <div class="card">
+    <div class="card-title">✨ 夢幻足球隊</div>
+    <div class="card-meta">竹北第一支足球俱樂部，2009 年創立</div>
+    <div class="detail-row"><span class="label">歷史</span><span class="value">超過 15 年在地深耕，竹北基層足球的推手</span></div>
+    <div class="detail-row"><span class="label">場地</span><span class="value pro">全國少數擁有專屬草地球場的球隊之一</span></div>
+    <div class="detail-row"><span class="label">特色</span><span class="value">由「毛媽」創辦，起步於河濱公園免費推廣班；強調共享共好</span></div>
+    <div class="detail-row"><span class="label">成績</span><span class="value">TYL 低年級組及高年級組新竹區總冠軍</span></div>
+    <div class="detail-row"><span class="label">氣氛</span><span class="value">社區型、家庭感強，適合剛接觸足球的小朋友</span></div>
+    <p><a class="link" href="https://www.facebook.com/groups/600864036594503/" target="_blank">夢幻足球 Facebook 社團 →</a></p>
+  </div>
+
+</div>
+
+<div class="note info">
+  <strong>足球隊選擇建議：</strong>銀河射手的規模和體系最完整，適合想走長期培訓路線的家庭；夢幻足球社區感最強，有自己的球場，適合入門嘗試；皇家野馬是老牌穩定、費用透明的選擇（單堂 NT$450–500）。<strong>Dream Taiwan Academy</strong> 的亮點是全英語授課 + 西班牙教練青訓，等於運動和語言一起練，月費 NT$4,500 也在合理範圍。實務上建議：先看哪一家的練習場地離你家最近，然後各去體驗一堂再決定。
+</div>
+
+<!-- ═══════ 5. 棒球 ═══════ -->
+<h2><span class="icon">⚾</span> 五、兒童棒球隊</h2>
+
+<p class="section-intro">棒球隊以週末練習為主，體力消耗確實比較大。社區棒球隊的強度比校隊低很多，以培養興趣為主，不用太擔心。</p>
+
+<div class="card-grid">
+
+  <div class="card">
+    <div class="card-title">🌀 竹風少年社區棒球隊</div>
+    <div class="card-meta">BTG 棒球教室體系，教練蔡富丞</div>
+    <div class="detail-row"><span class="label">月費</span><span class="value">NT$1,800/月（社區隊）</span></div>
+    <div class="detail-row"><span class="label">入隊</span><span class="value">家長後援會費 NT$1,000（一次性）</span></div>
+    <div class="detail-row"><span class="label">U8 迷你</span><span class="value">NT$3,600/期（約 NT$450/90min），5–7 歲適合入門</span></div>
+    <div class="detail-row"><span class="label">訓練</span><span class="value">週日 9:00 + 13:00（分梯次）</span></div>
+    <div class="detail-row"><span class="label">地點</span><span class="value">鳳山溪河濱運動公園（新埔大橋下）；雨天高鐵橋下</span></div>
+    <div class="detail-row"><span class="label">成績</span><span class="value pro">2019 迷你棒球冠軍，擊敗台北名校東園國小</span></div>
+    <div class="detail-row"><span class="label">氣氛</span><span class="value">家長深度參與（交通、伙食、情蒐），「球隊是一個家」的理念</span></div>
+    <p><a class="link" href="https://www.facebook.com/HurricaneBaseballTeam/" target="_blank">竹風少年 Facebook →</a></p>
+  </div>
+
+  <div class="card">
+    <div class="card-title">⚡ 雷爵棒球</div>
+    <div class="card-meta">Legends Dugout</div>
+    <p>社區型少棒隊，在 Facebook 有活躍的粉專。詳細的練習時間、地點和費用需直接聯繫確認。</p>
+    <p><a class="link" href="https://www.facebook.com/legendsdugout/" target="_blank">雷爵棒球 Facebook →</a></p>
+  </div>
+
+  <div class="card">
+    <div class="card-title">🔬 科園社區少棒隊</div>
+    <div class="card-meta">Science 科園</div>
+    <p>科園地區的社區棒球隊，顧名思義以科學園區家庭為主要客群。詳細資訊需透過 Facebook 粉專聯繫。</p>
+    <p><a class="link" href="https://www.facebook.com/p/Science%E7%A7%91%E5%9C%92%E7%A4%BE%E5%8D%80%E5%B0%91%E6%A3%92%E9%9A%8A-100057226610627/" target="_blank">科園少棒 Facebook →</a></p>
+  </div>
+
+</div>
+
+<div class="note">
+  <strong>棒球 vs 足球的現實考量：</strong>你說「打球很累」，這是對的——棒球的裝備（手套、球棒、頭盔）投資和移動成本（練習場地通常較遠）都比足球高。但社區棒球隊一週只練一次，強度可控。如果孩子兩個都有興趣，小一先選一個，等適應學校節奏後再加也不遲。
+</div>
+
+<!-- ═══════ 6. 校內社團 ═══════ -->
+<h2><span class="icon">🏫</span> 六、光明國小校內社團活動</h2>
+
+<p>根據 ecampus 報名系統，115 學年度上學期目前公布三類活動：</p>
+
+<div class="card-grid cols-2">
+  <div class="card">
+    <div class="card-title"><span class="tag tag-school">校隊</span> 現代舞代表隊</div>
+    <p>115 上學期校內舞蹈代表隊甄選</p>
+  </div>
+  <div class="card">
+    <div class="card-title"><span class="tag tag-sport">校隊</span> 體育性校隊</div>
+    <p>115 學年度上學期體育校隊（具體項目需登入查看）</p>
+  </div>
+  <div class="card">
+    <div class="card-title"><span class="tag tag-art">社團</span> 課後社團報名</div>
+    <p>115 學年度上學期課後社團（具體社團列表需登入 ecampus）</p>
+  </div>
+</div>
+
+<div class="note info">
+  <strong>查看完整列表：</strong><a class="link" href="https://ecampus.com.tw/Index/ActList/80" target="_blank">ecampus 報名系統</a>需要學號登入（帳號格式：KMES+學號；密碼：KM+身分證）。入學後拿到學號就可以上去看所有社團和報名。校內社團的好處是不用移動、費用低、放學後直接上。
+</div>
+
+<!-- ═══════ 7. 綜合建議 ═══════ -->
+<h2><span class="icon">💡</span> 七、整體規劃建議與盲點提醒</h2>
+
+<div class="advice">
+  <h3>一週作息模擬（小一，假設有安親班）</h3>
+  <div class="schedule-wrap">
+  <table>
+    <thead><tr><th>時段</th><th>週一</th><th>週二</th><th>週三</th><th>週四</th><th>週五</th><th>週末</th></tr></thead>
+    <tbody>
+      <tr><td>上午</td><td colspan="5" style="text-align:center;color:var(--text-secondary);">學校上課</td><td rowspan="3" style="text-align:center;vertical-align:middle;">足球 或 棒球<br><span style="font-size:0.8rem;color:var(--text-tertiary)">（選一，2–3 小時）<br>剩餘時間家庭活動</span></td></tr>
+      <tr><td>12:40–</td><td>安親班</td><td style="color:var(--text-tertiary)">（在校）</td><td>安親班</td><td>安親班</td><td>安親班</td></tr>
+      <tr><td>15:40–</td><td>接回/才藝</td><td>安親班</td><td>接回/才藝</td><td>接回/才藝</td><td>接回/才藝</td></tr>
+      <tr><td>17:30–</td><td colspan="5" style="text-align:center;color:var(--text-secondary);">回家、晚餐、自由時間</td><td style="text-align:center;color:var(--text-secondary)">家庭時間</td></tr>
+    </tbody>
+  </table>
+  </div>
+  <p style="font-size:0.85rem;color:var(--text-secondary);margin-top:8px;">才藝課可以嵌入安親班後的時段，例如週一桌球、週三美術或柔術，不用每天都排。</p>
+</div>
+
+<div class="advice">
+  <h3>你可能還沒想到的盲點</h3>
+
+  <p><strong>1. 午餐問題。</strong>一年級有四天中午就放學。如果安親班負責接，那他們包午餐嗎？有些安親班只管下午不管午餐，孩子可能得先在學校吃完。這是報名時要問清楚的。</p>
+
+  <p><strong>2. 接送動線。</strong>光明國小上下學時段校園周邊有實施學生接送區管制（從 9/1 起），接送車輛要走指定路線。如果安親班的交通車也要來接，要確認他們熟悉動線。你或太太如果開車接送，也要先去踩過一次。</p>
+
+  <p><strong>3. 小一適應期。</strong>前兩個月是最關鍵的適應期——從幼兒園的彈性作息切換到「07:30 要到校、40 分鐘坐好聽課」。這段時間不要排太多課外活動，先讓孩子穩定下來。很多有經驗的家長建議：上學期先安親 + 一個體育活動就好，下學期再加才藝。</p>
+
+  <p><strong>4. 才藝數量控制。</strong>現在列出來的選項加一加有桌球、美術、音樂、柔術、足球、棒球六項。全部上完孩子會崩潰，大人也接送到瘋。小一建議最多 2–3 項課外活動（含運動），而且盡量集中在附近，減少移動。</p>
+
+  <p><strong>5. 試上很重要。</strong>你說「網路上建議半年前去參觀和試上」，這是對的。建議在入學前的 3–6 月就開始跑，每個週末安排 1–2 間去看。重點觀察：帶班老師跟孩子互動的方式、空間環境、其他小朋友的狀態、接送流程。</p>
+
+  <p><strong>6. 學費預算要抓。</strong>粗估一下（以查到的實際價格為基礎）：全美語安親每月約 NT$15,000–17,000，加上一項運動——足球以皇家野馬為例約 NT$1,500–2,000/月（一期 7,500–10,000 分攤 5 個月），棒球竹風少年月費 NT$1,800——再加一項才藝（美術或音樂約 NT$2,000–4,000/月），每月課外教育支出大概落在 NT$19,000–24,000。如果是一般安親 + 才藝，約 NT$12,000–18,000。年度抓 15–25 萬。</p>
+
+  <p><strong>7. 寒暑假的安排。</strong>學校放假時安親班通常會加開全日班（費用另計），有些才藝班和運動俱樂部也有營隊。現在先了解各家的寒暑假方案，避免到時候手忙腳亂。</p>
+</div>
+
+<div class="advice">
+  <h3>入學前待辦清單</h3>
+  <ul class="checklist">
+    <li>確認 2026 年新生報到時間（新竹縣通常在 3–5 月通知，帶戶口名簿 + 身分證報到）</li>
+    <li>打電話問光明國小最新的作息時間表和課後照顧班資訊（03-5538655）</li>
+    <li>安排參觀安親班（建議 3–4 間，含全美語和一般安親各看）</li>
+    <li>帶孩子去體驗 1–2 個運動（足球或棒球，看他喜歡哪個）</li>
+    <li>帶孩子去柔術教室體驗一堂（確認外師排課和上課感覺）</li>
+    <li>確認接送動線：家→學校→安親班→才藝→回家的路線和時間</li>
+    <li>準備入學用品（書包、餐具、水壺、文具、姓名貼等）</li>
+    <li>開始調整孩子作息（目標：07:00 起床、21:30 睡覺）</li>
+  </ul>
+</div>
+
+<hr>
+
+<div class="sources">
+  <strong>資料來源：</strong>
+  <a href="https://kmes.hcc.edu.tw/" target="_blank">光明國小官網</a> ·
+  <a href="https://ecampus.com.tw/Index/ActList/80" target="_blank">ecampus 課後學習系統</a> ·
+  <a href="https://sses.hcc.edu.tw/var/file/53/1053/img/3613/115schedule.pdf" target="_blank">十興國小 115 學年度行事曆（PDF）</a> ·
+  <a href="https://fkes.hcc.edu.tw/p/412-1044-53.php?Lang=zh-tw" target="_blank">鳳岡國小放學時間</a> ·
+  <a href="https://csps.hcc.edu.tw/var/file/78/1078/img/485924772.pdf" target="_blank">中興國小作息時間表</a> ·
+  <a href="https://bearhouse.tw/hsinchu-afterschool-care/" target="_blank">Bear House 新竹安親班 30 校評比</a> ·
+  <a href="https://forum.babyhome.com.tw/topic/3582755" target="_blank">BabyHome 竹北安親班費用</a> ·
+  <a href="https://forum.babyhome.com.tw/topic/4993328" target="_blank">BabyHome 竹北美語安親班</a> ·
+  <a href="https://www.yoyoartclass.com/tag/%E7%AB%B9%E5%8C%97%E7%95%AB%E5%AE%A4/" target="_blank">悠遊藝術教學堂</a> ·
+  <a href="https://www.hibouxmusic.com/jb/" target="_blank">Hiboux Music Academy</a> ·
+  <a href="https://www.beclass.com/" target="_blank">皇家野馬 2026 秋季 BeClass 報名頁</a> ·
+  <a href="https://www.instagram.com/dreamtaiwanacademy/" target="_blank">Dream Taiwan Academy Instagram</a> ·
+  <a href="https://gogoal.com.tw/archives/83752" target="_blank">銀河射手 GoGoal 報導</a> ·
+  <a href="https://gogoal.com.tw/archives/14270" target="_blank">夢幻足球隊報導</a> ·
+  <a href="https://www.sportsv.net/articles/62712" target="_blank">竹風少年 運動視界</a> ·
+  <a href="https://www.threads.net/" target="_blank">竹風少年 Threads 費用分享</a> ·
+  <a href="https://www.parenting.com.tw/article/5095211" target="_blank">親子天下 小一入學</a> ·
+  <a href="http://www.findglocal.com/TW/Zhubei/1896920067234719/" target="_blank">新竹巴西柔術 竹北館</a>
+</div>

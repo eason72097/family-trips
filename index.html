@@ -269,7 +269,7 @@
 <header id="top">
   <div class="kicker">Family Travel · Taiwan</div>
   <h1>全台親子<span class="accent">好去處</span></h1>
-  <p>從新竹出發，收藏全台的自然、步道、動物農場、親子景點與渡假住宿。</p>
+  <p>從新竹出發，收藏全台的自然、步道、動物農場、親子景點、渡假住宿與全台溫泉。</p>
 </header>
 
 <div class="controls">
@@ -1526,6 +1526,41 @@ const sections = [
     {n:"墾丁夏都沙灘酒店",a:"屏東恆春墾丁・很遠",dist:"veryfar",tags:["🌅 景觀頂級","🌊 海邊","👶親子友善",{t:"🐠 海生館",q:"國立海洋生物博物館"},{t:"🌅 關山夕照",q:"關山夕照"}],note:"「海角七號」那家，台灣少數有私人沙灘的飯店，沙灘乾淨、人少，走出房門就踩到沙。分三棟、走路要一段，泳池偏淺（適合小孩）、部分區域老舊，但「私人沙灘」這一點沒有別家能比。",stay:"私人沙灘（下水需穿救生衣）、三座泳池、遊戲室、SPA。",age:"1 歲以上（淺水池、沙灘）。",price:"雙人一晚約 8–14 千（概估）",nearby:"墾丁大街（步行）、海生館、關山、後壁湖。",park:"飯店停車場，住客免費。",lat:21.9459,lng:120.7901},
     {n:"墾丁凱撒大飯店",a:"屏東恆春墾丁・很遠",dist:"veryfar",tags:["🌅 景觀頂級","🌊 海邊","👶親子友善",{t:"🏖 小灣沙灘",q:"小灣沙灘"},{t:"🌃 墾丁大街",q:"墾丁大街夜市"}],note:"墾丁的老牌五星，穿過馬路就是小灣沙灘，飯店有專用通道和免費躺椅，泳池區大、有兒童池，走五分鐘就到墾丁大街。房間翻新過，早餐豐富，高雄有免費接駁。比夏都熱鬧、離大街近，喜歡晚上逛夜市選這裡。",stay:"泳池與兒童池、小灣沙灘專用通道、遊戲室、SPA；高雄免費接駁。",age:"1 歲以上。",price:"雙人一晚約 6–10 千（概估）",nearby:"小灣沙灘、墾丁大街、鵝鑾鼻、船帆石。",park:"飯店停車場，住客免費。",transit:"高鐵左營站有飯店免費接駁（需預約）。",lat:21.9424,lng:120.8054},
     {n:"清境老英格蘭莊園",a:"南投清境・很遠",dist:"veryfar",tags:["🌅 景觀頂級","🌿 大人放鬆",{t:"🐑 青青草原",q:"清境農場青青草原"},{t:"🌉 清境高空步道",q:"清境高空觀景步道"}],note:"清境山上那座像英國城堡的莊園，建築細節、音樂廳和餐點都到位，住客評價很一致：「像到了歐洲」。不住宿也能付費入園拍照。房價高、偏大人與長輩，小孩在這裡是「跟著逛」，隔天去青青草原看羊才是他們的行程。",stay:"城堡建築與花園、音樂廳、餐廳；沒有兒童設施。",age:"偏大人；6 歲以上較合適。",price:"雙人一晚約 15–30 千（概估）",nearby:"清境農場青青草原、高空觀景步道、合歡山。",park:"莊園停車場，住客免費。",lat:24.0377,lng:121.1580}
+  ]},
+
+  { id:"hot-tcm", emoji:"♨", title:"溫泉泡湯｜桃竹苗（離家最近）", sub:"從竹北出發一小時內就有好湯，尖石和泰安是最常去的選擇。帶泳衣泳帽（大眾池幾乎都要求），自備毛巾比較乾淨。", items:[
+    {n:"尖石溫泉（錦屏・那羅・嘉樂）",a:"新竹尖石・中",dist:"mid",tags:["🔵 美人湯",{t:"🏮 內灣老街",q:"內灣老街"},{t:"🌲 司馬庫斯",q:"司馬庫斯"}],note:"離家最近的溫泉！過了內灣往山裡走，錦屏、那羅、嘉樂三個部落散佈著六、七家溫泉會館和湯屋。泉質是碳酸氫鈉泉（美人湯），泡完皮膚滑滑的。錦屏美人湯館有露天風呂和兒童戲水池，規模最大；石上湯屋比較安靜適合兩人。很多家有附鱘龍魚餐，泡完吃一頓是標配。",spring:"碳酸氫鈉泉（美人湯），無色無味，弱鹼性，泡後皮膚光滑。",style:"湯屋（約 500–800/hr）、露天大眾池（約 300–400）、飯店住宿含溫泉。",season:"秋冬最舒服（10–3月）；夏天山裡也涼，但泡湯意願低。",park:"各會館自有停車場，假日下午容易滿。",transit:"無大眾運輸直達，自駕為主；內灣老街開車約 15–20 分上山。",lat:24.6706,lng:121.2082},
+    {n:"北埔冷泉",a:"新竹北埔・中",dist:"mid",tags:["🟢 冷泉",{t:"🏮 北埔老街",q:"北埔老街"},{t:"🌿 綠世界",q:"綠世界生態農場"}],note:"全世界稀有的碳酸與硫磺共生冷泉，冬天 10°C、夏天 15°C，水呈黃褐色、浮著一層薄油——看起來怪但那是礦物質。從北埔老街過南埔、走吊橋就到，是個野溪型的戶外體驗，沒有商業湯屋，要有心理準備踩進山裡的水池。夏天消暑很讚，冬天則需要勇氣。",spring:"碳酸與硫磺共生泉，冷泉（10–15°C），水呈黃褐色，全球少見。",style:"戶外天然水池，免費開放，沒有更衣室（有簡易換衣空間），自備毛巾。",season:"夏天最適合（5–9月）；冬天水溫 10°C，只有猛人會下去。",park:"路邊停車，空間有限。",transit:"自駕為主；北埔老街轉進小路約 10 分鐘。",lat:24.6630,lng:121.0724},
+    {n:"羅浮溫泉",a:"桃園復興・中",dist:"mid",tags:["🔵 美人湯",{t:"🌉 小烏來天空步道",q:"小烏來天空步道"},{t:"🌲 拉拉山",q:"拉拉山巨木群"}],note:"北橫公路上的溫泉，2017 年重新挖出泉脈，桃園市政府蓋了公設的「羅浮溫泉湯池」（戶外大眾池，需泳衣泳帽）和免費足湯。2025 年新開的「蕃薯藤羅浮溫泉會所」走日式高級路線，竹林裡泡裸湯、八小時湯屋居所，被形容「不輸日本溫泉鄉」，但採會員制要預約。從竹北過去不到一小時。",spring:"碳酸氫鈉鹽泉（美人湯），無色無味，泡完皮膚滑潤。",style:"公設大眾池（穿泳衣，週二休）、免費足湯、蕃薯藤會所（裸湯／湯屋，需預約）。",season:"四季皆可；冬天泡完配北橫山景最舒服。",park:"羅浮溫泉湯池有停車場；蕃薯藤有自己的停車場。",transit:"自駕為主；桃園客運大溪往復興方向可到羅浮。",lat:24.7929,lng:121.3666},
+    {n:"泰安溫泉",a:"苗栗泰安・稍遠",dist:"midfar",tags:["🔵 美人湯",{t:"🍓 大湖草莓",q:"大湖酒莊"},{t:"🏔 雪霸國家公園",q:"雪霸國家公園汶水遊客中心"}],note:"苗栗山裡的百年溫泉，桃竹苗地區公認泉質最好的一區。溫泉區沿著汶水溪谷分佈，泰安觀止是最有名的一家（清水模建築對著溪谷），但也有平價的湯屋可以泡完就走。冬天去大湖採草莓、順路泡泰安溫泉，是新竹人最經典的一日遊路線。",spring:"碳酸氫鈉泉（美人湯），水質清澈，無色無味，弱鹼性。",style:"飯店住宿（泰安觀止、湯悅等，8–13 千/晚）、湯屋（500–1200/hr）、部分有露天大眾池。",season:"秋冬最舒服（10–3月）；12–4 月可配大湖草莓。",park:"各飯店和湯屋有自己停車場；假日山路較擠。",transit:"自駕為主；國道1苗栗交流道下，接台3線轉苗62鄉道上山。",lat:24.4719,lng:120.9769}
+  ]},
+
+  { id:"hot-north", emoji:"♨", title:"溫泉泡湯｜北部（台北・新北）", sub:"捷運和火車就能到的溫泉，最適合「臨時想泡」的週末半日遊。", items:[
+    {n:"北投溫泉",a:"台北北投・遠",dist:"far",tags:["🟡 硫磺泉","🏛 台灣四大名湯",{t:"🌋 地熱谷",q:"地熱谷"},{t:"🏛 溫泉博物館",q:"北投溫泉博物館"}],note:"台灣最老牌的溫泉區，日治時期就是泡湯勝地，跟關子嶺、四重溪、陽明山並列「台灣四大名湯」。三種泉質集中在一個區域：地熱谷附近的青磺泉（全台最稀有）、硫磺谷的白磺泉（牛奶湯）、頂北投的鐵磺泉。搭捷運到新北投站出來就是溫泉區，免費的公共浴池、百元湯屋到五星飯店都有，是全台灣交通最方便的溫泉。溫泉博物館免費參觀，帶小孩看看日式浴場的歷史很不錯。",spring:"硫磺泉（白磺、青磺、鐵磺三種），有硫磺味，水色白濁或微黃。青磺泉 pH1–2 強酸性，全台僅此一處。",style:"免費公共浴池（千禧湯等）、平價湯屋（200–600）、飯店（加賀屋、三二行館等）、地熱谷免費看。",season:"四季皆可；冬天最有氣氛。",park:"新北投周邊有公有停車場，假日很滿。",transit:"捷運新北投站出站即到——不開車首選。",lat:25.1366,lng:121.5072},
+    {n:"陽明山溫泉",a:"台北陽明山・遠",dist:"far",tags:["🟡 硫磺泉","🏛 台灣四大名湯",{t:"🌿 擎天崗",q:"擎天崗"},{t:"🌸 竹子湖",q:"竹子湖"}],note:"國家公園裡泡湯，冷水坑有免費公共浴池（硫磺泉，男女裸湯分開），泡完出來走擎天崗看牛吃草，冬天霧氣瀰漫很有日本的感覺。馬槽和紗帽山也有私人湯屋。陽明山溫泉的特色是「在山裡」——不像北投是街區型的，這裡是步道和草原包圍的戶外體驗。",spring:"硫磺泉（白磺為主），有硫磺味，有助舒緩肌肉痠痛。",style:"冷水坑免費公共浴池（裸湯，週一休）、馬槽和紗帽山有私人湯屋（500–1500）。",season:"秋冬最有氣氛（10–3月）；春天配竹子湖海芋。",park:"冷水坑有停車場（假日一位難求），建議平日去。",transit:"捷運劍潭站轉小15公車可到冷水坑。",lat:25.1679,lng:121.5626},
+    {n:"金山萬里溫泉",a:"新北金山・遠",dist:"far",tags:["🟡 硫磺泉","🌊 海底溫泉",{t:"🏮 金山老街",q:"金山老街"},{t:"🏛 朱銘美術館",q:"朱銘美術館"}],note:"北海岸的溫泉區，最特別的是有「海底溫泉」——磺港社區的公共浴池直接引海底冒出的溫泉水，是台灣本島唯一。天籟渡假酒店和沐舍溫泉渡假酒店也在這一區。泡完走去金山老街吃鴨肉和地瓜，是北海岸冬天的經典行程。",spring:"硫磺泉為主；磺港社區有海底溫泉（含鹽分的硫磺泉），全台本島唯一。",style:"公共浴池（磺港社區免費足湯）、湯屋、天籟等渡假飯店。",season:"秋冬（10–3月）；夏天可配北海岸玩水。",park:"金山老街周邊有停車場；各飯店有自己的停車場。",transit:"國光客運或基隆客運到金山。",lat:25.2159,lng:121.6440},
+    {n:"烏來溫泉",a:"新北烏來・遠",dist:"far",tags:["🔵 美人湯",{t:"🚂 烏來台車",q:"烏來台車"},{t:"🌊 烏來瀑布",q:"烏來瀑布"}],note:"離台北市區最近的山谷溫泉，泰雅族的傳統溫泉鄉。溫泉街沿著南勢溪，從平價湯屋到高級飯店都有，特色是很多家的湯屋直接面對溪谷。泡完搭烏來台車（像迷你火車）去看瀑布，秋天還有楓葉，小孩會很開心。溪邊有免費的露天溫泉（要注意水位和安全）。",spring:"碳酸氫鈉泉（美人湯），無色無味，泡後皮膚滑嫩。",style:"溫泉街湯屋（300–800）、飯店（馥蘭朵等）、溪邊免費露天溫泉（自己找、注意安全）。",season:"秋冬最美（10–2月有楓葉）。",park:"烏來老街有公有停車場和路邊停車，假日很擠。",transit:"捷運新店站轉新店客運849到烏來——不開車也行。",lat:24.8621,lng:121.5508}
+  ]},
+
+  { id:"hot-central", emoji:"♨", title:"溫泉泡湯｜中部", sub:"谷關是中部最具代表性的溫泉區，山谷裡的溫泉聚落。", items:[
+    {n:"谷關溫泉",a:"台中谷關・遠",dist:"far",tags:["🔵 美人湯","🟡 硫磺泉",{t:"🥾 捎來步道",q:"捎來步道"},{t:"🌲 八仙山",q:"八仙山國家森林遊樂區"}],note:"台中最深山的溫泉區，1907 年發現第一處溫泉，九二一地震後裡冷溪又冒出新泉脈，現在有碳酸氫鈉泉、鐵泉、鹽泉三種共生。溫泉公園有免費足湯和溫泉魚（魚咬腳底超癢），谷關統一渡假村和虹夕諾雅谷關都在這一帶。冬天來泡湯、走捎來步道看吊橋，是台中人的經典路線。",spring:"碳酸氫鈉泉＋鐵泉＋鹽泉三種共生，日治時期就是名湯。",style:"谷關溫泉公園免費足湯、湯屋（300–800）、飯店（統一渡假村、虹夕諾雅等，見渡假住宿分類）。",season:"秋冬最舒服（10–3月）；夏天山上也涼。",park:"溫泉公園有停車場；各飯店有自己停車場。",transit:"豐原客運 153／207 從台中市區到谷關（約 2 小時）。",lat:24.2035,lng:121.0066}
+  ]},
+
+  { id:"hot-south", emoji:"♨", title:"溫泉泡湯｜南部", sub:"南部的溫泉各有絕活：關子嶺的泥漿泉全球僅三處，四重溪冬天有溫泉季燈海，寶來在荖濃溪畔的山裡。", items:[
+    {n:"關子嶺溫泉",a:"台南白河・很遠",dist:"veryfar",tags:["⚫ 泥漿泉","🏛 台灣四大名湯",{t:"🌸 白河蓮花",q:"白河蓮花"},{t:"🍗 桶仔雞",q:"關子嶺桶仔雞"}],note:"全台灣最特別的溫泉——灰黑色的泥漿泉，泉水裡混著地底岩層的泥質和礦物質，泡起來滑滑的、洗完皮膚超嫩。全世界只有日本、義大利和台灣三個地方有這種泉質，日治時期就被封為「天下第一靈泉」，跟北投、陽明山、四重溪並列台灣四大名湯。泡完一定要吃關子嶺的桶仔雞，用龍眼木炭烤的，是這裡的招牌。",spring:"弱鹼性碳酸泉混合泥漿（泥漿溫泉），水呈灰黑色，含泥粒與礦物質。全球僅日本・義大利・台灣三處有。",style:"飯店和湯屋（景大山莊、關子嶺統茂等）、公共泥漿浴池。",season:"秋冬（10–2月）；每年 10–11 月有溫泉美食節。",park:"溫泉區各飯店有停車場。",transit:"自駕為主；台南火車站有往關子嶺的公車但班次少。",lat:23.3397,lng:120.5044},
+    {n:"寶來・不老溫泉",a:"高雄六龜・很遠",dist:"veryfar",tags:["🔵 美人湯",{t:"🌲 十八羅漢山",q:"十八羅漢山"},{t:"🌉 新威景觀大橋",q:"新威景觀大橋"}],note:"高雄山區、荖濃溪畔的溫泉鄉，觀光客少、很安靜，適合不想人擠人的泡湯。泉質是碳酸氫鈉泉，水溫 40–60°C，整條路上散佈著小型湯屋和民宿。從台28線接27線沿著溪谷開進來，沿路有十八羅漢山和新威景觀大橋，風景本身就值得跑一趟。",spring:"碳酸氫鈉泉（美人湯），水質清澈。",style:"小型湯屋和民宿為主（300–600/hr），規模不大、勝在安靜。",season:"秋冬（10–3月）。",park:"路邊停車和各湯屋停車場。",transit:"自駕為主；高雄市區開車約 1.5–2 小時。",lat:23.1053,lng:120.7014},
+    {n:"四重溪溫泉",a:"屏東車城・很遠",dist:"veryfar",tags:["🔵 美人湯","🏛 台灣四大名湯",{t:"🐠 海生館",q:"國立海洋生物博物館"},{t:"🌅 墾丁",q:"墾丁大街夜市"}],note:"屏東車城的百年溫泉，台灣四大名湯之一，日治時期連日本親王都來泡。泉質是碳酸氫鈉泉，水透明乾淨、可飲可浴。最大的亮點是每年 11 月到 2 月的「四重溪溫泉季」，整個溫泉公園掛滿燈飾，晚上泡免費足湯看燈海，非常夢幻。可以煮溫泉蛋，小孩會很興奮。去墾丁玩的時候順路泡一下最划算。",spring:"碳酸氫鈉泉，水質清澈透明、可飲可浴，含多種礦物質。",style:"溫泉公園免費足湯、煮溫泉蛋；旅館湯屋（300–800）；清泉日式溫泉館等。",season:"11–2 月最推（溫泉季燈海）；可配墾丁行程。",park:"溫泉公園有停車場。",transit:"自駕為主；恆春轉運站轉公車到四重溪。",lat:22.0944,lng:120.7471}
+  ]},
+
+  { id:"hot-east", emoji:"♨", title:"溫泉泡湯｜東部（宜蘭・花蓮・台東）", sub:"東部是台灣溫泉密度最高的地方：礁溪、蘇澳冷泉、太平山、花東縱谷、甚至綠島的海底溫泉。帶小孩去東部旅行，幾乎每天都能安排一場泡湯。", items:[
+    {n:"礁溪溫泉",a:"宜蘭礁溪・遠",dist:"far",tags:["🔵 美人湯",{t:"♨ 湯圍溝公園",q:"湯圍溝溫泉公園"},{t:"🏞 五峰旗瀑布",q:"五峰旗瀑布"},{t:"🏛 蘭陽博物館",q:"蘭陽博物館"}],note:"全台人氣第一的溫泉區，連續兩年蟬聯網路聲量冠軍。台灣少見的平地溫泉，出了礁溪火車站走路就能泡。碳酸氫鈉泉、無色無味，泡完皮膚像擦了化妝水一樣滑。從免費的湯圍溝公共足湯，到街上幾百元的湯屋，再到老爺、寒沐、川湯春天等飯店，全部走路能到。冬天去最有感覺，但假日人山人海。",spring:"碳酸氫鈉泉（美人湯），水清澈無色無味，泡後肌膚柔嫩。",style:"湯圍溝免費足湯、溫泉公園公共浴池、街上湯屋（200–600）、飯店（見渡假住宿分類）。",season:"秋冬最有氣氛（10–3月）；四季皆可。",park:"礁溪市區有多處公有停車場（假日很滿）。",transit:"台鐵礁溪站出站即到——不開車首選。",lat:24.8326,lng:121.7767},
+    {n:"蘇澳冷泉",a:"宜蘭蘇澳・遠",dist:"far",tags:["🟢 冷泉",{t:"🌊 南方澳漁港",q:"南方澳漁港"},{t:"🚂 蘇澳車站",q:"蘇澳車站"}],note:"台灣唯一合法開發的冷泉，泉溫只有 22°C，跳下去的瞬間會叫出來，但過幾分鐘就覺得超舒爽，皮膚上會冒出像汽水一樣的小氣泡（碳酸）。蘇澳冷泉公園有大眾池（穿泳衣泳帽）和個人池，120 元就能泡。夏天最適合，泡完去南方澳吃海鮮，完美的宜蘭南端一日遊。",spring:"碳酸冷泉，22°C，富含碳酸，浸泡時皮膚會冒氣泡。",style:"蘇澳冷泉公園大眾池（120 元，需泳衣泳帽）、個人池（40 分鐘）。",season:"夏天最爽（5–9月）；冬天太冷不建議。",park:"冷泉公園旁有停車場。",transit:"台鐵蘇澳站步行約 5 分。",lat:24.5973,lng:121.8507},
+    {n:"鳩之澤溫泉（太平山）",a:"宜蘭大同・遠",dist:"far",tags:["🔵 美人湯","🌋 地熱體驗",{t:"🌲 太平山",q:"太平山國家森林遊樂區"},{t:"🚂 蹦蹦車",q:"太平山蹦蹦車"}],note:"藏在太平山國家森林遊樂區裡的溫泉，要買園區門票才能進。戶外有石砌的大眾湯池（穿泳衣），最好玩的是旁邊的煮蛋區——買竹籃把蛋和玉米放進 95°C 的溫泉水裡煮，13 分鐘後撈起來吃，小孩超愛。冬天山上冷，泡完湯在霧氣裡走步道，很有日本秘湯的感覺。",spring:"碳酸氫鈉泉（美人湯），水質清澈。煮蛋區泉溫可達 95°C。",style:"大眾露天湯池（250 元，需泳衣泳帽）、煮蛋區（免費，蛋和竹籃在旁邊買或租）。",season:"秋冬最有氣氛（10–3月）；但要注意太平山冬天可能結冰封路。",park:"鳩之澤停車場（太平山園區內），需先購買園區門票。",transit:"自駕為主；或從宜蘭搭國光客運到太平山（假日有加班車）。",lat:24.5454,lng:121.5082},
+    {n:"清水地熱",a:"宜蘭大同・遠",dist:"far",tags:["🌋 地熱體驗",{t:"🏞 三星蔥田",q:"三星鄉"},{t:"🌾 長埤湖",q:"長埤湖"}],note:"不是泡的溫泉，是用 100°C 的地熱水煮東西的戶外體驗——帶著蛋、玉米、花生、甚至整隻雞，放進竹籃丟進冒煙的水池裡煮，是全家最開心的戶外活動之一。旁邊有免費足湯可以泡腳。園區每天九點開放，假日很早就客滿（停車場滿就不讓進了），建議平日或一大早去。食材可以在山下市場買好帶上去，比園區裡便宜。",spring:"地熱溫泉水，近 100°C，可煮食但不能泡（另有足湯區可泡腳）。",style:"煮蛋體驗（竹籃租借付押金、食材可自帶或現場買）、免費足湯。",season:"四季皆可；冬天在蒸氣裡吃溫泉蛋特別爽。假日一大早就要到。",park:"園區停車場（滿了就不讓進，假日建議 9 點前到）。100 元/次。",transit:"自駕為主。",lat:24.6118,lng:121.6366},
+    {n:"瑞穗溫泉",a:"花蓮瑞穗・很遠",dist:"veryfar",tags:["🟤 含鐵泉",{t:"🐄 瑞穗牧場",q:"瑞穗牧場"},{t:"🚣 秀姑巒溪",q:"秀姑巒溪泛舟"}],note:"花東縱谷裡的老溫泉，最大特色是泉水含鐵，放一會兒會變成黃褐色，有淡淡鐵鏽味。日治時期 1919 年就開放公共浴場，是花蓮最有歷史的溫泉。現在有老牌的瑞穗溫泉旅社（便宜、設施舊但泉質好）和大型的瑞穗天合國際觀光酒店。配瑞穗牧場和秀姑巒溪泛舟，是花東兩天一夜的經典組合。",spring:"含鐵碳酸鹽泉，水初出清澈、靜置後轉黃褐色，有淡鐵味。",style:"瑞穗溫泉旅社大眾池（250 元）、瑞穗天合飯店（見渡假住宿分類）。",season:"秋冬（10–3月）。",park:"各設施有自己停車場。",transit:"台鐵瑞穗站，轉車或步行約 15–20 分到溫泉區。",lat:23.4966,lng:121.3436},
+    {n:"安通溫泉",a:"花蓮玉里・很遠",dist:"veryfar",tags:["🔵 美人湯",{t:"🌾 玉里",q:"玉里鎮"},{t:"🏞 南安瀑布",q:"南安瀑布"}],note:"花東縱谷裡最安靜的溫泉，觀光客很少，是「秘湯」等級的存在。安通溫泉旅社從日治時期營業到現在，露天池對著山谷，三個池溫度不同（熱、溫、冷），250 元泡一整天。溪邊還有免費的野溪溫泉可以自己找。適合喜歡安靜、不怕設施舊的人。",spring:"碳酸氫鈉泉（美人湯），含少量硫化氫，水清澈。",style:"安通溫泉旅社露天池（250 元，泡整天）、附近有野溪溫泉（免費、自己找）。",season:"秋冬（10–3月）。",park:"旅社有停車場。",transit:"台鐵玉里站，開車約 10 分鐘。",lat:23.2808,lng:121.3420},
+    {n:"知本溫泉",a:"台東卑南・很遠",dist:"veryfar",tags:["🔵 美人湯",{t:"🌲 知本森林遊樂區",q:"知本國家森林遊樂區"},{t:"🏞 台東",q:"台東市區"}],note:"東台灣代表性溫泉，在熱帶山林裡泡湯的感覺跟北部完全不同——周圍是檳榔樹和蕨類，空氣溫暖潮濕。泉質是碳酸氫鈉泉、泡完皮膚很滑，知本老爺酒店是最高級的選擇，溫泉區也有平價湯屋。走路就能到知本國家森林遊樂區，好漢坡 800 階爬完再泡湯是經典行程。",spring:"碳酸氫鈉泉（美人湯），水質清澈滑順。",style:"飯店（知本老爺等，見渡假住宿分類）、溫泉區湯屋（200–500）、公共浴池。",season:"四季皆可（台東冬天也不太冷）；秋冬最舒服。",park:"溫泉區有停車場。",transit:"台鐵知本站，轉計程車或飯店接駁約 10 分。",lat:22.6930,lng:121.0181},
+    {n:"綠島朝日溫泉",a:"台東綠島・很遠",dist:"veryfar",tags:["🌊 海底泉",{t:"🏝 綠島",q:"綠島"},{t:"🌅 日出",q:"朝日溫泉日出"}],note:"全世界僅三處的海底溫泉之一（另外兩個在義大利和日本），泡在太平洋邊的露天池裡看日出，是台灣最獨特的溫泉體驗。泉水是海水經地熱加溫後從海底冒出的，帶鹹味。池子緊貼著海岸，浪大的時候海水會打進來。早上五點開門、專門給看日出的人用。要坐船到綠島才能泡，門檻最高但體驗也最無可取代。",spring:"海底溫泉（硫磺鹽泉），海水經地熱加溫，帶鹹味，全球僅三處。",style:"朝日溫泉公園露天池（250 元，需泳衣泳帽），可以煮蛋。凌晨 5 點開門看日出。",season:"四季皆可；夏天配浮潛潛水最划算（4–10月）。",park:"園區有停車場（綠島上騎機車為主）。",transit:"台東富岡漁港搭船到綠島約 50 分鐘，園區離南寮港騎車約 15 分。",lat:22.6370,lng:121.5042}
   ]}
 ];
 
@@ -1579,7 +1614,8 @@ const COST={
  "forest-n":1,"forest-c":1,"forest-s":1,"forest-e":1,flower:1,sky:1,rail:1,
  natpark:0,natscenic:0,natgarden:0,playground:0,
  animal:2,pick:2,eco:2,forest:2, waterpark:3,indoor:3,
- "stay-park":3,"stay-spa":3,"stay-kid":3,"stay-estate":3,"stay-view":3
+ "stay-park":3,"stay-spa":3,"stay-kid":3,"stay-estate":3,"stay-view":3,
+ "hot-tcm":1,"hot-north":1,"hot-central":1,"hot-south":1,"hot-east":1
 };
 const COSTLABEL={0:["🆓免費","b-cost0"],1:["💲$","b-cost1"],2:["💲$$","b-cost2"],3:["💲$$$","b-cost3"]};
 const COFFEE_STYLES=[
@@ -1600,6 +1636,8 @@ const SSEC={sky:"天空步道",flower:"賞花",coast:"海邊",night:"夜景"};
 const LSEC={library:"圖書館",factory:"觀光工廠",indoor:"室內樂園"};
 const MSTAY=[["all","全部型態"],["樂園附設","🎢樂園附設"],["溫泉渡假","♨溫泉渡假"],["親子設施","👶親子設施"],["大型園區","🌿大型園區"],["景觀頂級","🌅景觀頂級"]];
 const TSEC={"stay-park":"樂園附設","stay-spa":"溫泉渡假","stay-kid":"親子設施","stay-estate":"大型園區","stay-view":"景觀頂級"};
+const MHOT=[["all","全部泉質"],["美人湯","🔵美人湯"],["硫磺泉","🟡硫磺泉"],["泥漿泉","⚫泥漿泉"],["冷泉","🟢冷泉"],["海底泉","🌊海底泉"],["地熱體驗","🌋地熱體驗"],["含鐵泉","🟤含鐵泉"]];
+const HSEC={"hot-tcm":1,"hot-north":1,"hot-central":1,"hot-south":1,"hot-east":1};
 const PLAY_STYLES=[
   ["溜滑梯",/溜滑梯|滑梯|磨石子|大碗公|滑道/],
   ["沙坑",/沙坑|玩沙|沙池/],
@@ -1702,6 +1740,12 @@ function renderCard(it,curSecId,idx){
     if(/🎢/.test(tagText)&&cats.indexOf("樂園附設")===-1)cats.push("樂園附設");
     badges+=badge("🏨 "+TSEC[curSecId],"b-style");
   }
+  if(HSEC[curSecId]){
+    const stags=(it.tags||[]).map(t=>typeof t==="string"?t:(t.t||"")).join(" ");
+    [["美人湯",/美人湯/],["硫磺泉",/硫磺泉/],["泥漿泉",/泥漿泉/],["冷泉",/冷泉/],["海底泉",/海底泉/],["地熱體驗",/地熱體驗/],["含鐵泉",/含鐵泉/]].forEach(([k,re])=>{
+      if(re.test(stags)&&cats.indexOf(k)===-1)cats.push(k);
+    });
+  }
   if(curSecId==="playground"){
     const pp=[]; const t=it.n+" "+(it.note||"");
     PLAY_STYLES.forEach(([k,re])=>{if(re.test(t)){if(cats.indexOf(k)===-1)cats.push(k); pp.push(k);}});
@@ -1715,6 +1759,7 @@ function renderCard(it,curSecId,idx){
       <div class="area">${it.a}</div>
     </div></div>
     <div class="note">${it.note}</div>
+    ${(it.spring||it.style||it.season)?`<div class="stayinfo">${it.spring?`<div>💧 <b>泉質</b>：${it.spring}</div>`:""}${it.style?`<div>🛁 <b>泡法</b>：${it.style}</div>`:""}${it.season?`<div>📅 <b>最佳季節</b>：${it.season}</div>`:""}</div>`:""}
     ${(it.stay||it.age||it.price||it.nearby)?`<div class="stayinfo">${it.stay?`<div>🎯 <b>館內</b>：${it.stay}</div>`:""}${it.age?`<div>👶 <b>適合</b>：${it.age}</div>`:""}${it.price?`<div>💰 <b>價位</b>：${it.price}</div>`:""}${it.nearby?`<div>🧭 <b>順遊</b>：${it.nearby}</div>`:""}</div>`:""}
     ${it.park?`<div class="park">🅿 <b>停車</b>：${it.park}</div>`:""}
     ${it.transit?`<details class="transit"><summary>🚉 大眾運輸／其他交通</summary><div>${it.transit}</div></details>`:""}
@@ -1748,7 +1793,8 @@ const groups=[
   {id:"g-coffee", emoji:"☕", name:"咖啡主題",  secs:["coffee-explore","coffee-tcm","coffee-spec","coffee-origin","coffee-view","coffee-old","coffee-spot"]},
   {id:"g-town",   emoji:"🏘", name:"特色小鎮",  secs:["town-n","town-c","town-s","town-e"]},
   {id:"g-food",   emoji:"🍴", name:"在地美食",  secs:["food-bib","food-explore","food-salty-tcm","food-salty-tw","food-sweet-tcm","food-sweet-tw","food-other"]},
-  {id:"g-stay",   emoji:"🏨", name:"渡假住宿",  secs:["stay-park","stay-spa","stay-kid","stay-estate","stay-view"]}
+  {id:"g-stay",   emoji:"🏨", name:"渡假住宿",  secs:["stay-park","stay-spa","stay-kid","stay-estate","stay-view"]},
+  {id:"g-hot",    emoji:"♨",  name:"溫泉泡湯",  secs:["hot-tcm","hot-north","hot-central","hot-south","hot-east"]}
 ];
 
 const app=document.getElementById("app");
@@ -1947,7 +1993,7 @@ const kidOnly=document.getElementById("kidOnly");
 const filterToggle=document.getElementById("filterToggle");
 const filterBody=document.getElementById("filterBody");
 const gInfo={}; groups.forEach(g=>gInfo[g.id]={emoji:g.emoji,name:g.name});
-const GCOLOR={"g-nature":"#2e9e4f","g-animal":"#e67e22","g-learn":"#16a085","g-museum":"#8a5a2b","g-book":"#7d5fff","g-culture":"#c0392b","g-scenery":"#2980b9","g-coffee":"#6f4e37","g-town":"#d63384","g-food":"#e1a100","g-mtn":"#34495e","g-playground":"#e84393","g-stay":"#3949ab"};
+const GCOLOR={"g-nature":"#2e9e4f","g-animal":"#e67e22","g-learn":"#16a085","g-museum":"#8a5a2b","g-book":"#7d5fff","g-culture":"#c0392b","g-scenery":"#2980b9","g-coffee":"#6f4e37","g-town":"#d63384","g-food":"#e1a100","g-mtn":"#34495e","g-playground":"#e84393","g-stay":"#3949ab","g-hot":"#e65100"};
 const MCATS=[["all","全部型態"],["自然科學","🔬自然科學"],["歷史人文","🏛️歷史"],["藝術","🎨藝術"],["產業主題","🚂產業"],["原民客家","🪶原民客家"]];
 const MBOOK=[["all","全部型態"],["書店咖啡","☕書店咖啡"],["二手書","♻二手書"],["親子","👶兒童/親子"]];
 const MFOOD=[["all","全部"],["平常吃","🍜平常吃"],["順便吃","🚗順便吃"],["特別去吃","🎉特別去吃"],["必比登","⭐必比登"]];
@@ -1977,7 +2023,7 @@ function applyFilters(){
     const cardCats=(c.dataset.cats||"").split(" ");
     const g=c.dataset.group||"";
     const okGroup=(curGroup==="all"||g===curGroup);
-    const okMcat=((curGroup!=="g-museum"&&curGroup!=="g-book"&&curGroup!=="g-food"&&curGroup!=="g-coffee"&&curGroup!=="g-nature"&&curGroup!=="g-animal"&&curGroup!=="g-scenery"&&curGroup!=="g-learn"&&curGroup!=="g-stay")||curMcat==="all"||cardCats.indexOf(curMcat)!==-1);
+    const okMcat=((curGroup!=="g-museum"&&curGroup!=="g-book"&&curGroup!=="g-food"&&curGroup!=="g-coffee"&&curGroup!=="g-nature"&&curGroup!=="g-animal"&&curGroup!=="g-scenery"&&curGroup!=="g-learn"&&curGroup!=="g-stay"&&curGroup!=="g-hot")||curMcat==="all"||cardCats.indexOf(curMcat)!==-1);
     const okMcat2=(!(curGroup==="g-nature"&&(curMcat==="步道"||curMcat==="公園"))||curMcat2==="all"||cardCats.indexOf(curMcat2)!==-1);
     const mcat3On=(curGroup==="g-nature"&&(curMcat==="步道"||(curMcat==="公園"&&curMcat2==="特色遊戲場")));
     const okMcat3=(!mcat3On||curMcat3==="all"||cardCats.indexOf(curMcat3)!==-1);
@@ -2029,9 +2075,9 @@ groupFilter.addEventListener("click",e=>{
   [...groupFilter.children].forEach(c=>c.classList.remove("active"));
   e.target.classList.add("active");
   curGroup=e.target.dataset.g;
-  const isMus=(curGroup==="g-museum"), isBook=(curGroup==="g-book"), isFood=(curGroup==="g-food"), isCoffee=(curGroup==="g-coffee"), isNature=(curGroup==="g-nature"), isAnimal=(curGroup==="g-animal"), isScenery=(curGroup==="g-scenery"), isLearn=(curGroup==="g-learn"), isStay=(curGroup==="g-stay");
-  if(isMus)buildMcat(MCATS); else if(isBook)buildMcat(MBOOK); else if(isFood)buildMcat(MFOOD); else if(isCoffee)buildMcat(MCOFFEE); else if(isNature)buildMcat(MNATURE); else if(isAnimal)buildMcat(MANIMAL); else if(isScenery)buildMcat(MSCENERY); else if(isLearn)buildMcat(MLEARN); else if(isStay)buildMcat(MSTAY);
-  mcatFilter.style.display=(isMus||isBook||isFood||isCoffee||isNature||isAnimal||isScenery||isLearn||isStay)?"":"none";
+  const isMus=(curGroup==="g-museum"), isBook=(curGroup==="g-book"), isFood=(curGroup==="g-food"), isCoffee=(curGroup==="g-coffee"), isNature=(curGroup==="g-nature"), isAnimal=(curGroup==="g-animal"), isScenery=(curGroup==="g-scenery"), isLearn=(curGroup==="g-learn"), isStay=(curGroup==="g-stay"), isHot=(curGroup==="g-hot");
+  if(isMus)buildMcat(MCATS); else if(isBook)buildMcat(MBOOK); else if(isFood)buildMcat(MFOOD); else if(isCoffee)buildMcat(MCOFFEE); else if(isNature)buildMcat(MNATURE); else if(isAnimal)buildMcat(MANIMAL); else if(isScenery)buildMcat(MSCENERY); else if(isLearn)buildMcat(MLEARN); else if(isStay)buildMcat(MSTAY); else if(isHot)buildMcat(MHOT);
+  mcatFilter.style.display=(isMus||isBook||isFood||isCoffee||isNature||isAnimal||isScenery||isLearn||isStay||isHot)?"":"none";
   mcat2Filter.style.display="none"; mcat3Filter.style.display="none";
   curMcat="all"; curMcat2="all"; curMcat3="all";
   applyFilters();

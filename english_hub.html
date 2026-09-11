@@ -356,6 +356,52 @@ input { font-family: var(--font-body); }
   background: var(--active-soft); color: var(--active); font-weight: 500;
 }
 
+/* ── Course Links (YouTube / Youglish / Platform) ── */
+.cc-links {
+  display: flex; gap: 8px; flex-wrap: wrap; margin-top: 10px;
+}
+.cc-links a {
+  display: inline-flex; align-items: center; gap: 4px;
+  font-size: 12px; font-weight: 600; padding: 6px 12px;
+  border-radius: 999px; text-decoration: none;
+  transition: opacity .15s;
+}
+.cc-links a:hover { opacity: .8; text-decoration: none; }
+.cc-links .yt-link {
+  background: #fee2e2; color: #dc2626;
+}
+.cc-links .course-link {
+  background: var(--accent-soft); color: var(--accent);
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) .cc-links .yt-link { background: #450a0a; color: #f87171; }
+}
+:root[data-theme="dark"] .cc-links .yt-link { background: #450a0a; color: #f87171; }
+
+.cc-vocab a {
+  color: inherit; text-decoration: none;
+  border-bottom: 1px dashed var(--text-3);
+  transition: border-color .15s, color .15s;
+}
+.cc-vocab a:hover {
+  color: var(--accent); border-bottom-color: var(--accent);
+  text-decoration: none;
+}
+.course-header {
+  display: flex; align-items: center; justify-content: space-between;
+  margin-bottom: 12px; flex-wrap: wrap; gap: 8px;
+}
+.course-header a {
+  display: inline-flex; align-items: center; gap: 4px;
+  font-size: 14px; font-weight: 600; padding: 8px 16px;
+  border-radius: 999px; background: var(--accent); color: #fff;
+  text-decoration: none; transition: opacity .15s;
+}
+.course-header a:hover { opacity: .85; text-decoration: none; }
+.course-header .hint {
+  font-size: 13px; color: var(--text-3);
+}
+
 /* ── Empty State ── */
 .empty-state { text-align: center; padding: 40px 16px; color: var(--text-3); font-size: 15px; }
 
@@ -407,6 +453,11 @@ mark { background: var(--accent-soft); color: var(--text); padding: 0 2px; borde
 
     <!-- ═══ Course View ═══ -->
     <section class="view" id="view-course" hidden>
+      <div class="course-header">
+        <a href="https://courses.english.cool/courses/1968891/lectures/44574883" target="_blank" rel="noopener">📖 開啟課程平台</a>
+        <a href="https://docs.google.com/presentation/d/1sWuIK_W_LWPw2tM3oa8eHTDC0YP69ocFodZ8lZobkEs/edit" target="_blank" rel="noopener" style="background:var(--p1)">🎬 練習影片合集</a>
+        <span class="hint">💡 單字可點擊聽發音 (Youglish)</span>
+      </div>
       <input class="search-box" id="courseSearch" placeholder="搜尋課程內容：輸入關鍵字 (e.g. 連音, schwa, idiom)">
       <div class="part-tabs" id="partTabs" style="margin-top:12px">
         <span class="chip active" data-p="0">全部 50 單元</span>
@@ -498,6 +549,46 @@ const catLabels = {
 };
 
 const courseUnits = [{"id":1,"p":1,"t":"了解你的英文聽力問題 — 課程總覽","c":"課程總覽：英文聽力四大問題（語速快/連音、聽不出已學的字、抓不到重點、不熟悉口音），三大部分設計（Bottom-up精聽 → Top-down泛聽 → 世界口音），以及Listening Journal聽力日誌框架。","v":["syllable-timed language 音節計時語言","stress-timed language 重音計時語言","Bottom-up 由下至上","Top-down 由上至下","Intensive Listening 精聽"],"l":""},{"id":2,"p":1,"t":"聽不懂英文？其實是聽不出節奏 — 單字重音","c":"中文是音節計時語言(syllable-timed)，英文是重音計時語言(stress-timed)。重音音節：音調高、時間長、音量大；非重音音節則相反。判斷音節數可用拍手法。","v":["syllable 音節","stress 重音","stressed syllable 重音音節","unstressed syllable 非重音音節","schwa /ə/ 央元音"],"l":""},{"id":3,"p":1,"t":"語速快時，不見的字去哪裡了？ — 句子重音","c":"句子中的重音字（實詞/Content Words）包括名詞、動詞、形容詞、副詞；非重音字（虛詞/Function Words）包括助動詞、Be動詞、介系詞、代名詞、連接詞、冠詞。","v":["Content Words 實詞/內容字","Function Words 虛詞/功能字","stressed words 重音字","unstressed words 非重音字"],"l":""},{"id":4,"p":1,"t":"原來這些字有兩種念法 — 虛詞弱讀與 And, Or","c":"虛詞在句中為非重音，發音從重讀(strong form)變為弱讀(weak form)。央元音Schwa /ə/是最常見的弱讀母音。And /ænd/→/ən/，Or /ɔr/→/ər/。","v":["strong form 重讀","weak form 弱讀","schwa /ə/ 央元音","And /ænd/→/ən/","Or /ɔr/→/ər/"],"l":""},{"id":5,"p":1,"t":"原來這些字有兩種念法 — For, Of, To","c":"For /fɔr/→/fər/，Of /ɑv/→/əv/或/ə/，To /tu/→/tə/。Of後接子音常省略為/ə/，後接母音保留/əv/以便連音。","v":["For /fɔr/→/fər/","Of /ɑv/→/əv/或/ə/","To /tu/→/tə/"],"l":""},{"id":6,"p":1,"t":"搞懂總是聽不清楚的縮寫 — n't, 'd, 've","c":"n't的/t/常不送氣；'d可代表would/had/did三種；'ve發音/əv/或/ə/跟of弱讀很像。","v":["n't 縮寫（/t/不送氣）","'d = would/had/did","'ve = have /əv/或/ə/"],"l":""},{"id":7,"p":1,"t":"終於聽出 Can 以及 Can't 的差別","c":"Can弱讀/kən/，Can't讀/kænt/。三大判斷點：時間長短、母音差異、重音位置。最關鍵是「重音」。","v":["Can 弱讀 /kən/","Can't /kænt/","glottal stop 喉塞音"],"l":""},{"id":8,"p":1,"t":"找出英文聽力中不見的聲音 (1) — 喉塞音","c":"喉塞音(Glottal Stop)：字尾為塞音/p,t,k,b,d,g/且下一字首為子音時，尾音不釋放氣流。","v":["Glottal Stop 喉塞音/吞音","塞音 /p/ /t/ /k/ /b/ /d/ /g/"],"l":""},{"id":9,"p":1,"t":"找出英文聽力中不見的聲音 (2) — H-dropping, G-dropping","c":"H-dropping：非重音字的h開頭在句中常不發/h/。G-dropping：-ing結尾的/ɪŋ/弱化為/ɪn/。","v":["H-dropping 省略h","G-dropping 省略g","him→'im","going to→gonna"],"l":""},{"id":10,"p":1,"t":"破解聽力罩門：連音 (1) — 子音連母音","c":"前一字尾為子音＋後一字首為母音→產生連音。字尾t連母音時t變彈舌音；t/d+y→ch/j。","v":["linking 連音","flap t 彈舌音","t+y→/tʃ/ (ch)","d+y→/dʒ/ (j)"],"l":""},{"id":11,"p":1,"t":"破解聽力罩門：連音 (2) — 母音連母音","c":"前一字尾母音＋後一字首母音時產生滑音。圓唇母音後加/w/，扁唇母音後加/j/。","v":["glide 滑音","/w/ 滑音（圓唇）","/j/ 滑音（扁唇）"],"l":""},{"id":12,"p":1,"t":"精聽練習實戰 (1) — 方法論","c":"精聽六步驟：安排進度→選擇素材→聽寫(每次3-15字)→檢查→核對答案→跟讀(shadowing)。","v":["SMART goal","Habit Tracker","shadowing 跟讀","Intensive Listening 精聽"],"l":""},{"id":13,"p":1,"t":"精聽練習實戰 (2) — 範例示範","c":"以Jennifer（B1/TOEIC500-600）為例示範完整精聽流程。素材：Friends影集片段。","v":["精聽 Intensive Listening","Voicetube","ELLLO"],"l":""},{"id":14,"p":2,"t":"長篇聽力理解導論 — 聽力策略","c":"四大聽力策略：事前計畫/預習、上下文推理、背景與語言知識、非語言溝通。Listening Journal框架貫穿Part 2。","v":["Planning 事前計畫","Context Inference 上下文推理","Background Knowledge 背景知識","Listening Journal 聽力日誌"],"l":""},{"id":15,"p":2,"t":"常見慣用語 Idioms (1)","c":"5個常見慣用語，透過短對話練習上下文推理策略。","v":["get the hang of it 抓到訣竅","throw me under the bus 背叛出賣","bite your tongue 忍住不說"],"l":"A2-B1"},{"id":16,"p":2,"t":"常見慣用語 Idioms (2)","c":"搭配 How I Met Your Mother, Good Will Hunting, Rocky Balboa 學 3 個慣用語。","v":["There's a fine line between A and B","occur to someone 突然想到"],"l":"A2-B1"},{"id":17,"p":2,"t":"日常對話：你會說哪些語言？","c":"透過日常對話練習 A2 長篇聽力。學習描述語言能力程度的各種表達。","v":["I speak a little bit of","My __ is conversational","I am fluent in"],"l":"A2"},{"id":18,"p":2,"t":"卡通學英文：We Bare Bears 熊熊遇見你","c":"透過 We Bare Bears 卡通婚禮篇進行聽力理解與填空練習。","v":["sharp 穿著體面的","I'm down 算我一份","bride 新娘"],"l":"A2"},{"id":19,"p":2,"t":"網路短劇：能幫我顧個東西嗎","c":"幽默短劇：Chris請Karen看顧東西，引發冒牌者事件。","v":["shady 可疑的","imposter 冒牌者","imposter syndrome"],"l":"A2"},{"id":20,"p":2,"t":"FBI 探員教你觀察微表情 (1)","c":"FBI探員 Joe Navarro 教你從「自在」和「不自在」角度觀察臉部表情。","v":["comfort 自在","discomfort 不自在","facial expression"],"l":"B1"},{"id":21,"p":2,"t":"FBI 探員教你觀察微表情 (2)","c":"延續 Unit 20，探討臉部遮擋時的不安感、手性概念在表情解讀中的應用。","v":["chirality 手性","genuine 真實的","concealment 隱藏"],"l":"B1"},{"id":22,"p":2,"t":"泰勒絲與 VOGUE 的快問快答","c":"Taylor Swift 接受 Vogue 73問快問快答，適合練快節奏對話聽力。","v":["guilty pleasure","songwriting 創作"],"l":"B1"},{"id":23,"p":2,"t":"網路短劇：我真的有這麼廢嗎？","c":"朋友久別重逢比較近況，反映「同儕比較焦慮」。","v":["catch up 敘舊","promotion 升遷","engaged 訂婚"],"l":"B1"},{"id":24,"p":2,"t":"誰竄改了你的記憶？(1)","c":"探討記憶不可靠性：記憶可被外在資訊影響、扭曲，甚至無中生有。","v":["false memory 虛假記憶","misinformation 錯誤資訊"],"l":"B2"},{"id":25,"p":2,"t":"誰竄改了你的記憶？(2)","c":"延續記憶探討：法律、醫療領域的影響。記憶非鐵定事實。","v":["testimony 證詞","cognitive bias 認知偏誤"],"l":"B2"},{"id":26,"p":2,"t":"Kobe Bryant 最後的訪談","c":"Kobe 談長期思維養成：用長遠眼光看待事情，耐心逐步提升。","v":["long-term thinking","patience 耐心","discipline 紀律"],"l":"B2"},{"id":27,"p":2,"t":"想去趟「在地化」旅行嗎？(1)","c":"探討 live-like-a-local 旅行興起，以里斯本為例討論觀光業影響。","v":["gentrification 仕紳化","tourism 觀光業"],"l":"B2"},{"id":28,"p":2,"t":"想去趟「在地化」旅行嗎？(2)","c":"深入里斯本觀光業背後原因及負面影響（房租飆漲、居民被驅逐）。","v":["soaring rent 飆漲的租金","sustainable tourism"],"l":"B2"},{"id":29,"p":2,"t":"哈利王子的美國之旅","c":"Prince Harry 與 James Corden 搭巴士遊洛杉磯，聊美國生活。","v":["royal family 皇室","privacy 隱私"],"l":"B2"},{"id":30,"p":2,"t":"你是內向還是外向？(1)","c":"介紹 introvert/extrovert 心理學定義，包括榮格與 Eysenck 的理論。","v":["introvert 內向者","extrovert 外向者"],"l":"C1"},{"id":31,"p":2,"t":"你是內向還是外向？(2)","c":"探討如何幫助內向/外向者發揮優勢，以及 Jerome Kagan 幼兒性格研究。","v":["ambivert 中性格","collaboration 合作"],"l":"C1"},{"id":32,"p":2,"t":"看安海瑟薇電影學生活口語","c":"透過 Anne Hathaway 電影片段學日常口語。","v":["infidelity 不忠","feminism 女性主義"],"l":"C1"},{"id":33,"p":2,"t":"每個字都懂，卻不懂笑點？學會「諷刺梗」","c":"透過經典美劇教導辨識 sarcasm 諷刺語氣。","v":["sarcasm 諷刺","irony 反諷","deadpan 面無表情的"],"l":"C1"},{"id":34,"p":2,"t":"聽馬斯克 Podcast 學生活口語","c":"透過 Elon Musk 在 Joe Rogan 訪談學商業、經濟表達。","v":["capital allocation 資本分配","innovation 創新"],"l":"C1"},{"id":35,"p":3,"t":"英國口音 (1) — 發音特色","c":"英式英語(RP)四大特色：蝴蝶音→打哈欠、母音/ɑ/→/ɒ/、R不發音、T不彈舌。","v":["Received Pronunciation (RP)","non-rhotic 非捲舌"],"l":""},{"id":36,"p":3,"t":"英國口音 (2) — 跟艾瑪華森學英國腔","c":"透過 Emma Watson 訪談練習辨識 RP 發音。","v":["Emma Watson","RP accent"],"l":""},{"id":37,"p":3,"t":"英國口音 (3) — 看福爾摩斯學英國腔","c":"透過 BBC Sherlock 練習辨識英式英語。","v":["Sherlock Holmes","Benedict Cumberbatch"],"l":""},{"id":38,"p":3,"t":"澳洲口音 (1) — 發音特色","c":"澳洲英語：長母音/eɪ/→/aɪ/、升調語尾、縮寫多、R不發音。","v":["Australian English","rising intonation 升調","arvo = afternoon"],"l":""},{"id":39,"p":3,"t":"澳洲口音 (2) — 跟雷神索爾學澳洲腔","c":"透過 Chris Hemsworth 訪談練習辨識澳洲口音。","v":["Chris Hemsworth","mate 夥伴"],"l":""},{"id":40,"p":3,"t":"澳洲口音 (3) — 看金鋼狼學澳洲腔","c":"透過 Hugh Jackman 訪談練習辨識澳洲口音。","v":["Hugh Jackman","Wolverine"],"l":""},{"id":41,"p":3,"t":"印度口音 (1) — 發音特色","c":"印度英語六大特色：T/TH→D、字尾L捲舌、P→B、R→L/打舌音、K→G、V/W混合。","v":["Indian English","retroflex 捲舌音"],"l":""},{"id":42,"p":3,"t":"印度口音 (2) — 跟生活大爆炸的 Raj 學印度腔","c":"透過 Big Bang Theory 的 Raj 練習辨識印度口音。","v":["Raj Koothrappali","selective mutism"],"l":""},{"id":43,"p":3,"t":"印度口音 (3) — 跟印度肥皂劇學印度腔","c":"透過印度肥皂劇沉浸式練習。","v":["Bollywood","soap opera 肥皂劇"],"l":""},{"id":44,"p":3,"t":"歐洲口音 (1) — 跟 Netflix 亞森羅蘋學法國腔","c":"法國口音特色：小舌音R、TH→Z/S、H不發音、語調較平。","v":["Lupin 亞森羅蘋","French accent","uvular R"],"l":""},{"id":45,"p":3,"t":"歐洲口音 (2) — 跟德國 YouTuber 學德國腔","c":"德國口音：W→V、TH→Z/S、語調較硬較直。","v":["German accent","W→V (wine→vine)"],"l":""},{"id":46,"p":3,"t":"歐洲口音 (3) — 跟摩登家庭的 Gloria 學西文腔","c":"西班牙語腔：母音較開、子音群前加母音、J→H、B/V不分。","v":["Modern Family","Spanish accent"],"l":""},{"id":47,"p":3,"t":"亞洲口音 (1) — 跟孫燕姿學新加坡腔","c":"Singlish 特色：句尾語助詞(lah/lor/meh)、省略虛詞、聲調影響。","v":["Singlish","lah 語助詞"],"l":""},{"id":48,"p":3,"t":"亞洲口音 (2) — 跟當地新聞學越南、泰國腔","c":"越南腔：聲調影響、子音群簡化。泰國腔：R→L、字尾子音省略。","v":["Vietnamese accent","Thai accent"],"l":""},{"id":49,"p":3,"t":"亞洲口音 (3) — 跟近藤麻理惠學日韓腔","c":"日本腔：L/R不分、母音插入。韓國腔：F→P、Z→J。","v":["Marie Kondo","Japanese accent","Korean accent"],"l":""},{"id":50,"p":3,"t":"日後學習建議","c":"精聽用Youglish/Yarn搜尋實際念法；泛聽持續用Listening Journal；聽不懂口音時的禮貌表達。","v":["Youglish","Yarn","shadowing 跟讀"],"l":""}];
+
+const COURSE_URL = 'https://courses.english.cool/courses/1968891/lectures/44574883';
+const SLIDES_URL = 'https://docs.google.com/presentation/d/1sWuIK_W_LWPw2tM3oa8eHTDC0YP69ocFodZ8lZobkEs/edit';
+
+// YouTube search queries for units with specific media references
+const mediaMap = {
+  3: [{q:'Will Smith Full Interview Ellen',t:'Will Smith × Ellen'},{q:'Brooklyn Nine-Nine Cold Open',t:'Brooklyn 99'},{q:'Friends Best Moments Season 2 TBS',t:'Friends S2'}],
+  13: [{q:'Friends english listening practice',t:'Friends 精聽素材'}],
+  16: [{q:'How I Met Your Mother idiom scene',t:'乘風破浪 HIMYM'},{q:'Good Will Hunting bar scene',t:'乘風破浪 Good Will Hunting'},{q:'Rocky Balboa speech son',t:'乘風破浪 Rocky Balboa'}],
+  17: [{q:'What Languages Do You Speak ELLLO',t:'ELLLO 對話'}],
+  18: [{q:'We Bare Bears wedding episode',t:'熊熊遇見你'}],
+  19: [{q:'Can you watch my stuff comedy skit',t:'短劇原片'}],
+  20: [{q:'Joe Navarro body language WIRED',t:'Joe Navarro 微表情'}],
+  21: [{q:'Joe Navarro body language WIRED',t:'Joe Navarro 微表情'}],
+  22: [{q:'Taylor Swift 73 Questions Vogue',t:'Taylor Swift × Vogue'}],
+  23: [{q:'am I a loser comedy skit catch up',t:'短劇原片'}],
+  24: [{q:'false memory Elizabeth Loftus TED',t:'虛假記憶 TED'}],
+  25: [{q:'false memory Elizabeth Loftus TED',t:'虛假記憶 TED'}],
+  26: [{q:'Kobe Bryant last interview motivation',t:'Kobe 最後訪談'}],
+  27: [{q:'live like a local travel Lisbon documentary',t:'在地化旅行'}],
+  28: [{q:'Lisbon tourism gentrification documentary',t:'里斯本觀光'}],
+  29: [{q:'Prince Harry James Corden Late Late Show bus',t:'Harry × Corden'}],
+  30: [{q:'introvert extrovert psychology explained',t:'內向 vs 外向'}],
+  31: [{q:'introvert extrovert psychology explained',t:'內向 vs 外向'}],
+  32: [{q:'Anne Hathaway interview movie scene',t:'Anne Hathaway'}],
+  33: [{q:'sarcasm TV show Friends Seinfeld examples',t:'諷刺梗 美劇'}],
+  34: [{q:'Elon Musk Joe Rogan podcast',t:'Musk × Joe Rogan'}],
+  36: [{q:'Emma Watson interview British accent',t:'Emma Watson 訪談'}],
+  37: [{q:'Sherlock BBC Benedict Cumberbatch scene',t:'BBC Sherlock'}],
+  39: [{q:'Chris Hemsworth interview australian accent',t:'Chris Hemsworth'}],
+  40: [{q:'Hugh Jackman interview australian accent',t:'Hugh Jackman'}],
+  42: [{q:'Big Bang Theory Raj indian accent',t:'Big Bang Raj'}],
+  43: [{q:'',t:'印度肥皂劇',direct:'https://youtu.be/OGqWkrU9lqo'}],
+  44: [{q:'Lupin Netflix french accent scene',t:'Netflix 亞森羅蘋'}],
+  45: [{q:'German YouTuber speaking english accent',t:'德國 YouTuber'}],
+  46: [{q:'Modern Family Gloria accent funny',t:'Gloria 西文腔'}],
+  47: [{q:'Stefanie Sun interview Singlish',t:'孫燕姿 Singlish'}],
+  48: [{q:'Vietnam news english accent',t:'越南新聞'},{q:'Thailand news english accent',t:'泰國新聞'}],
+  49: [{q:'Marie Kondo interview english',t:'近藤麻理惠'}],
+};
 
 const methods = [
   {id:'extensive',name:'泛聽',en:'Extensive Listening',
@@ -715,6 +806,38 @@ function renderShows() {
 }
 
 // ── Course View ──
+function youglishUrl(term) {
+  // Extract English part for Youglish search
+  const en = term.replace(/[（(].+?[）)]/g, '').replace(/[^\x00-\x7F]+/g, '').trim();
+  if (!en || en.length < 2) return null;
+  return `https://youglish.com/pronounce/${encodeURIComponent(en)}/english`;
+}
+
+function renderVocab(v, query) {
+  const url = youglishUrl(v);
+  const text = highlightText(v, query);
+  if (url) {
+    return `<span><a href="${url}" target="_blank" rel="noopener" title="聽 Youglish 真人發音" onclick="event.stopPropagation()">${text}</a></span>`;
+  }
+  return `<span>${text}</span>`;
+}
+
+function renderMediaLinks(unitId) {
+  const items = mediaMap[unitId];
+  if (!items) return '';
+  let html = '<div class="cc-links">';
+  items.forEach(m => {
+    if (m.direct) {
+      html += `<a class="yt-link" href="${m.direct}" target="_blank" rel="noopener" onclick="event.stopPropagation()">▶ ${m.t}</a>`;
+    } else if (m.q) {
+      html += `<a class="yt-link" href="https://www.youtube.com/results?search_query=${encodeURIComponent(m.q)}" target="_blank" rel="noopener" onclick="event.stopPropagation()">▶ ${m.t}</a>`;
+    }
+  });
+  html += `<a class="course-link" href="${SLIDES_URL}" target="_blank" rel="noopener" onclick="event.stopPropagation()">🎬 投影片</a>`;
+  html += '</div>';
+  return html;
+}
+
 function renderCourse() {
   let filtered = courseUnits;
   if (coursePart > 0) filtered = filtered.filter(u => u.p === coursePart);
@@ -734,17 +857,19 @@ function renderCourse() {
   }
 
   el.innerHTML = filtered.map(u => {
+    const hasMedia = mediaMap[u.id];
     return `<div class="course-card" data-part="${u.p}" onclick="this.classList.toggle('open')">
       <div class="cc-head">
         <span class="cc-num">${String(u.id).padStart(2,'0')}</span>
-        <span class="cc-title">${highlightText(u.t, courseQuery)}</span>
+        <span class="cc-title">${highlightText(u.t, courseQuery)}${hasMedia ? ' 🎬' : ''}</span>
         ${u.l ? `<span class="cc-level">${u.l}</span>` : ''}
       </div>
       <div class="cc-concept">${highlightText(u.c, courseQuery)}</div>
       <div class="cc-expand">
         <div class="cc-vocab">
-          ${u.v.map(v => `<span>${highlightText(v, courseQuery)}</span>`).join('')}
+          ${u.v.map(v => renderVocab(v, courseQuery)).join('')}
         </div>
+        ${renderMediaLinks(u.id)}
       </div>
     </div>`;
   }).join('');

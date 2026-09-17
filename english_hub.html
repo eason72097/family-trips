@@ -288,7 +288,7 @@ input { font-family: var(--font-body); }
 .course-card .cc-title { font-family: var(--font-display); font-weight: 600; font-size: 15px; }
 .course-card .cc-concept { font-size: 14px; color: var(--text-2); margin-top: 8px; line-height: 1.55; }
 .course-card .cc-expand { overflow: hidden; max-height: 0; transition: max-height .3s ease; }
-.course-card.open .cc-expand { max-height: 400px; }
+.course-card.open .cc-expand { max-height: 2400px; }
 .course-card .cc-vocab {
   margin-top: 10px; display: flex; flex-wrap: wrap; gap: 6px;
 }
@@ -405,6 +405,126 @@ input { font-family: var(--font-body); }
 /* ── Empty State ── */
 .empty-state { text-align: center; padding: 40px 16px; color: var(--text-3); font-size: 15px; }
 
+/* ── Notes（筆記／心得／標記）── */
+.eh-notes {
+  margin-top: 12px; padding: 12px;
+  border-radius: var(--radius-sm);
+  background: var(--surface-hover);
+  border: 1px dashed var(--border);
+  cursor: default;
+}
+.eh-notes .eh-flags { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 8px; }
+.eh-flag {
+  font-size: 12px; padding: 5px 10px; border-radius: 999px;
+  border: 1px solid var(--border); background: var(--surface);
+  color: var(--text-2); font-weight: 500; line-height: 1.2;
+  transition: all .12s;
+}
+.eh-flag:hover { border-color: var(--accent); }
+.eh-flag.on { background: var(--accent); border-color: var(--accent); color: #fff; }
+.eh-flag.on[data-flag="hard"] { background: var(--p1); border-color: var(--p1); }
+.eh-flag.on[data-flag="again"] { background: var(--p3); border-color: var(--p3); }
+.eh-flag.on[data-flag="done"], .eh-flag.on[data-flag="fits"] { background: var(--active); border-color: var(--active); }
+.eh-flag.on[data-flag="park"] { background: var(--text-3); border-color: var(--text-3); }
+.eh-notes label { display: block; font-size: 12px; font-weight: 600; color: var(--text-2); margin-top: 8px; }
+.eh-notes textarea {
+  display: block; width: 100%; box-sizing: border-box;
+  margin-top: 4px; padding: 8px 10px; min-height: 58px;
+  font-family: var(--font-body); font-size: 14px; line-height: 1.55;
+  color: var(--text); background: var(--surface);
+  border: 1px solid var(--border); border-radius: var(--radius-sm);
+  resize: vertical;
+}
+.eh-notes textarea:focus { outline: none; border-color: var(--accent); }
+.eh-notes textarea::placeholder { color: var(--text-3); }
+.eh-save-state { font-size: 11px; color: var(--text-3); margin-top: 6px; text-align: right; min-height: 14px; }
+.eh-badges { display: inline-flex; gap: 3px; margin-left: 6px; font-size: 12px; vertical-align: middle; }
+.eh-badges:empty { display: none; }
+
+/* show card notes toggle */
+.show-card .eh-toggle {
+  font-size: 13px; padding: 3px 8px; border-radius: 999px;
+  border: 1px solid var(--border); color: var(--text-2); background: var(--surface);
+  white-space: nowrap; line-height: 1.2;
+}
+.show-card .eh-toggle:hover { border-color: var(--accent); color: var(--accent); }
+.show-card .eh-toggle.has { border-color: var(--accent); color: var(--accent); }
+.show-card .eh-notes { display: none; }
+.show-card.notes-open .eh-notes { display: block; }
+
+/* method / tool notes: collapsed by default */
+.method-card .eh-notes, .tool-card .eh-notes { display: none; }
+.method-card.notes-open .eh-notes, .tool-card.notes-open .eh-notes { display: block; }
+.eh-toggle-inline {
+  font-size: 12px; color: var(--text-3); margin-top: 8px; display: inline-block;
+  border-bottom: 1px dashed var(--text-3);
+}
+.eh-toggle-inline.has { color: var(--accent); border-color: var(--accent); }
+
+/* note filters on course view */
+.note-filters { display: flex; gap: 8px; flex-wrap: wrap; margin: 10px 0 14px; }
+.note-filters .chip {
+  font-size: 13px; padding: 6px 12px; border-radius: 999px;
+  background: var(--surface); border: 1px solid var(--border);
+  font-weight: 500; cursor: pointer; transition: all .15s; white-space: nowrap;
+}
+.note-filters .chip:hover { border-color: var(--accent); }
+.note-filters .chip.active { background: var(--text); color: var(--ground); border-color: var(--text); }
+
+/* ── 我的筆記 view ── */
+.sync-status { font-size: 13px; color: var(--text-3); margin-bottom: 14px; }
+.sync-status.ok { color: var(--active); }
+.sync-status.err { color: var(--p1); }
+.notes-block {
+  background: var(--surface); border-radius: var(--radius);
+  padding: 16px; box-shadow: var(--shadow); margin-bottom: 12px;
+}
+.notes-block h3 { font-size: 16px; margin-bottom: 10px; }
+.notes-block .hint { font-size: 13px; color: var(--text-3); }
+.wish-add { display: flex; gap: 8px; margin-bottom: 10px; }
+.wish-add input {
+  flex: 1; min-width: 0; padding: 10px 12px; font-size: 14px;
+  border: 1px solid var(--border); border-radius: var(--radius-sm);
+  background: var(--surface); color: var(--text);
+}
+.wish-add input:focus { outline: none; border-color: var(--accent); }
+.wish-add button {
+  padding: 10px 14px; border-radius: var(--radius-sm);
+  background: var(--accent); color: #fff; font-weight: 600; font-size: 14px;
+}
+.wish-list { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 6px; }
+.wish-item {
+  display: flex; align-items: flex-start; gap: 10px;
+  padding: 8px 10px; border-radius: var(--radius-sm);
+  background: var(--surface-hover); font-size: 14px; line-height: 1.5;
+}
+.wish-item input[type="checkbox"] { margin-top: 4px; }
+.wish-item .wish-text { flex: 1; word-break: break-word; }
+.wish-item.done .wish-text { text-decoration: line-through; color: var(--text-3); }
+.wish-item .wish-del { color: var(--text-3); font-size: 14px; padding: 0 4px; }
+.wish-item .wish-del:hover { color: var(--p1); }
+.summary-list { display: flex; flex-direction: column; gap: 6px; }
+.summary-item {
+  display: grid; grid-template-columns: auto 1fr auto; gap: 2px 10px; align-items: baseline;
+  padding: 8px 10px; border-radius: var(--radius-sm);
+  background: var(--surface-hover); font-size: 14px; cursor: pointer;
+}
+.summary-item:hover { background: var(--accent-soft); }
+.summary-item .si-kind { font-size: 11px; font-weight: 600; color: var(--text-3); white-space: nowrap; }
+.summary-item .si-title { font-weight: 600; }
+.summary-item .si-snip {
+  grid-column: 2 / span 2; color: var(--text-2); font-size: 13px; line-height: 1.5; min-width: 0;
+  overflow: hidden; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical;
+}
+.summary-item .si-snip:empty { display: none; }
+.summary-item .si-time { font-size: 11px; color: var(--text-3); white-space: nowrap; }
+.progress-row { display: flex; gap: 8px; flex-wrap: wrap; }
+.progress-pill {
+  font-size: 13px; padding: 6px 12px; border-radius: 999px;
+  background: var(--surface-hover); color: var(--text-2); font-weight: 500;
+}
+.progress-pill b { color: var(--text); }
+
 /* ── Highlights ── */
 mark { background: var(--accent-soft); color: var(--text); padding: 0 2px; border-radius: 2px; }
 
@@ -431,6 +551,7 @@ mark { background: var(--accent-soft); color: var(--text); padding: 0 2px; borde
     <button data-view="course">📖 聽力術課程</button>
     <button data-view="methods">🧠 方法</button>
     <button data-view="tools">🛠 工具</button>
+    <button data-view="notes">📝 我的筆記</button>
   </nav>
 
   <main>
@@ -465,6 +586,12 @@ mark { background: var(--accent-soft); color: var(--text); padding: 0 2px; borde
         <span class="chip" data-p="2">Part 2 泛聽</span>
         <span class="chip" data-p="3">Part 3 口音</span>
       </div>
+      <div class="note-filters" id="noteFilters">
+        <span class="chip" data-nf="done">✅ 上過</span>
+        <span class="chip" data-nf="again">🔁 要再練</span>
+        <span class="chip" data-nf="hard">🔥 很難</span>
+        <span class="chip" data-nf="noted">📝 有筆記</span>
+      </div>
       <div class="course-list" id="courseList"></div>
     </section>
 
@@ -476,6 +603,36 @@ mark { background: var(--accent-soft); color: var(--text); padding: 0 2px; borde
     <!-- ═══ Tools View ═══ -->
     <section class="view" id="view-tools" hidden>
       <div class="tool-grid" id="toolGrid"></div>
+    </section>
+
+    <!-- ═══ Notes View（我的筆記）═══ -->
+    <section class="view" id="view-notes" hidden>
+      <div class="sync-status" id="syncStatus">📱 目前只存在這台裝置</div>
+
+      <div class="notes-block">
+        <h3>📌 之後想看／想聽／想再練</h3>
+        <div class="wish-add">
+          <input id="wishInput" placeholder="例：Acquired 迪士尼那集補角色英文名、Lily 第 8 課再做一次聽寫" maxlength="200">
+          <button id="wishAdd">加入</button>
+        </div>
+        <ul class="wish-list" id="wishList"></ul>
+      </div>
+
+      <div class="notes-block">
+        <h3>📖 課程進度</h3>
+        <div class="progress-row" id="courseProgress"></div>
+        <div class="summary-list" id="flaggedUnits" style="margin-top:10px"></div>
+      </div>
+
+      <div class="notes-block">
+        <h3>🎧 節目感想</h3>
+        <div class="summary-list" id="showNotes"></div>
+      </div>
+
+      <div class="notes-block">
+        <h3>🕒 最近寫的</h3>
+        <div class="summary-list" id="recentNotes"></div>
+      </div>
     </section>
   </main>
 </div>
@@ -642,6 +799,291 @@ let showLang = 'all';
 let showCat = 'all';
 let coursePart = 0;
 let courseQuery = '';
+let noteFilter = '';
+
+/* ════════════════════════════════════════
+   NOTES STORE（筆記／心得／標記／清單）
+   - 立即存 localStorage，600ms 後同步到 Firestore（englishHub collection）
+   - 雲端有更新時（其他裝置寫的）以 updatedAt 較新者為準
+   ════════════════════════════════════════ */
+const EH_LS_KEY = 'eh_notes_v1';
+const EH_FLAGS = {
+  unit: [['done','✅ 上過'],['again','🔁 要再練'],['hard','🔥 很難']],
+  show: [['fits','👍 適合我'],['again','🔁 想繼續聽'],['park','😵 太難先收']],
+  method: [], tool: []
+};
+const EH_FLAG_ICON = { done:'✅', again:'🔁', hard:'🔥', fits:'👍', park:'😵' };
+const EH_FIELDS = {
+  unit: [['note','📝 筆記','規則、例子、自己聽錯的那句…'],['reflection','💭 心得','上完的感覺、卡在哪、下次想怎麼練…']],
+  show: [['note','💭 感想','聽起來怎麼樣？哪一集好聽？聽不懂的是什麼…']],
+  method: [['note','💭 心得','試過之後的感覺、自己的做法…']],
+  tool: [['note','💭 心得','怎麼用最順、遇到的問題…']]
+};
+
+let ehStore = { items: {}, wishlist: [], wishlistUpdatedAt: '' };
+let ehCloud = null;          // 由 module script 注入
+let ehCloudOk = false;
+const ehSaveTimers = {};
+
+function ehLoadLocal() {
+  try {
+    const raw = localStorage.getItem(EH_LS_KEY);
+    if (raw) {
+      const parsed = JSON.parse(raw);
+      if (parsed && typeof parsed === 'object') {
+        ehStore.items = parsed.items || {};
+        ehStore.wishlist = Array.isArray(parsed.wishlist) ? parsed.wishlist : [];
+        ehStore.wishlistUpdatedAt = parsed.wishlistUpdatedAt || '';
+      }
+    }
+  } catch (e) { console.warn('localStorage 讀取失敗', e); }
+}
+function ehSaveLocal() {
+  try { localStorage.setItem(EH_LS_KEY, JSON.stringify(ehStore)); }
+  catch (e) { console.warn('localStorage 寫入失敗', e); }
+}
+function ehGet(id) { return ehStore.items[id] || null; }
+function ehHasContent(it) {
+  if (!it) return false;
+  if ((it.note || '').trim() || (it.reflection || '').trim()) return true;
+  return Object.values(it.flags || {}).some(Boolean);
+}
+function ehNowIso() { return new Date().toISOString(); }
+function ehFmtTime(iso) {
+  if (!iso) return '';
+  const d = new Date(iso);
+  if (isNaN(d)) return '';
+  const today = new Date();
+  const same = d.toDateString() === today.toDateString();
+  const hm = String(d.getHours()).padStart(2,'0') + ':' + String(d.getMinutes()).padStart(2,'0');
+  return same ? hm : `${d.getMonth()+1}/${d.getDate()} ${hm}`;
+}
+function ehEsc(s) {
+  return String(s || '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+}
+
+/** 更新一筆（patch 會合併），立即存本機、排程同步雲端 */
+function ehUpdate(id, kind, patch) {
+  const cur = ehStore.items[id] || { kind, flags: {} };
+  const next = { ...cur, ...patch, kind, flags: { ...(cur.flags || {}), ...(patch.flags || {}) }, updatedAt: ehNowIso() };
+  ehStore.items[id] = next;
+  ehSaveLocal();
+  ehSetSaveState(id, '儲存中…');
+  clearTimeout(ehSaveTimers[id]);
+  ehSaveTimers[id] = setTimeout(() => ehPushCloud(id), 600);
+  ehHydrateBadges(id);
+  if (currentView === 'notes') renderNotesView();
+}
+async function ehPushCloud(id) {
+  const it = ehStore.items[id];
+  if (!it) return;
+  if (!ehCloud) { ehSetSaveState(id, `📱 已存本機 ${ehFmtTime(it.updatedAt)}`); return; }
+  try {
+    await ehCloud.save(id, it);
+    ehCloudOk = true;
+    ehSetSaveState(id, `☁️ 已同步 ${ehFmtTime(it.updatedAt)}`);
+    ehRenderSyncStatus();
+  } catch (e) {
+    console.warn('雲端寫入失敗', e);
+    ehCloudOk = false;
+    ehSetSaveState(id, `📱 已存本機（雲端失敗）${ehFmtTime(it.updatedAt)}`);
+    ehRenderSyncStatus(e);
+  }
+}
+function ehSetSaveState(id, text) {
+  document.querySelectorAll(`.eh-save-state[data-eh-for="${id}"]`).forEach(el => el.textContent = text);
+}
+
+/* 清單（之後想看／想聽） */
+function ehWishAdd(text) {
+  const t = (text || '').trim();
+  if (!t) return;
+  ehStore.wishlist.unshift({ id: 'w' + Date.now().toString(36), text: t, done: false, createdAt: ehNowIso() });
+  ehWishChanged();
+}
+function ehWishToggle(id) {
+  const w = ehStore.wishlist.find(x => x.id === id); if (!w) return;
+  w.done = !w.done; ehWishChanged();
+}
+function ehWishDelete(id) {
+  ehStore.wishlist = ehStore.wishlist.filter(x => x.id !== id); ehWishChanged();
+}
+function ehWishChanged() {
+  ehStore.wishlistUpdatedAt = ehNowIso();
+  ehSaveLocal();
+  renderWishList();
+  clearTimeout(ehSaveTimers.__wish);
+  ehSaveTimers.__wish = setTimeout(async () => {
+    if (!ehCloud) return;
+    try { await ehCloud.saveWishlist(ehStore.wishlist, ehStore.wishlistUpdatedAt); ehCloudOk = true; ehRenderSyncStatus(); }
+    catch (e) { console.warn('清單雲端寫入失敗', e); ehCloudOk = false; ehRenderSyncStatus(e); }
+  }, 600);
+}
+
+/* ── 面板 HTML ── */
+function renderNotesPanel(kind, id) {
+  const flags = EH_FLAGS[kind] || [];
+  const fields = EH_FIELDS[kind] || [];
+  return `<div class="eh-notes" data-eh-panel="${id}">
+    ${flags.length ? `<div class="eh-flags">${flags.map(([f, label]) =>
+      `<button type="button" class="eh-flag" data-eh-id="${id}" data-eh-kind="${kind}" data-flag="${f}">${label}</button>`).join('')}</div>` : ''}
+    ${fields.map(([f, label, ph]) =>
+      `<label>${label}<textarea data-eh-id="${id}" data-eh-kind="${kind}" data-field="${f}" placeholder="${ph}" rows="2"></textarea></label>`).join('')}
+    <div class="eh-save-state" data-eh-for="${id}"></div>
+  </div>`;
+}
+function ehBadgesHtml(id) {
+  const it = ehGet(id); if (!it) return '';
+  const icons = Object.entries(it.flags || {}).filter(([,v]) => v).map(([f]) => EH_FLAG_ICON[f] || '').join(' ');
+  const hasText = ((it.note||'').trim() || (it.reflection||'').trim()) ? '📝' : '';
+  return [icons, hasText].filter(Boolean).join(' ');
+}
+/** 把 store 的值填進畫面上所有對應欄位（正在打字的欄位不動） */
+function ehHydrate(root) {
+  root = root || document;
+  root.querySelectorAll('textarea[data-eh-id]').forEach(ta => {
+    if (document.activeElement === ta) return;
+    const it = ehGet(ta.dataset.ehId);
+    const v = it ? (it[ta.dataset.field] || '') : '';
+    if (ta.value !== v) ta.value = v;
+  });
+  root.querySelectorAll('.eh-flag[data-eh-id]').forEach(btn => {
+    const it = ehGet(btn.dataset.ehId);
+    btn.classList.toggle('on', !!(it && it.flags && it.flags[btn.dataset.flag]));
+  });
+  root.querySelectorAll('.eh-save-state[data-eh-for]').forEach(el => {
+    const it = ehGet(el.dataset.ehFor);
+    if (it && it.updatedAt && !el.textContent) el.textContent = `${ehCloudOk ? '☁️' : '📱'} ${ehFmtTime(it.updatedAt)}`;
+  });
+  root.querySelectorAll('[data-eh-badges]').forEach(el => { el.innerHTML = ehBadgesHtml(el.dataset.ehBadges); });
+  root.querySelectorAll('[data-eh-has]').forEach(el => { el.classList.toggle('has', ehHasContent(ehGet(el.dataset.ehHas))); });
+}
+function ehHydrateBadges(id) {
+  document.querySelectorAll(`[data-eh-badges="${id}"]`).forEach(el => { el.innerHTML = ehBadgesHtml(id); });
+  document.querySelectorAll(`[data-eh-has="${id}"]`).forEach(el => { el.classList.toggle('has', ehHasContent(ehGet(id))); });
+}
+
+/* ── 雲端：由 module script 呼叫 ── */
+window.ehAttachCloud = function (cloud) {
+  ehCloud = cloud;
+  ehRenderSyncStatus();
+  cloud.subscribe((docs) => {
+    // docs: { id: data }，含 __wishlist__
+    let changed = false;
+    Object.entries(docs).forEach(([id, data]) => {
+      if (id === '__wishlist__') {
+        const remoteAt = data.updatedAt || '';
+        if (remoteAt > (ehStore.wishlistUpdatedAt || '')) {
+          ehStore.wishlist = Array.isArray(data.items) ? data.items : [];
+          ehStore.wishlistUpdatedAt = remoteAt; changed = true;
+        } else if ((ehStore.wishlistUpdatedAt || '') > remoteAt) {
+          cloud.saveWishlist(ehStore.wishlist, ehStore.wishlistUpdatedAt).catch(()=>{});
+        }
+        return;
+      }
+      const local = ehStore.items[id];
+      const remoteAt = data.updatedAt || '';
+      if (!local || remoteAt > (local.updatedAt || '')) { ehStore.items[id] = data; changed = true; }
+      else if ((local.updatedAt || '') > remoteAt) { cloud.save(id, local).catch(()=>{}); }
+    });
+    // 本機有、雲端沒有的（例如離線時寫的）：推上去
+    Object.entries(ehStore.items).forEach(([id, it]) => { if (!docs[id]) cloud.save(id, it).catch(()=>{}); });
+    if (ehStore.wishlist.length && !docs.__wishlist__) cloud.saveWishlist(ehStore.wishlist, ehStore.wishlistUpdatedAt).catch(()=>{});
+    ehCloudOk = true;
+    ehRenderSyncStatus();
+    if (changed) { ehSaveLocal(); ehHydrate(); renderWishList(); if (currentView === 'notes') renderNotesView(); }
+  }, (err) => { ehCloudOk = false; ehRenderSyncStatus(err); });
+};
+function ehRenderSyncStatus(err) {
+  const el = document.getElementById('syncStatus'); if (!el) return;
+  if (!ehCloud) { el.textContent = '📱 目前只存在這台裝置（雲端模組未載入）'; el.className = 'sync-status'; return; }
+  if (err) { el.textContent = '⚠️ 雲端同步失敗，筆記仍會存在這台裝置：' + (err.code || err.message || err); el.className = 'sync-status err'; return; }
+  el.textContent = ehCloudOk ? '☁️ 已連接 Firestore，跨裝置同步中' : '☁️ 連線中…'; el.className = 'sync-status ' + (ehCloudOk ? 'ok' : '');
+}
+
+/* ── 我的筆記 view ── */
+function renderWishList() {
+  const el = document.getElementById('wishList'); if (!el) return;
+  if (!ehStore.wishlist.length) { el.innerHTML = '<li class="hint" style="list-style:none">還沒有項目。聽到想回頭看的、想再練的，寫在這裡就不會忘。</li>'; return; }
+  el.innerHTML = ehStore.wishlist.map(w => `<li class="wish-item${w.done ? ' done' : ''}" data-wid="${w.id}">
+    <input type="checkbox" ${w.done ? 'checked' : ''} aria-label="完成">
+    <span class="wish-text">${ehEsc(w.text)}</span>
+    <button type="button" class="wish-del" title="刪除">✕</button>
+  </li>`).join('');
+}
+function ehUnitTitle(id) { const u = courseUnits.find(x => 'unit_' + String(x.id).padStart(2,'0') === id); return u ? `${String(u.id).padStart(2,'0')} ${u.t}` : id; }
+function ehShowTitle(id) { const s = shows.find(x => 'show_' + x.id === id); return s ? s.t : id; }
+function ehMethodTitle(id) { const m = methods.find(x => 'method_' + x.id === id); return m ? m.name : id; }
+function ehToolTitle(id) { const t = tools.find(x => 'tool_' + x.name === id); return t ? t.name : id; }
+function ehTitle(id, kind) {
+  if (kind === 'unit') return ehUnitTitle(id);
+  if (kind === 'show') return ehShowTitle(id);
+  if (kind === 'method') return ehMethodTitle(id);
+  if (kind === 'tool') return ehToolTitle(id);
+  return id;
+}
+function renderNotesView() {
+  renderWishList();
+  const items = Object.entries(ehStore.items).map(([id, it]) => ({ id, ...it }));
+  // 課程進度
+  const units = items.filter(i => i.kind === 'unit');
+  const doneIds = units.filter(u => u.flags && u.flags.done).map(u => parseInt(u.id.slice(5)));
+  const p1 = doneIds.filter(n => n <= 13).length, p2 = doneIds.filter(n => n >= 14 && n <= 34).length, p3 = doneIds.filter(n => n >= 35).length;
+  document.getElementById('courseProgress').innerHTML =
+    `<span class="progress-pill">Part 1 精聽 <b>${p1}/13</b></span>
+     <span class="progress-pill">Part 2 泛聽 <b>${p2}/21</b></span>
+     <span class="progress-pill">Part 3 口音 <b>${p3}/16</b></span>
+     <span class="progress-pill">🔁 要再練 <b>${units.filter(u => u.flags && u.flags.again).length}</b></span>
+     <span class="progress-pill">🔥 很難 <b>${units.filter(u => u.flags && u.flags.hard).length}</b></span>`;
+  const flagged = units.filter(u => u.flags && (u.flags.again || u.flags.hard)).sort((a,b) => a.id.localeCompare(b.id));
+  document.getElementById('flaggedUnits').innerHTML = flagged.length ? flagged.map(u =>
+    `<div class="summary-item" data-jump="${u.id}" data-kind="unit">
+      <span class="si-kind">${ehBadgesHtml(u.id)}</span>
+      <span class="si-title">${ehEsc(ehUnitTitle(u.id))}</span>
+      <span class="si-snip">${ehEsc((u.note || u.reflection || '').replace(/\s+/g,' '))}</span>
+    </div>`).join('') : '<div class="hint">在課程單元裡按「🔁 要再練」或「🔥 很難」，會集中列在這裡。</div>';
+  // 節目感想
+  const sh = items.filter(i => i.kind === 'show' && ehHasContent(i)).sort((a,b) => (b.updatedAt||'').localeCompare(a.updatedAt||''));
+  document.getElementById('showNotes').innerHTML = sh.length ? sh.map(s =>
+    `<div class="summary-item" data-jump="${s.id}" data-kind="show">
+      <span class="si-kind">${ehBadgesHtml(s.id)}</span>
+      <span class="si-title">${ehEsc(ehShowTitle(s.id))}</span>
+      <span class="si-snip">${ehEsc((s.note || '').replace(/\s+/g,' '))}</span>
+      <span class="si-time">${ehFmtTime(s.updatedAt)}</span>
+    </div>`).join('') : '<div class="hint">在節目卡片按「📝」寫感想，會集中列在這裡。</div>';
+  // 最近寫的
+  const recent = items.filter(i => ((i.note||'').trim() || (i.reflection||'').trim())).sort((a,b) => (b.updatedAt||'').localeCompare(a.updatedAt||'')).slice(0, 12);
+  const kindLabel = { unit:'課程', show:'節目', method:'方法', tool:'工具' };
+  document.getElementById('recentNotes').innerHTML = recent.length ? recent.map(r =>
+    `<div class="summary-item" data-jump="${r.id}" data-kind="${r.kind}">
+      <span class="si-kind">${kindLabel[r.kind] || r.kind}</span>
+      <span class="si-title">${ehEsc(ehTitle(r.id, r.kind))}</span>
+      <span class="si-snip">${ehEsc(((r.note||'').trim() || (r.reflection||'')).replace(/\s+/g,' '))}</span>
+      <span class="si-time">${ehFmtTime(r.updatedAt)}</span>
+    </div>`).join('') : '<div class="hint">還沒有筆記。</div>';
+}
+/** 從「我的筆記」跳回原本的卡片並展開 */
+function ehJump(id, kind) {
+  if (kind === 'unit') {
+    switchView('course'); coursePart = 0; courseQuery = ''; noteFilter = '';
+    document.getElementById('courseSearch').value = '';
+    document.querySelectorAll('#partTabs .chip').forEach(c => c.classList.toggle('active', c.dataset.p === '0'));
+    document.querySelectorAll('#noteFilters .chip').forEach(c => c.classList.remove('active'));
+    renderCourse();
+    const card = document.querySelector(`.course-card[data-eh-card="${id}"]`);
+    if (card) { card.classList.add('open'); card.scrollIntoView({ behavior: 'smooth', block: 'start' }); }
+  } else if (kind === 'show') {
+    switchView('shows'); showLang = 'all'; showCat = 'all';
+    document.querySelectorAll('#showFilters .chip').forEach(c => c.classList.toggle('active', c.dataset.lang === 'all'));
+    renderShows();
+    const card = document.querySelector(`#showGrid .show-card[data-eh-card="${id}"]`);
+    if (card) { card.classList.add('notes-open'); card.scrollIntoView({ behavior: 'smooth', block: 'start' }); }
+  } else if (kind === 'method' || kind === 'tool') {
+    switchView(kind === 'method' ? 'methods' : 'tools');
+    const card = document.querySelector(`[data-eh-card="${id}"]`);
+    if (card) { card.classList.add('notes-open'); card.scrollIntoView({ behavior: 'smooth', block: 'start' }); }
+  }
+}
 
 function detectSlot() {
   const h = new Date().getHours(), m = new Date().getMinutes();
@@ -674,10 +1116,12 @@ function renderPlatformLinks(show) {
 function renderShowCard(s) {
   const tierClass = `badge-t${s.tier}`;
   const tierLabel = s.tier === 1 ? '① 優先' : s.tier === 2 ? '② 進階' : '③ 選聽';
-  return `<div class="show-card" data-lang="${s.lang}">
+  const nid = 'show_' + s.id;
+  return `<div class="show-card" data-lang="${s.lang}" data-eh-card="${nid}">
     <div class="show-top">
-      <span class="show-title">${s.t}</span>
+      <span class="show-title">${s.t}<span class="eh-badges" data-eh-badges="${nid}"></span></span>
       ${renderPlatformLinks(s)}
+      <button type="button" class="eh-toggle" data-eh-has="${nid}" data-eh-toggle="${nid}" title="寫感想">📝</button>
     </div>
     <div class="show-desc">${s.desc}</div>
     <div class="show-meta">
@@ -686,6 +1130,7 @@ function renderShowCard(s) {
       ${s.freq ? '<span class="badge badge-freq">🎧 常聽</span>' : ''}
       ${s.note ? `<span style="font-size:12px;color:var(--text-3)">📌 ${s.note}</span>` : ''}
     </div>
+    ${renderNotesPanel('show', nid)}
   </div>`;
 }
 
@@ -775,6 +1220,7 @@ function renderSlotContent() {
   }
 
   el.innerHTML = html;
+  ehHydrate(el);
 }
 
 // ── Shows View ──
@@ -803,6 +1249,7 @@ function renderShows() {
     return;
   }
   el.innerHTML = filtered.map(renderShowCard).join('');
+  ehHydrate(el);
 }
 
 // ── Course View ──
@@ -850,18 +1297,28 @@ function renderCourse() {
     );
   }
 
+  if (noteFilter) {
+    filtered = filtered.filter(u => {
+      const it = ehGet('unit_' + String(u.id).padStart(2,'0'));
+      if (!it) return false;
+      if (noteFilter === 'noted') return !!((it.note||'').trim() || (it.reflection||'').trim());
+      return !!(it.flags && it.flags[noteFilter]);
+    });
+  }
+
   const el = document.getElementById('courseList');
   if (!filtered.length) {
-    el.innerHTML = '<div class="empty-state">沒有符合的單元</div>';
+    el.innerHTML = `<div class="empty-state">${noteFilter ? '還沒有標記成這一類的單元' : '沒有符合的單元'}</div>`;
     return;
   }
 
   el.innerHTML = filtered.map(u => {
     const hasMedia = mediaMap[u.id];
-    return `<div class="course-card" data-part="${u.p}" onclick="this.classList.toggle('open')">
+    const nid = 'unit_' + String(u.id).padStart(2,'0');
+    return `<div class="course-card" data-part="${u.p}" data-eh-card="${nid}" onclick="if(!event.target.closest('.eh-notes')) this.classList.toggle('open')">
       <div class="cc-head">
         <span class="cc-num">${String(u.id).padStart(2,'0')}</span>
-        <span class="cc-title">${highlightText(u.t, courseQuery)}${hasMedia ? ' 🎬' : ''}</span>
+        <span class="cc-title">${highlightText(u.t, courseQuery)}${hasMedia ? ' 🎬' : ''}<span class="eh-badges" data-eh-badges="${nid}"></span></span>
         ${u.l ? `<span class="cc-level">${u.l}</span>` : ''}
       </div>
       <div class="cc-concept">${highlightText(u.c, courseQuery)}</div>
@@ -870,9 +1327,11 @@ function renderCourse() {
           ${u.v.map(v => renderVocab(v, courseQuery)).join('')}
         </div>
         ${renderMediaLinks(u.id)}
+        ${renderNotesPanel('unit', nid)}
       </div>
     </div>`;
   }).join('');
+  ehHydrate(el);
 }
 
 function highlightText(text, query) {
@@ -883,8 +1342,9 @@ function highlightText(text, query) {
 
 // ── Methods View ──
 function renderMethods() {
-  document.getElementById('methodGrid').innerHTML = methods.map(m => `<div class="method-card">
-    <h4>${m.name}</h4>
+  const el = document.getElementById('methodGrid');
+  el.innerHTML = methods.map(m => { const nid = 'method_' + m.id; return `<div class="method-card" data-eh-card="${nid}">
+    <h4>${m.name}<span class="eh-badges" data-eh-badges="${nid}"></span></h4>
     <div class="method-en">${m.en}</div>
     <p>${m.desc}</p>
     <ol class="method-steps">
@@ -896,13 +1356,17 @@ function renderMethods() {
         return `<span class="slot-tag">${sl.icon} ${sl.label}</span>`;
       }).join('')}
     </div>
-  </div>`).join('');
+    <button type="button" class="eh-toggle-inline" data-eh-has="${nid}" data-eh-toggle="${nid}">📝 寫心得</button>
+    ${renderNotesPanel('method', nid)}
+  </div>`; }).join('');
+  ehHydrate(el);
 }
 
 // ── Tools View ──
 function renderTools() {
-  document.getElementById('toolGrid').innerHTML = tools.map(t => `<div class="tool-card">
-    <h4>${t.name}</h4>
+  const el = document.getElementById('toolGrid');
+  el.innerHTML = tools.map(t => { const nid = 'tool_' + t.name; return `<div class="tool-card" data-eh-card="${nid}">
+    <h4>${t.name}<span class="eh-badges" data-eh-badges="${nid}"></span></h4>
     <p>${t.desc}</p>
     <p style="margin-top:6px"><b>建議：</b>${t.tip}</p>
     <div class="slot-tags">
@@ -912,7 +1376,10 @@ function renderTools() {
       }).join('')}
     </div>
     <span class="tool-link"><a href="${t.link}" target="_blank" rel="noopener">開啟 ${t.name} →</a></span>
-  </div>`).join('');
+    <button type="button" class="eh-toggle-inline" data-eh-has="${nid}" data-eh-toggle="${nid}">📝 寫心得</button>
+    ${renderNotesPanel('tool', nid)}
+  </div>`; }).join('');
+  ehHydrate(el);
 }
 
 // ── Navigation ──
@@ -921,17 +1388,68 @@ function switchView(view) {
   document.querySelectorAll('#mainNav button').forEach(b => {
     b.classList.toggle('active', b.dataset.view === view);
   });
-  ['time','shows','course','methods','tools'].forEach(v => {
+  ['time','shows','course','methods','tools','notes'].forEach(v => {
     const el = document.getElementById(`view-${v}`);
     if (el) el.hidden = v !== view;
   });
+  if (view === 'notes') renderNotesView();
 }
 
 // ── Init ──
 function init() {
+  ehLoadLocal();
+
   document.querySelectorAll('#mainNav button').forEach(btn => {
     btn.onclick = () => switchView(btn.dataset.view);
   });
+
+  // ── 筆記：事件委派（重新 render 也不用重綁）──
+  document.addEventListener('input', e => {
+    const ta = e.target.closest('textarea[data-eh-id]');
+    if (!ta) return;
+    ehUpdate(ta.dataset.ehId, ta.dataset.ehKind, { [ta.dataset.field]: ta.value });
+  });
+  document.addEventListener('click', e => {
+    const flag = e.target.closest('.eh-flag[data-eh-id]');
+    if (flag) {
+      e.stopPropagation();
+      const it = ehGet(flag.dataset.ehId);
+      const on = !(it && it.flags && it.flags[flag.dataset.flag]);
+      ehUpdate(flag.dataset.ehId, flag.dataset.ehKind, { flags: { [flag.dataset.flag]: on } });
+      document.querySelectorAll(`.eh-flag[data-eh-id="${flag.dataset.ehId}"][data-flag="${flag.dataset.flag}"]`).forEach(b => b.classList.toggle('on', on));
+      return;
+    }
+    const tog = e.target.closest('[data-eh-toggle]');
+    if (tog) {
+      e.stopPropagation();
+      const card = tog.closest('[data-eh-card]');
+      if (card) {
+        card.classList.toggle('notes-open');
+        if (card.classList.contains('notes-open')) { const ta = card.querySelector('textarea[data-eh-id]'); if (ta) ta.focus(); }
+      }
+      return;
+    }
+    const jump = e.target.closest('.summary-item[data-jump]');
+    if (jump) { ehJump(jump.dataset.jump, jump.dataset.kind); return; }
+    const wishItem = e.target.closest('.wish-item[data-wid]');
+    if (wishItem) {
+      if (e.target.closest('.wish-del')) ehWishDelete(wishItem.dataset.wid);
+      else if (e.target.matches('input[type="checkbox"]')) ehWishToggle(wishItem.dataset.wid);
+      return;
+    }
+  });
+  // 課程頁的標記篩選
+  document.getElementById('noteFilters').addEventListener('click', e => {
+    const chip = e.target.closest('.chip'); if (!chip) return;
+    noteFilter = noteFilter === chip.dataset.nf ? '' : chip.dataset.nf;
+    document.querySelectorAll('#noteFilters .chip').forEach(c => c.classList.toggle('active', c.dataset.nf === noteFilter));
+    renderCourse();
+  });
+  // 清單
+  const wishInput = document.getElementById('wishInput');
+  document.getElementById('wishAdd').onclick = () => { ehWishAdd(wishInput.value); wishInput.value = ''; wishInput.focus(); };
+  wishInput.addEventListener('keydown', e => { if (e.key === 'Enter') { e.preventDefault(); ehWishAdd(wishInput.value); wishInput.value = ''; } });
+  renderWishList();
 
   const nowSlot = detectSlot();
   if (nowSlot) selectedSlot = nowSlot;
@@ -977,6 +1495,40 @@ function init() {
 }
 
 init();
+</script>
+
+<script type="module">
+/* ═══ 雲端同步：沿用既有 ppl-plan Firebase 專案，使用獨立的 englishHub collection ═══
+   - 這段載不進來（離線、被擋）時，上面的筆記功能照常運作，只是只存在本機。 */
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+import { getFirestore, collection, doc, setDoc, onSnapshot } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+
+const firebaseConfig = {
+  apiKey: "AIzaSyD68ASVlyKiBOdvcyqIjil1DLNhibaxiaM",
+  authDomain: "ppl-plan.firebaseapp.com",
+  projectId: "ppl-plan",
+  storageBucket: "ppl-plan.firebasestorage.app",
+  messagingSenderId: "91585219195",
+  appId: "1:91585219195:web:f1ce4e153622965f1930de"
+};
+const EH_COL = "englishHub"; // 與 places / pplEdits / pplLogs 完全獨立
+
+try {
+  const app = initializeApp(firebaseConfig, "englishHub");
+  const db = getFirestore(app);
+  const cloud = {
+    save: (id, data) => setDoc(doc(db, EH_COL, id), data, { merge: true }),
+    saveWishlist: (items, updatedAt) => setDoc(doc(db, EH_COL, "__wishlist__"), { items, updatedAt }, { merge: false }),
+    subscribe: (onDocs, onErr) => onSnapshot(collection(db, EH_COL), snap => {
+      const docs = {};
+      snap.forEach(d => { docs[d.id] = d.data(); });
+      onDocs(docs);
+    }, onErr)
+  };
+  if (window.ehAttachCloud) window.ehAttachCloud(cloud);
+} catch (e) {
+  console.warn("Firebase 初始化失敗，改為只存本機", e);
+}
 </script>
 </body>
 </html>
